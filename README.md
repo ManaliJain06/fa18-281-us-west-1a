@@ -1,12 +1,22 @@
-# US-WEST-1A
+# US-WEST-1A 🏖
 
-# Project
+# Project 🍔
 Counter Burger Online Orders
 
-# Members
+# Members 🤓
 - Arijit Mandal
 - Fulbert Jong
 - Manali Jain
 - Rudy Wahjudi
 - Varun Jindal
+
+# Modules 🐡
+
+| Name         | Who         |
+|-----------|-----------|
+|User       | Varun     |
+|Menu       | Arijit    |
+|Order/Cart | Fulbert   |
+|Payment    | Rudy      |
+| Location  | Manali    |
 
