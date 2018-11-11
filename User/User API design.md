@@ -72,6 +72,7 @@
 3. Get User by ID
 
 	GET /users/:id
+	
 	Content-type: application/json
 
 	| Parameter        | Type           | Description  |
@@ -83,9 +84,10 @@
 
 	Parameters for Success (Status code: 200)
 	
+	
 	| Parameter        | Type           | Description  |
 	| ------------- |:-------------:| -----:|
-    	| firstName   | string  | User First Name
+	| firstName   | string  | User First Name
     	| lastName    | string  | User last name
     	| address     | string  | User address
     	| city        | string  | User city
@@ -97,6 +99,7 @@
     	| creditcard  | string  | User credit card number 
 
 	Parameters for Error (Status code: 401)
+	
 	| Parameter        | Type           | Description  |
 	| ------------- |:-------------:| -----:|
 	| message     | string  | Error Message
@@ -115,11 +118,13 @@
 	Response
 
 	Parameters for Success (Status code: 200)
+	
 	| Parameter        | Type           | Description  |
   	| ------------- |:-------------:| -----:|
    	| message   | string  | Message with successful deletion of the user
 
 	Parameters for Error (Status code: 401)
+	
 	| Parameter        | Type           | Description  |
 	| ------------- |:-------------:| -----:|
 	| message     | string  | Error Message
@@ -146,6 +151,7 @@
 	Response
 
 	Parameters for Success (Status code: 200)
+	
 	| Parameter        | Type           | Description  |
     	| ------------- |:-------------:| -----:|
     	| firstName   | string  | User First Name
@@ -160,6 +166,7 @@
     	| creditcard  | string  | User credit card number 
 
 	Parameters for Error (Status code: 401)
+	
 	| Parameter        | Type           | Description  |
 	| ------------- |:-------------:| -----:|
 	| message     | string  | Error Message
