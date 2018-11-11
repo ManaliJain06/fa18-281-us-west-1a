@@ -2,7 +2,7 @@
 
 ## 1. Add Restaurant to a Location(zip code)
 
-**Request**
+**- Request**
 
 POST /location/restaurant
 
@@ -13,27 +13,33 @@ Parameters
 | Parameter      | Type   | Description                                    |
 | -------------- | ------ | ---------------------------------------------- |
 | restaurantName | string | Restaurant name                                |
-| restaurantId   | String | Restuarant ID                                  |
-| area           | string | Restaurant area                                |
+| zipcode        | string | Restaurant zip code                            |
 | phone          | string | Restaurant phone number                        |
-| address        | string | Restaurant address                             |
+| addressLine1   | string | Restaurant address line 1                      |
+| addressLine2   | string | Restaurant address line 2                      |
+| city           | string | City of the restaurant                         |
+| state          | string | State of the restaurant                        |
+| country        | string | Country of the restaurant                      |
 | hours          | string | Restaurant open hours                          |
 | acceptedCards  | string | Cards accepted by restaurant                   |
 | distance       | string | Restaurant distance from that zipcode location |
 | email          | string | Restaurant email                               |
 
-**Response**
+**- Response**
 
 Parameters for Success (Status code: 200)
 
 | Parameter      | Type   | Description                                    |
 | -------------- | ------ | ---------------------------------------------- |
-| restaurantId   | string | Restaurant Id created by mongodb               |
 | restaurantName | string | Restaurant name                                |
-| restaurantId   | String | Restuarant ID                                  |
-| area           | string | Restaurant area                                |
+| restaurantId   | string | Restuarant ID                                  |
+| zipcode        | string | Restaurant zip code                            |
 | phone          | string | Restaurant phone number                        |
-| address        | string | Restaurant address                             |
+| addressLine1   | string | Restaurant address line 1                      |
+| addressLine2   | string | Restaurant address line 2                      |
+| city           | string | City of the restaurant                         |
+| state          | string | State of the restaurant                        |
+| country        | string | Country of the restaurant                      |
 | hours          | string | Restaurant open hours                          |
 | acceptedCards  | string | Cards accepted by restaurant                   |
 | distance       | string | Restaurant distance from that zipcode location |
@@ -47,9 +53,9 @@ Parameters for Error (Status code: 401)
 
 
 
-## 2. Get burger restaurants for location(zip code)
+## 2. Get restaurant list for location(zip code)
 
-**Request**
+**- Request**
 
 GET /location/:zipcode
 
@@ -61,7 +67,7 @@ Parameters
 | --------- | ------ | ------------------------------------------------------------ |
 | zipcode   | string | Area zip code will be send to the go apis for getting the list of all the restaurants in that area |
 
-**Response**
+**- Response**
 
 Response will come in the form of a list of restaurants
 
@@ -70,12 +76,16 @@ Parameters for Success (Status code: 200)
 | Parameter      | Type   | Description                                    |
 | -------------- | ------ | ---------------------------------------------- |
 | restaurantName | string | Restaurant name                                |
-| restaurantId   | String | Restuarant Id created by mongodb               |
-| area           | string | Restaurant area                                |
+| restaurantId   | string | Restuarant ID                                  |
+| zipcode        | string | Restaurant zip code                            |
 | phone          | string | Restaurant phone number                        |
-| address        | string | Restaurant address                             |
+| addressLine1   | string | Restaurant address line 1                      |
+| addressLine2   | string | Restaurant address line 2                      |
+| city           | string | City of the restaurant                         |
+| state          | string | State of the restaurant                        |
+| country        | string | Country of the restaurant                      |
 | hours          | string | Restaurant open hours                          |
-| acceptedCards  | string | Cards accepted by Restaurants                  |
+| acceptedCards  | string | Cards accepted by restaurant                   |
 | distance       | string | Restaurant distance from that zipcode location |
 | email          | string | Restaurant email                               |
 
@@ -87,9 +97,104 @@ Parameters for Error (Status code: 401)
 
 
 
-## 3. Delete Restaurant from the list of a location(zipcode)
+## 3. Get restaurant by restaurant Id
 
-**Request**
+**- Request**
+
+GET /location/restaurant/:restaurantId
+
+Content-Type: application/json
+
+Parameters
+
+| Parameter    | Type   | Description                                 |
+| ------------ | ------ | ------------------------------------------- |
+| restaurantId | string | Restaurant Id to get the restaurant details |
+
+**- Response**
+
+Parameters for Success (Status code: 200)
+
+| Parameter      | Type   | Description                                    |
+| -------------- | ------ | ---------------------------------------------- |
+| restaurantName | string | Restaurant name                                |
+| restaurantId   | string | Restuarant ID                                  |
+| zipcode        | string | Restaurant zip code                            |
+| phone          | string | Restaurant phone number                        |
+| addressLine1   | string | Restaurant address line 1                      |
+| addressLine2   | string | Restaurant address line 2                      |
+| city           | string | City of the restaurant                         |
+| state          | string | State of the restaurant                        |
+| country        | string | Country of the restaurant                      |
+| hours          | string | Restaurant open hours                          |
+| acceptedCards  | string | Cards accepted by restaurant                   |
+| distance       | string | Restaurant distance from that zipcode location |
+| email          | string | Restaurant email                               |
+
+Parameters for Error (Status code: 401)
+
+| Parameter | Type   | Description   |
+| --------- | ------ | ------------- |
+| message   | string | Error message |
+
+
+
+## 4. Update restaurants details
+
+**- Request**
+
+PUT /location/restuarant/:restaurantId
+
+Content-Type: application/json
+
+Parameters
+
+| Parameter      | Type   | Description                                    |
+| -------------- | ------ | ---------------------------------------------- |
+| restaurantName | string | Restaurant name                                |
+| zipcode        | string | Restaurant zip code                            |
+| phone          | string | Restaurant phone number                        |
+| addressLine1   | string | Restaurant address line 1                      |
+| addressLine2   | string | Restaurant address line 2                      |
+| city           | string | City of the restaurant                         |
+| state          | string | State of the restaurant                        |
+| country        | string | Country of the restaurant                      |
+| hours          | string | Restaurant open hours                          |
+| acceptedCards  | string | Cards accepted by restaurant                   |
+| distance       | string | Restaurant distance from that zipcode location |
+| email          | string | Restaurant email                               |
+
+**- Response**
+
+Parameters for Success (Status code: 200)
+
+| Parameter      | Type   | Description                                    |
+| -------------- | ------ | ---------------------------------------------- |
+| restaurantName | string | Restaurant name                                |
+| restaurantId   | string | Restuarant ID                                  |
+| zipcode        | string | Restaurant zip code                            |
+| phone          | string | Restaurant phone number                        |
+| addressLine1   | string | Restaurant address line 1                      |
+| addressLine2   | string | Restaurant address line 2                      |
+| city           | string | City of the restaurant                         |
+| state          | string | State of the restaurant                        |
+| country        | string | Country of the restaurant                      |
+| hours          | string | Restaurant open hours                          |
+| acceptedCards  | string | Cards accepted by restaurant                   |
+| distance       | string | Restaurant distance from that zipcode location |
+| email          | string | Restaurant email                               |
+
+Parameters for Error (Status code: 401)
+
+| Parameter | Type   | Description   |
+| --------- | ------ | ------------- |
+| message   | string | Error message |
+
+
+
+## 5. Delete Restaurant from a location(zipcode)
+
+**- Request**
 
 DELETE /location/restaurant/:restaurantId
 
@@ -101,7 +206,7 @@ Parameters
 | ------------ | ------ | ------------------------------------------------------------ |
 | restaurantId | string | Restaurant Unique Id to delete the restaurant from that zip location when the resturant has been shfited from that place or is no more in service |
 
-**Response**
+**- Response**
 
 Parameters for Success (Status code: 200)
 
@@ -114,4 +219,6 @@ Parameters for Error (Status code: 401)
 | Parameter | Type   | Description   |
 | --------- | ------ | ------------- |
 | message   | string | Error message |
+
+
 
