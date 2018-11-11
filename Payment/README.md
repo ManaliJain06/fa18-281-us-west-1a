@@ -1,6 +1,7 @@
 # Payment API 💵
 
 **Attributes**
+
 |Attribute Name	| Type	| Description|
 |---------------|-------|------------|
 |paymentId |String|Payment| Id         |
@@ -40,6 +41,7 @@
     |paymentDate	|String	|Date of the payment
 
     **Parameters for Error (Status code: 400)**
+
     |Parameter	|Type |	Description|
     |-----|-----|------|
     |message	|String|	Error Message|
@@ -70,6 +72,7 @@
     |paymentDate	|String	|Date of the payment
 
     **Parameters for Error (Status code: 400)**
+
     |Parameter	|Type |	Description|
     |-----|-----|------|
     |message	|String|	Error Message|
@@ -103,6 +106,7 @@
     |paymentDate	|String	|Date of the payment
 
     **Parameters for Error (Status code: 400)**
+
     |Parameter	|Type |	Description|
     |-----|-----|------|
     |message	|String|	Error Message|
@@ -136,6 +140,7 @@
     |paymentDate	|String	|Date of the payment
 
     **Parameters for Error (Status code: 400)**
+
     |Parameter	|Type |	Description|
     |-----|-----|------|
     |message	|String|	Error Message|
@@ -170,6 +175,7 @@
     |paymentDate	|String	|Date of the payment
 
     **Parameters for Error (Status code: 400)**
+
     |Parameter	|Type |	Description|
     |-----|-----|------|
     |message	|String|	Error Message|
@@ -205,6 +211,7 @@
     |paymentDate	|String	|Date of the payment
 
     **Parameters for Error (Status code: 400)**
+    
     |Parameter	|Type |	Description|
     |-----|-----|------|
     |message	|String|	Error Message|
