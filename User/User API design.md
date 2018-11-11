@@ -22,8 +22,12 @@
     | creditcard  | string  | User credit card number
 
     Response
+    
 
-    Parameters for Success (Status code: 200)
+    Parameters for Success Status code: 200 
+    
+    
+    
     | Parameter        | Type           | Description  |
     | ------------- |:-------------:| -----:|
     | firstName   | string  | User First Name
@@ -32,6 +36,7 @@
     | message     | string  | Successful sign up message  
 
     Parameters for Error (Status code: 401)
+    
     | Parameter        | Type           | Description  |
     | ------------- |:-------------:| -----:|
     | message     | string  | Error Message
@@ -50,6 +55,7 @@
 	Response
 
 	Parameters for Success (Status code: 200)
+	
 	| Parameter        | Type           | Description  |
 	| ------------- |:-------------:| -----:|
 	| firstName   | string  | User First Name
@@ -58,6 +64,7 @@
 	| Token       | string  | JSON WEB TOKEN  
 
 	Parameters for Error (Status code: 401)
+	
 	| Parameter        | Type           | Description  |
 	| ------------- |:-------------:| -----:|
 	| message     | string  | Error Message
@@ -75,18 +82,19 @@
 	Response
 
 	Parameters for Success (Status code: 200)
+	
 	| Parameter        | Type           | Description  |
-    | ------------- |:-------------:| -----:|
-    | firstName   | string  | User First Name
-    | lastName    | string  | User last name
-    | address     | string  | User address
-    | city        | string  | User city
-    | state       | string  | User state
-    | zipcode     | string  | User zipcode
-    | phone       | string  | User phone
-    | email       | string  | User email
-    | password    | string  | User password
-    | creditcard  | string  | User credit card number 
+	| ------------- |:-------------:| -----:|
+    	| firstName   | string  | User First Name
+    	| lastName    | string  | User last name
+    	| address     | string  | User address
+    	| city        | string  | User city
+    	| state       | string  | User state
+    	| zipcode     | string  | User zipcode
+    	| phone       | string  | User phone
+    	| email       | string  | User email
+    	| password    | string  | User password
+    	| creditcard  | string  | User credit card number 
 
 	Parameters for Error (Status code: 401)
 	| Parameter        | Type           | Description  |
@@ -108,8 +116,8 @@
 
 	Parameters for Success (Status code: 200)
 	| Parameter        | Type           | Description  |
-    | ------------- |:-------------:| -----:|
-    | message   | string  | Message with successful deletion of the user
+  	| ------------- |:-------------:| -----:|
+   	| message   | string  | Message with successful deletion of the user
 
 	Parameters for Error (Status code: 401)
 	| Parameter        | Type           | Description  |
@@ -122,34 +130,34 @@
 	Content-type: application/json
 
 	| Parameter        | Type           | Description  |
-    | ------------- |:-------------:| -----:|
-    | firstName   | string  | User First Name
-    | lastName    | string  | User last name
-    | address     | string  | User address
-    | city        | string  | User city
-    | state       | string  | User state
-    | zipcode     | string  | User zipcode
-    | phone       | string  | User phone
-    | email       | string  | User email
-    | password    | string  | User password
-    | creditcard  | string  | User credit card number 
+    	| ------------- |:-------------:| -----:|
+    	| firstName   | string  | User First Name
+    	| lastName    | string  | User last name
+    	| address     | string  | User address
+    	| city        | string  | User city
+    	| state       | string  | User state
+    	| zipcode     | string  | User zipcode
+    	| phone       | string  | User phone
+    	| email       | string  | User email
+    	| password    | string  | User password
+    	| creditcard  | string  | User credit card number 
 
 
 	Response
 
 	Parameters for Success (Status code: 200)
 	| Parameter        | Type           | Description  |
-    | ------------- |:-------------:| -----:|
-    | firstName   | string  | User First Name
-    | lastName    | string  | User last name
-    | address     | string  | User address
-    | city        | string  | User city
-    | state       | string  | User state
-    | zipcode     | string  | User zipcode
-    | phone       | string  | User phone
-    | email       | string  | User email
-    | password    | string  | User password
-    | creditcard  | string  | User credit card number 
+    	| ------------- |:-------------:| -----:|
+    	| firstName   | string  | User First Name
+    	| lastName    | string  | User last name
+    	| address     | string  | User address
+    	| city        | string  | User city
+    	| state       | string  | User state
+    	| zipcode     | string  | User zipcode
+    	| phone       | string  | User phone
+    	| email       | string  | User email
+    	| password    | string  | User password
+    	| creditcard  | string  | User credit card number 
 
 	Parameters for Error (Status code: 401)
 	| Parameter        | Type           | Description  |
