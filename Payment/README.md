@@ -88,6 +88,7 @@
     ```
 
     **Parameters**
+    
     |Parameter	|Type |	Description|
     |-----|-----|------|
     |orderId	|String|	Unique order number|
@@ -122,6 +123,7 @@
     ```
 
     **Parameters**
+
     |Parameter	|Type |	Description|
     |-----|-----|------|
     |userId	|String|	User Id|
@@ -155,6 +157,7 @@
     ```
 
     **Parameters**
+
     |Parameter	|Type |	Description|
     |-----|-----|------|
     |paymentId	|String|	User Id|
@@ -193,6 +196,7 @@
     **Cancel payment will only set the payment status to False**
 
     **Parameters**
+
     |Parameter	|Type |	Description|
     |-----|-----|------|
     |paymentId	|String|	User Id|
@@ -211,7 +215,7 @@
     |paymentDate	|String	|Date of the payment
 
     **Parameters for Error (Status code: 400)**
-    
+
     |Parameter	|Type |	Description|
     |-----|-----|------|
     |message	|String|	Error Message|
