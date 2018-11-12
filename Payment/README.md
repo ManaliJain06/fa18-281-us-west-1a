@@ -16,7 +16,7 @@
 
     **Request**
     ```
-    POST /payment
+    POST /payments
     Content-Type: application/json
     ```
     **Parameters**
@@ -51,7 +51,7 @@
 
     **Request**
     ```
-    GET /payment
+    GET /payments
     Content-Type: application/json
     ```
     **Parameters**
@@ -78,12 +78,12 @@
     |message	|String|	Error Message|
 
 
-3. View Payment Details by orderId
+3. View Payment Details by Id
 
     **Request**
 
     ```
-    GET /payment/:orderId
+    GET /payments/:orderId
     Content-Type: application/json
     ```
 
@@ -91,7 +91,7 @@
     
     |Parameter	|Type |	Description|
     |-----|-----|------|
-    |orderId	|String|	Unique order number|
+    |paymentId	|String|	Payment Id|
 
     **Response**
 
@@ -113,46 +113,12 @@
     |message	|String|	Error Message|
 
 
-4. View Payment Details by userId
+4. Edit Payment
 
     **Request**
 
     ```
-    GET /payment/:userId
-    Content-Type: application/json
-    ```
-
-    **Parameters**
-
-    |Parameter	|Type |	Description|
-    |-----|-----|------|
-    |userId	|String|	User Id|
-
-    **Response**
-
-    Parameters for Success (Status code: 200)
-
-    |Parameter	|Type	|Description  |
-    |----|----|----|
-    |paymentId	|String	|Unique order number|
-    |userId	|String	|User Id
-    |orderId	|String	|Unique order number
-    |totalAmount	|Double	|Total amount paid
-    |status	|Boolean  |Payment Status (True = Paid, False = Cancelled)
-    |paymentDate	|String	|Date of the payment
-
-    **Parameters for Error (Status code: 400)**
-
-    |Parameter	|Type |	Description|
-    |-----|-----|------|
-    |message	|String|	Error Message|
-
-5. Edit Payment
-
-    **Request**
-
-    ```
-    PUT /payment/:paymentId
+    PUT /payments/:paymentId
     Content-Type: application/json
     ```
 
@@ -184,12 +150,12 @@
     |message	|String|	Error Message|
 
 
-6. Cancel Payment
+5. Cancel Payment
 
     **Request**
 
     ```
-    DELETE /payment/:paymentId
+    DELETE /payments/:paymentId
     Content-Type: application/json
     ```
 
