@@ -25,6 +25,7 @@ Parameters for Success (Status code: 200)
 
 
 Parameters for Error (Status code: 400)
+
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
 | Message   | string  | Error message 
@@ -42,6 +43,7 @@ Content-Type: application/json
 
 Response
 Parameters for Success (Status code: 200)
+
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
 | userId   | string  | User ID
@@ -50,6 +52,7 @@ Parameters for Success (Status code: 200)
 | totalAmount     | double  | total price
 
 Parameters for Error (Status code: 400)
+
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
 | Message   | string  | Error message 
@@ -61,7 +64,7 @@ Request
 Put /order/
 Content-Type: application/json
 ```
-Parameters
+
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
 | userId   | string  | User ID
@@ -80,6 +83,7 @@ Parameters for Success (Status code: 200)
 | totalAmount     | double  | total price
 
 Parameters for Error (Status code: 400)
+
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
 | Message   | string  | Error message 
@@ -100,7 +104,6 @@ Response
 
 Parameters for Success (Status code: 200)
 
-Parameters
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
 | orderId   | string  | order ID: itemId, quantity
@@ -108,7 +111,6 @@ Parameters
 
 Parameters for Error (Status code: 400)
 
-Parameters for Error (Status code: 400)
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
 | Message   | string  | Error message 
@@ -120,6 +122,7 @@ Request
 Put /order/:orderId
 Content-Type: application/json
 ```
+
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
 | userId   | string  | User ID
@@ -137,6 +140,7 @@ Parameters for Success (Status code: 200)
 | totalAmount     | double  | total price
 
 Parameters for Error (Status code: 400)
+
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
 | Message   | string  | Error message 
