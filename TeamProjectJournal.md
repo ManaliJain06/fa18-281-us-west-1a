@@ -28,6 +28,16 @@
     DELETE delete payment by id
 
   - Also managed to connect to local mongodb.
+  
+# Arijit
+  - Created Menu REST api in golang
+  	POST create an item in the menu
+    GET get menu item bu Id
+    GET get all menu items
+    GET health check api
+    
+  - Also designed the database collection attributes
+  - Tested the API's using Postman
 
 ```
 
