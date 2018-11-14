@@ -46,7 +46,7 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	payments = append(payments, Payment{PaymentID: "2", UserID: "2", OrderID: "22", TotalAmount: 30.30, Status: true, PaymentDate: t.Format("2006-01-02 15:04:05")})
 
 	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
-	mx.HandleFunc("/payments", allPayments(formatter)).Methods("GET")
+	mx.HandleFunc("/payments", getAllPayments(formatter)).Methods("GET")
 	mx.HandleFunc("/payments/{id}", getPaymentByID(formatter)).Methods("GET")
 	mx.HandleFunc("/payments", createPayments(formatter)).Methods("POST")
 	mx.HandleFunc("/payments/{id}", deletePayment(formatter)).Methods("DELETE")
@@ -93,7 +93,26 @@ func pingHandler(formatter *render.Render) http.HandlerFunc {
 // 	json.NewEncoder(w).Encode(payments)
 // }
 
-func allPayments(formatter *render.Render) http.HandlerFunc {
+func getAllPayments(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		session, err := mgo.Dial(mongodb_server)
+		if err != nil {
+			panic(err)
+		}
+		defer session.Close()
+		session.SetMode(mgo.Monotonic, true)
+		c := session.DB(mongodb_database).C(mongodb_collection)
+		var result []bson.M
+		err = c.Find(nil).All(&result)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("getAllPayments:", result)
+		formatter.JSON(w, http.StatusOK, result)
+	}
+}
+
+func getPaymentByID(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		session, err := mgo.Dial(mongodb_server)
 		if err != nil {
@@ -103,66 +122,37 @@ func allPayments(formatter *render.Render) http.HandlerFunc {
 		session.SetMode(mgo.Monotonic, true)
 		c := session.DB(mongodb_database).C(mongodb_collection)
 		var result bson.M
-		err = c.Find(bson.M{}).One(&result)
+		params := mux.Vars(req)
+		err = c.Find(bson.M{"PaymentID": params["id"]}).One(&result)
 		if err != nil {
 			log.Fatal(err)
 		}
 		fmt.Println("Gumball Machine:", result)
 		formatter.JSON(w, http.StatusOK, result)
 
-		// fmt.Println("Get all payments")
-
-		// fmt.Println(payments)
-		// formatter.JSON(w, http.StatusOK, payments)
-	}
-}
-
-func getPaymentByID(formatter *render.Render) http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
-		// session, err := mgo.Dial(mongodb_server)
-		//     if err != nil {
-		//             panic(err)
-		//     }
-		//     defer session.Close()
-		//     session.SetMode(mgo.Monotonic, true)
-		//     c := session.DB(mongodb_database).C(mongodb_collection)
-		//     var result bson.M
-		//     err = c.Find(bson.M{"SerialNumber" : "1234998871109"}).One(&result)
-		//     if err != nil {
-		//             log.Fatal(err)
-		//     }
-		//     fmt.Println("Gumball Machine:", result )
-		// formatter.JSON(w, http.StatusOK, result)
-		fmt.Println("getPaymentByPaymentId")
-		params := mux.Vars(req)
-		for _, item := range payments {
-			if item.PaymentID == params["id"] {
-				// json.NewEncoder(w).Encode(item)
-				formatter.JSON(w, http.StatusOK, item)
-				return
-			}
-		}
+		// fmt.Println("getPaymentByPaymentId")
+		// params := mux.Vars(req)
+		// for _, item := range payments {
+		// 	if item.PaymentID == params["id"] {
+		// 		// json.NewEncoder(w).Encode(item)
+		// 		formatter.JSON(w, http.StatusOK, item)
+		// 		return
+		// 	}
+		// }
 	}
 }
 
 func createPayments(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		// session, err := mgo.Dial(mongodb_server)
-		//     if err != nil {
-		//             panic(err)
-		//     }
-		//     defer session.Close()
-		//     session.SetMode(mgo.Monotonic, true)
-		//     c := session.DB(mongodb_database).C(mongodb_collection)
-		//     var result bson.M
-		//     err = c.Find(bson.M{"SerialNumber" : "1234998871109"}).One(&result)
-		//     if err != nil {
-		//             log.Fatal(err)
-		//     }
-		//     fmt.Println("Gumball Machine:", result )
-		// formatter.JSON(w, http.StatusOK, result)
-		fmt.Println("createPayments")
-		// params := mux.Vars(req)
+		session, err := mgo.Dial(mongodb_server)
+		if err != nil {
+			panic(err)
+		}
+		defer session.Close()
+		session.SetMode(mgo.Monotonic, true)
+		c := session.DB(mongodb_database).C(mongodb_collection)
+		// var result bson.M
+
 		var payment Payment
 		_ = json.NewDecoder(req.Body).Decode(&payment)
 
@@ -172,11 +162,30 @@ func createPayments(formatter *render.Render) http.HandlerFunc {
 		payment.PaymentDate = t.Format("2006-01-02 15:04:05")
 		payment.Status = true
 
-		payments = append(payments, payment)
+		// err = c.Find(bson.M{"SerialNumber" : "1234998871109"}).One(&result)
+		err = c.Insert(payment)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("Create new payment:", payment)
+		formatter.JSON(w, http.StatusOK, payment)
 
-		// fmt.Fprintf(w, "createPayments")
-		// json.NewEncoder(w).Encode(payments)
-		formatter.JSON(w, http.StatusOK, payments)
+		// fmt.Println("createPayments")
+		// // params := mux.Vars(req)
+		// var payment Payment
+		// _ = json.NewDecoder(req.Body).Decode(&payment)
+
+		// uuid, _ := uuid.NewV4()
+		// payment.PaymentID = uuid.String()
+		// t := time.Now()
+		// payment.PaymentDate = t.Format("2006-01-02 15:04:05")
+		// payment.Status = true
+
+		// payments = append(payments, payment)
+
+		// // fmt.Fprintf(w, "createPayments")
+		// // json.NewEncoder(w).Encode(payments)
+		// formatter.JSON(w, http.StatusOK, payments)
 	}
 }
 
@@ -309,12 +318,12 @@ func editPayment(formatter *render.Render) http.HandlerFunc {
 /*
 
 
-db.payments.insert({
-	PaymentID: '1',
-	UserID: '1',
-	OrderID: '100',
-	TotalAmount: NumberDecimal(100.50),
-	Status: true,
-	PaymentDate: Date('2018-11-11 20:27:43')
-});
+ db.payments.insert({
+	 PaymentID: '1',
+	 UserID: '1',
+	 OrderID: '100',
+	 TotalAmount: NumberDecimal(100.50),
+	 Status: true,
+	 PaymentDate: Date('2018-11-11 20:27:43')
+ });
 */
