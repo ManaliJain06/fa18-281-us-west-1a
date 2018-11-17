@@ -9,9 +9,9 @@ Content-Type: application/json
 
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
-| userId   | string  | User ID
+| userId    | string  | User ID
 | itemId    | string  | Item ID
-| quantity     | integer  | Item quantity
+| quantity  | int     | Item quantity
 
 Response
 
@@ -19,9 +19,10 @@ Parameters for Success (Status code: 200)
 
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
-| orderId   | string  | order ID: itemId, quantity
-| orderStatus    | string  | placed, paid, removed
-| totalAmount     | double  | total price
+| orderId       | string    | order ID
+| items         | struct    | item ID, quantity   
+| orderStatus   | string    | placed, paid, removed
+| totalAmount   | double    | total price
 
 
 Parameters for Error (Status code: 400)
@@ -46,10 +47,11 @@ Parameters for Success (Status code: 200)
 
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
-| userId   | string  | User ID
-| orderId   | string  | order ID: itemId, quantity
-| orderStatus    | string  | placed, paid, removed
-| totalAmount     | double  | total price
+| userId        | string    | User ID
+| orderId       | string    | order ID
+| items         | struct    | item ID, quantity   
+| orderStatus   | string    | placed, paid, removed
+| totalAmount   | double    | total price
 
 Parameters for Error (Status code: 400)
 
@@ -67,9 +69,10 @@ Content-Type: application/json
 
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
-| userId   | string  | User ID
-| itemId    | string  | Item ID
-| quantity     | integer  | Item quantity
+| userId    | string | User ID
+| orderId   | string | order ID
+| itemId    | string | Item ID
+| quantity  | int    | Item quantity
 
 Response
 
@@ -77,10 +80,11 @@ Parameters for Success (Status code: 200)
 
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
-| userId   | string  | User ID
-| orderId   | string  | order ID: itemId, quantity
-| orderStatus    | string  | placed, paid, removed
-| totalAmount     | double  | total price
+| userId        | string  | User ID
+| orderId       | string  | order ID
+| items         | struct  | item ID, quantity   
+| orderStatus   | string  | placed, paid, removed
+| totalAmount   | double  | total price
 
 Parameters for Error (Status code: 400)
 
@@ -106,8 +110,8 @@ Parameters for Success (Status code: 200)
 
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
-| orderId   | string  | order ID: itemId, quantity
-| orderStatus    | string  | placed, paid, removed
+| orderId       | string  | order ID
+| orderStatus   | string  | placed, paid, removed
 
 Parameters for Error (Status code: 400)
 
@@ -126,7 +130,7 @@ Content-Type: application/json
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
 | userId   | string  | User ID
-| orderId   | string  | order ID: itemId, quantity
+| orderId  | string  | order ID
 
 Response
 
@@ -134,10 +138,11 @@ Parameters for Success (Status code: 200)
 
 | Parameter        | Type           | Description  |
 | ------------- |-------------| -----|
-| userId   | string  | User ID
-| orderId   | string  | order ID: itemId, quantity
-| orderStatus    | string  | placed, paid, removed
-| totalAmount     | double  | total price
+| userId        | string  | User ID
+| orderId       | string  | order ID
+| items         | struct  | item ID, quantity   
+| orderStatus   | string  | placed, paid, removed
+| totalAmount   | double  | total price
 
 Parameters for Error (Status code: 400)
 
