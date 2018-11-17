@@ -1,0 +1,3 @@
+/*
+	UI Component to list all the restuarants
+*/

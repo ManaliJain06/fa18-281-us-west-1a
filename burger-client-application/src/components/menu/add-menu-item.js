@@ -1,0 +1,3 @@
+/*
+	UI Component to add an item in the menu
+*/

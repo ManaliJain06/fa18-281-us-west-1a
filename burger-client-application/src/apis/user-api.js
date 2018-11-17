@@ -1,0 +1,3 @@
+/*
+	Client REST API calls to user microservice
+*/

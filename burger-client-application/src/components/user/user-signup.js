@@ -1,0 +1,3 @@
+/*
+	UI Component for Sign Up page
+*/
