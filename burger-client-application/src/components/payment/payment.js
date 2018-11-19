@@ -1,0 +1,3 @@
+/*
+	UI Component to show payment web page
+*/

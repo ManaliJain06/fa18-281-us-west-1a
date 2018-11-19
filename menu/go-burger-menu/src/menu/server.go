@@ -32,7 +32,11 @@ func MenuServer() *negroni.Negroni {
 	n := negroni.Classic()
 	router := mux.NewRouter()
 	initRoutes(router, formatter)
-	n.UseHandler(router)
+	allowedHeaders := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
+	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"})
+	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
+
+	n.UseHandler(handlers.CORS(allowedHeaders, allowedMethods, allowedOrigins)(router))
 	return n
 }
 
@@ -40,7 +44,7 @@ func MenuServer() *negroni.Negroni {
 func initRoutes(router *mux.Router, formatter *render.Render) {
 	router.HandleFunc("/menu/ping", pingHandler(formatter)).Methods("GET")
 	router.HandleFunc("/menu/item", createMenuItemHandler(formatter)).Methods("POST")
-	router.HandleFunc("/menu/item/{id}", findItemHandler(formatter)).Methods("POST")
+	router.HandleFunc("/menu/item/{id}", findItemHandler(formatter)).Methods("GET")
 
 }
 
