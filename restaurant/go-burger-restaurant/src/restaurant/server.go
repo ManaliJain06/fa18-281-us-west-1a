@@ -42,6 +42,7 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/restaurant", addRestaurantHandler(formatter)).Methods("POST")
 	mx.HandleFunc("/restaurant/zipcode/{zipcode}", addRestaurantHandler(formatter)).Methods("GET")
+	mx.HandleFunc("/restaurant/{restaurantId}", deleteRestaurantHandler(formatter)).Methods("DELETE")
 }
 
 // Handler for API Ping
@@ -105,5 +106,28 @@ func getRestaurantHandler(formatter *render.Render) http.HandlerFunc {
 			log.Fatal(err)
 		}
 		formatter.JSON(w, http.StatusOK, res)
+	}
+}
+
+func deleteRestaurantHandler(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		
+		session, err := mgo.Dial(mongodb_server)
+		if err != nil {
+			panic(err)
+		}
+		defer session.Close()
+		session.SetMode(mgo.Monotonic, true)
+		c := session.DB(mongodb_database).C(mongodb_collection)
+		
+		params := mux.Vars(req)
+
+		var result bson.M
+		err = c.Find(bson.M{"RestaurantId": params["restaurantId"]}).One(&result)
+		if err != nil {
+			log.Fatal(err)
+		} 
+		
+		formatter.JSON(w, http.StatusOK, result)
 	}
 }
