@@ -123,11 +123,14 @@ func getPaymentByID(formatter *render.Render) http.HandlerFunc {
 		c := session.DB(mongodb_database).C(mongodb_collection)
 		var result bson.M
 		params := mux.Vars(req)
-		err = c.Find(bson.M{"PaymentID": params["id"]}).One(&result)
+
+		fmt.Printf("params[id]=%s \n", params["id"])
+
+		err = c.Find(bson.M{"paymentid": params["id"]}).One(&result)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println("Gumball Machine:", result)
+		fmt.Println("getPaymentByID:", result)
 		formatter.JSON(w, http.StatusOK, result)
 
 		// fmt.Println("getPaymentByPaymentId")
@@ -191,78 +194,105 @@ func createPayments(formatter *render.Render) http.HandlerFunc {
 
 func deletePayment(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		// session, err := mgo.Dial(mongodb_server)
-		//     if err != nil {
-		//             panic(err)
-		//     }
-		//     defer session.Close()
-		//     session.SetMode(mgo.Monotonic, true)
-		//     c := session.DB(mongodb_database).C(mongodb_collection)
-		//     var result bson.M
-		//     err = c.Find(bson.M{"SerialNumber" : "1234998871109"}).One(&result)
-		//     if err != nil {
-		//             log.Fatal(err)
-		//     }
-		//     fmt.Println("Gumball Machine:", result )
-		// formatter.JSON(w, http.StatusOK, result)
-
-		fmt.Println("deletePayment")
+		session, err := mgo.Dial(mongodb_server)
+		if err != nil {
+			panic(err)
+		}
+		defer session.Close()
+		session.SetMode(mgo.Monotonic, true)
+		c := session.DB(mongodb_database).C(mongodb_collection)
+		var result bson.M
 		params := mux.Vars(req)
-		for index, item := range payments {
-			if item.PaymentID == params["id"] {
-				payments = append(payments[:index], payments[index+1:]...)
-				break
+
+		err = c.Find(bson.M{"paymentid": params["id"]}).One(&result)
+		if err != nil {
+			log.Fatal(err)
+		} else {
+			err = c.Remove(bson.M{"paymentid": params["id"]})
+			if err != nil {
+				log.Fatal(err)
 			}
 		}
+		fmt.Println("deletePayment ", result)
+		formatter.JSON(w, http.StatusOK, result)
 
-		// json.NewEncoder(w).Encode(payments)
-		formatter.JSON(w, http.StatusOK, payments)
+		// fmt.Println("deletePayment")
+		// params := mux.Vars(req)
+		// for index, item := range payments {
+		// 	if item.PaymentID == params["id"] {
+		// 		payments = append(payments[:index], payments[index+1:]...)
+		// 		break
+		// 	}
+		// }
+
+		// // json.NewEncoder(w).Encode(payments)
+		// formatter.JSON(w, http.StatusOK, payments)
 	}
 }
 
 func editPayment(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		// session, err := mgo.Dial(mongodb_server)
-		//     if err != nil {
-		//             panic(err)
-		//     }
-		//     defer session.Close()
-		//     session.SetMode(mgo.Monotonic, true)
-		//     c := session.DB(mongodb_database).C(mongodb_collection)
-		//     var result bson.M
-		//     err = c.Find(bson.M{"SerialNumber" : "1234998871109"}).One(&result)
-		//     if err != nil {
-		//             log.Fatal(err)
-		//     }
-		//     fmt.Println("Gumball Machine:", result )
-		// formatter.JSON(w, http.StatusOK, result)
 
-		fmt.Println("editPayment")
+		// find payment, edit
 
 		var payment Payment
 		_ = json.NewDecoder(req.Body).Decode(&payment)
-
-		fmt.Println("before", payment)
-
+		fmt.Println("Edit payment to these attributes: ", payment)
+		session, err := mgo.Dial(mongodb_server)
+		if err != nil {
+			panic(err)
+		}
+		defer session.Close()
+		session.SetMode(mgo.Monotonic, true)
+		c := session.DB(mongodb_database).C(mongodb_collection)
 		params := mux.Vars(req)
-		for index, item := range payments {
-			if item.PaymentID == params["id"] {
-				payment.PaymentID = item.PaymentID
-				payment.UserID = item.UserID
-				payment.OrderID = item.OrderID
-				payment.PaymentDate = item.PaymentDate
 
-				fmt.Println(payment)
-
-				payments = append(payments[:index], payments[index+1:]...)
-				payments = append(payments, payment)
-
-				break
-			}
+		var fetchedPayment bson.M
+		err = c.Find(bson.M{"paymentid": params["id"]}).One(&fetchedPayment)
+		if err != nil {
+			log.Fatal(err)
 		}
 
-		// json.NewEncoder(w).Encode(payments)
-		formatter.JSON(w, http.StatusOK, payments)
+		fmt.Println("fetchedPayment", fetchedPayment)
+		fetchedPayment["totalamount"] = payment.TotalAmount
+		fetchedPayment["status"] = payment.Status
+
+		query := bson.M{"paymentid": params["id"]}
+		// change := bson.M{"$set": bson.M{ "CountGumballs" : m.CountGumballs}}
+		err = c.Update(query, &fetchedPayment)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println("Edit Payment:", fetchedPayment)
+		formatter.JSON(w, http.StatusOK, fetchedPayment)
+
+		// fmt.Println("editPayment")
+
+		// var payment Payment
+		// _ = json.NewDecoder(req.Body).Decode(&payment)
+
+		// fmt.Println("before", payment)
+
+		// params := mux.Vars(req)
+		// for index, item := range payments {
+		// 	if item.PaymentID == params["id"] {
+		// 		payment.PaymentID = item.PaymentID
+		// 		payment.UserID = item.UserID
+		// 		payment.OrderID = item.OrderID
+		// 		payment.PaymentDate = item.PaymentDate
+
+		// 		fmt.Println(payment)
+
+		// 		payments = append(payments[:index], payments[index+1:]...)
+		// 		payments = append(payments, payment)
+
+		// 		break
+		// 	}
+		// }
+
+		// // json.NewEncoder(w).Encode(payments)
+		// formatter.JSON(w, http.StatusOK, payments)
 	}
 }
 
