@@ -28,9 +28,8 @@ None
 2) Discuss on design and tools and technology for the application
 3) Create Design Spec documents
 
-## Task Assignment
-
 ## Blockers
+None as of now.
 
 ## Outcome-
 # Rudy
@@ -61,5 +60,29 @@ None
     DELETE to delete the restaurant
     PUT to update the restaurant
 
-  - Create database design for the restaurant module\
+  - Create database design for the restaurant module
 
+# Varun
+- Created User API desgin document. Which contains the details of all the api user module will have.
+- Understanding the restful standards and implementing .
+- Learning Golang for implementing the Gol mongodb
+
+# Week 3 (11/11/2019 - 11/17/2019)
+
+## Minutes of meeting for team meeting
+1) Designing the database for the application.
+2) Deciding on the frontend technology of the application.
+3) Perform initial integration testing on the Various GO APIs.
+
+## Blockers
+Connecting React server with go API as it gives a CORS error.
+
+## Outcome-
+
+# Varun
+
+- Created database in mongodb.
+- Created Create user API.
+- Created Get user API.
+- Created Delete user API.
+- Created GetAll user API.
