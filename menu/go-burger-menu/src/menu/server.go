@@ -45,6 +45,8 @@ func initRoutes(router *mux.Router, formatter *render.Render) {
 	router.HandleFunc("/menu/ping", pingHandler(formatter)).Methods("GET")
 	router.HandleFunc("/menu/item", createMenuItemHandler(formatter)).Methods("POST")
 	router.HandleFunc("/menu/item/{id}", findItemHandler(formatter)).Methods("GET")
+	router.HandleFunc("/menu/items/{id}", deleteItemsHandler(formatter)).Methods("DELETE")
+	router.HandleFunc("/menu/item", updateItemsHandler(formatter)).Methods("PUT")
 
 }
 
@@ -115,6 +117,28 @@ func findItemHandler(formatter *render.Render) http.HandlerFunc {
 	}
 }
 
+
+// API to delete an items in the menu
+func deleteItemsHandler(formatter *render.Render) http.HandlerFunc {
+	return func(response http.ResponseWriter, request *http.Request) {
+		params := mux.Vars(request)
+		var uuid string = params["id"]
+		fmt.Println( "Item ID: ", uuid )
+		session, err := mgo.Dial(database_server)
+        if err != nil {
+                panic(err)
+        }
+        defer session.Close()
+        //session.SetMode(mgo.Monotonic, true) need to check
+        mongo_collection := session.DB(database).C(collection)
+        var result[] menuItem
+        err = mongo_collection.Delete(bson.M{}).All(&result)
+        if err != nil {
+                log.Fatal(err)
+        }
+        fmt.Println("result: ", result)
+		formatter.JSON(response, http.StatusOK, result)
+	}
 
 
 
