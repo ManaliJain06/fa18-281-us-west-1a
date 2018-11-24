@@ -117,6 +117,32 @@ func findItemHandler(formatter *render.Render) http.HandlerFunc {
 	}
 }
 
+// API to update an items in the menu
+func updateItemsHandler(formatter *render.Render) http.HandlerFunc {
+	return func(response http.ResponseWriter, request *http.Request) {
+		uuid,_ := uuid.NewV4()
+		var item menuItem
+		_ = json.NewDecoder(request.Body).Decode(&item)		
+    	fmt.Println("Menu Item: ", item.Name)
+    	fmt.Println("Menu Item Id: ", uuid)
+    	fmt.Println("Menu Item : ", item)
+		session, err := mgo.Dial(database_server)
+        if err != nil {
+                panic(err)
+        }
+        defer session.Close()
+        //session.SetMode(mgo.Monotonic, true) need to check
+        item.Id = uuid.String()
+        mongo_collection := session.DB(database).C(collection)
+        error := mongo_collection.Insert(item)
+        if error != nil {
+                panic(error)
+        }
+        fmt.Println("Menu mongo_collection: ", mongo_collection)
+		formatter.JSON(response, http.StatusOK, item)
+	}
+}
+
 
 // API to delete an items in the menu
 func deleteItemsHandler(formatter *render.Render) http.HandlerFunc {
