@@ -67,6 +67,10 @@ None as of now.
 - Understanding the restful standards and implementing .
 - Learning Golang for implementing the Gol mongodb
 
+# Fulbert
+- Created Order API design document which will function as cart
+- Start creating a local mongodb for testing
+- Start working on REST API development
 # Week 3 (11/11/2019 - 11/17/2019)
 
 ## Minutes of meeting for team meeting
@@ -86,3 +90,10 @@ Connecting React server with go API as it gives a CORS error.
 - Created Get user API.
 - Created Delete user API.
 - Created GetAll user API.
+
+# Fulbert
+
+- Created a local mongodb for testing
+- Created Create order API
+- Created Get order by ID API
+- Creted Getall orders API
