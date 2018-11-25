@@ -7,14 +7,15 @@
 package main
 
 type items struct {
-	itemId   string
-	quantity int
+	ItemId   string
+	Quantity int
 }
 type burgerOrder struct {
-	OrderId     string
-	UserId      string
-	OrderStatus string
-	TotalAmount float32
+	OrderId     string  `bson:"OrderId"`
+	UserId      string  `bson:"UserId"`
+	OrderStatus string  `bson:"OrderStatus"`
+	TotalAmount float32 `bson:"TotalAmount"`
+	Cart        []items `bson:"Cart"`
 }
 
 var orders map[string]burgerOrder
