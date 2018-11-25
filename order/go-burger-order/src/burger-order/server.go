@@ -48,6 +48,8 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/order", burgerOrderStatus(formatter)).Methods("GET")
 	mx.HandleFunc("/order/{OrderId}", burgerOrderStatus(formatter)).Methods("GET")
 	mx.HandleFunc("/order", burgerNewOrderHandler(formatter)).Methods("POST")
+	// mx.HandleFunc("/order/{OrderId}", burgerOrderUpdate(formatter)).Methods("PUT")
+	mx.HandleFunc("/order/{OrderId}", burgerOrderDelete(formatter)).Methods("DELETE")
 }
 
 // Helper Functions
@@ -68,7 +70,6 @@ func pingHandler(formatter *render.Render) http.HandlerFunc {
 // API burger Order Handler
 func burgerOrderStatus(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		fmt.Println("Orders:", orders)
 		session, err := mgo.Dial(mongodb_server)
 		if err != nil {
 			panic(err)
@@ -76,46 +77,28 @@ func burgerOrderStatus(formatter *render.Render) http.HandlerFunc {
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
 		c := session.DB(mongodb_database).C(mongodb_collection)
-		var orders_array []burgerOrder
-		err = c.Find(bson.M{}).All(&orders_array)
-		if err != nil {
-			log.Fatal(err)
+		params := mux.Vars(req)
+		var uuid string = params["OrderId"]
+		if uuid == "" {
+			var orders_array []burgerOrder
+			err = c.Find(bson.M{}).All(&orders_array)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println("Burger Orders:", orders_array)
+			formatter.JSON(w, http.StatusOK, orders_array)
+		} else {
+			fmt.Println("Order ID: ", uuid)
+			var result []burgerOrder
+			err = c.Find(bson.M{"OrderId": uuid}).One(&result)
+			fmt.Println("Burger Order: ", result)
+			formatter.JSON(w, http.StatusOK, result)
 		}
-		fmt.Println("Burger Orders:", orders_array)
-		formatter.JSON(w, http.StatusOK, orders_array)
 	}
 }
 
-// API Update Gumball Inventory
-/* func gumballUpdateHandler(formatter *render.Render) http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
-    	var m gumballMachine
-    	_ = json.NewDecoder(req.Body).Decode(&m)
-    	fmt.Println("Update Gumball Inventory To: ", m.CountGumballs)
-		session, err := mgo.Dial(mongodb_server)
-        if err != nil {
-                panic(err)
-        }
-        defer session.Close()
-        session.SetMode(mgo.Monotonic, true)
-        c := session.DB(mongodb_database).C(mongodb_collection)
-        query := bson.M{"SerialNumber" : "1234998871109"}
-        change := bson.M{"$set": bson.M{ "CountGumballs" : m.CountGumballs}}
-        err = c.Update(query, change)
-        if err != nil {
-                log.Fatal(err)
-        }
-       	var result bson.M
-        err = c.Find(bson.M{"SerialNumber" : "1234998871109"}).One(&result)
-        if err != nil {
-                log.Fatal(err)
-        }
-        fmt.Println("Gumball Machine:", result )
-		formatter.JSON(w, http.StatusOK, result)
-	}
-} */
-
 // API Create New Burger Order
+
 func burgerNewOrderHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		// Open MongoDB Session
@@ -128,11 +111,19 @@ func burgerNewOrderHandler(formatter *render.Render) http.HandlerFunc {
 		c := session.DB(mongodb_database).C(mongodb_collection)
 		uuid1, _ := uuid.NewV4()
 		uuid2, _ := uuid.NewV4()
+		uuid3, _ := uuid.NewV4()
+
 		var newOrder = burgerOrder{
 			OrderId:     uuid1.String(),
 			UserId:      uuid2.String(),
 			OrderStatus: "Order Placed",
-			TotalAmount: 25,
+			TotalAmount: 50,
+			Cart: []items{
+				items{
+					ItemId:   uuid3.String(),
+					Quantity: 2,
+				},
+			},
 		}
 		if orders == nil {
 			orders = make(map[string]burgerOrder)
@@ -145,27 +136,55 @@ func burgerNewOrderHandler(formatter *render.Render) http.HandlerFunc {
 	}
 }
 
-// API Get Burger Order Status
-/* func burgerOrderStatus(formatter *render.Render) http.HandlerFunc {
+// API Delete Burger Order
+func burgerOrderDelete(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		params := mux.Vars(req)
-		var uuid string = params["id"]
-		fmt.Println("Order ID: ", uuid)
-		if uuid == "" {
-			fmt.Println("Orders:", orders)
-			var orders_array []burgerOrder
-			for key, value := range orders {
-				fmt.Println("Key:", key, "Value:", value)
-				orders_array = append(orders_array, value)
-			}
-			formatter.JSON(w, http.StatusOK, orders_array)
-		} else {
-			var ord = orders[uuid]
-			fmt.Println("Order: ", ord)
-			formatter.JSON(w, http.StatusOK, ord)
+		session, err := mgo.Dial(mongodb_server)
+		if err != nil {
+			panic(err)
 		}
+		defer session.Close()
+		session.SetMode(mgo.Monotonic, true)
+		c := session.DB(mongodb_database).C(mongodb_collection)
+		params := mux.Vars(req)
+		var uuid string = params["OrderId"]
+		fmt.Println("Order ID: ", uuid)
+		err = c.Remove(bson.M{"OrderId": uuid})
+		fmt.Println("Delete Order: ", uuid)
+		formatter.JSON(w, http.StatusOK, uuid)
 	}
-} */
+}
+
+// API Update Burger Order
+ /* func burgerOrderUpdate(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+    	var m burgerOrder
+    	_ = json.NewDecoder(req.Body).Decode(&m)
+    	// fmt.Println("Update Gumball Inventory To: ", m.CountGumballs)
+		session, err := mgo.Dial(mongodb_server)
+        if err != nil {
+                panic(err)
+        }
+        defer session.Close()
+        session.SetMode(mgo.Monotonic, true)
+		c := session.DB(mongodb_database).C(mongodb_collection)
+		// params := mux.Vars(req)
+		// var uuid string = params["OrderId"]
+        // query := bson.M{"OrderId" : uuid}
+        // change := bson.M{"$set": bson.M{ "CountGumballs" : m.CountGumballs}}
+        // err = c.Update(query, change)
+        if err != nil {
+                log.Fatal(err)
+        }
+       	var result bson.M
+        err = c.Find(bson.M{"SerialNumber" : "1234998871109"}).One(&result)
+        if err != nil {
+                log.Fatal(err)
+        }
+        fmt.Println("Gumball Machine:", result )
+		formatter.JSON(w, http.StatusOK, result)
+	}
+}  */
 
 // API Process Orders
 /* func gumballProcessOrdersHandler(formatter *render.Render) http.HandlerFunc {
