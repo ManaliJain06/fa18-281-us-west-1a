@@ -131,3 +131,50 @@ func deleteRestaurantHandler(formatter *render.Render) http.HandlerFunc {
 		formatter.JSON(w, http.StatusOK, result)
 	}
 }
+
+func updateRestaurantHandler(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		
+		session, err := mgo.Dial(mongodb_server)
+		if err != nil {
+			panic(err)
+		}
+		defer session.Close()
+		session.SetMode(mgo.Monotonic, true)
+		c := session.DB(mongodb_database).C(mongodb_collection)
+		
+		params := mux.Vars(req)
+
+		var res restaurant
+		_=json.NewDecoder(req.Body).Decode(&res)
+
+		var newRestaurant bson.M
+		err = c.Find(bson.M{"RestaurantId": params["restaurantId"]}).One(&newRestaurant)
+		if err != nil {
+			log.Fatal(err)
+		} 
+
+		newRestaurant["restaurantName"] = res.restaurantName
+		newRestaurant["zipcode"] = res.zipcode
+		newRestaurant["phone"] = res.phone
+		newRestaurant["addressLine1"] = res.addressLine1
+		newRestaurant["addressLine2"] = res.addressLine2
+		newRestaurant["city"] = res.city
+		newRestaurant["state"] = res.state
+		newRestaurant["country"] = res.country
+		newRestaurant["hours"] = res.hours
+		newRestaurant["acceptedCards"] = res.acceptedCards
+		newRestaurant["distance"] = res.distance
+		newRestaurant["email"] = res.email
+
+
+		query := bson.M{"restaurantId": params["restaurantId"]}
+		// change := bson.M{"$set": bson.M{ "CountGumballs" : m.CountGumballs}}
+		err = c.Update(query, &newRestaurant)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		formatter.JSON(w, http.StatusOK, newRestaurant)
+	}
+}
