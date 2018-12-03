@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/codegangsta/negroni"
@@ -18,8 +19,21 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+/*
+ Mac commands to start and stop local mongo
+ ===============================================
+ brew services start mongodb
+ brew services stop mongodb
+ brew services restart mongodb
+*/
+
 // MongoDB Config
-var mongodb_server = "localhost:27017"
+// var mongodb_server = "localhost:27017"
+// var mongodb_database = "test"
+// var mongodb_collection = "payments"
+
+// Use EC2 MongoDB Sharding
+var mongodb_server = os.Getenv("AWS_MONGODB")
 var mongodb_database = "test"
 var mongodb_collection = "payments"
 
