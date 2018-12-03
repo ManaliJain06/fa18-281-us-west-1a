@@ -42,3 +42,6 @@ Backup of *.doc*
 *.xlk
 
 *.exe
+
+*.xml
+.idea
