@@ -40,3 +40,5 @@ Backup of *.doc*
 
 # Excel Backup File
 *.xlk
+
+*.exe
