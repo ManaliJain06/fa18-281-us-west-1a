@@ -13,12 +13,13 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/unrolled/render"
 	"github.com/satori/go.uuid"
+	"github.com/gorilla/handlers"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
 // MongoDB Config
-var database_server = "localhost"
+var database_server = "18.144.8.184:27017"
 var database = "burger"
 var collection = "menu"
 
@@ -36,7 +37,7 @@ func MenuServer() *negroni.Negroni {
 	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"})
 	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
 
-	n.UseHandler(handlers.CORS(allowedHeaders, allowedMethods, allowedOrigins)(router))
+	n.UseHandler(handlers.CORS(allowedHeaders,allowedMethods , allowedOrigins)(router))
 	return n
 }
 
@@ -45,7 +46,6 @@ func initRoutes(router *mux.Router, formatter *render.Render) {
 	router.HandleFunc("/menu/ping", pingHandler(formatter)).Methods("GET")
 	router.HandleFunc("/menu/item", createMenuItemHandler(formatter)).Methods("POST")
 	router.HandleFunc("/menu/item/{id}", findItemHandler(formatter)).Methods("GET")
-	router.HandleFunc("/menu/items/{id}", deleteItemsHandler(formatter)).Methods("DELETE")
 	router.HandleFunc("/menu/item", updateItemsHandler(formatter)).Methods("PUT")
 
 }
@@ -66,7 +66,7 @@ func pingHandler(formatter *render.Render) http.HandlerFunc {
 }
 
 // API to create a new item in the menu
-func createMenuItemHandler(formatter *render.Render) http.HandlerFunc {
+/*func createMenuItemHandler(formatter *render.Render) http.HandlerFunc {
 	return func(response http.ResponseWriter, request *http.Request) {
 		uuid,_ := uuid.NewV4()
 		var item menuItem
@@ -89,9 +89,46 @@ func createMenuItemHandler(formatter *render.Render) http.HandlerFunc {
         fmt.Println("Menu mongo_collection: ", mongo_collection)
 		formatter.JSON(response, http.StatusOK, item)
 	}
+}*/
+
+// API to create a new item in the menu
+func createMenuItemHandler(formatter *render.Render) http.HandlerFunc {
+	return func(response http.ResponseWriter, request *http.Request) {
+		var reqPayload restaurantReqBody
+		_ = json.NewDecoder(request.Body).Decode(&reqPayload)		
+    	fmt.Println("Menu ItemPayload ", reqPayload.Item)
+    	uuid,_ := uuid.NewV4()
+    	reqPayload.Item.Id = uuid.String()
+    	session, err := mgo.Dial(database_server)
+        if err != nil {
+                panic(err)
+        }
+        defer session.Close()
+       mongo_collection := session.DB(database).C(collection)
+        //var newMenu bson.M
+
+       	var menu Menu;
+        err = mongo_collection.Find(bson.M{"restaurantid" : reqPayload.RestaurantId}).One(&menu)
+        if err != nil {
+                fmt.Println("error: ", err)
+
+             	menu.RestaurantId = reqPayload.RestaurantId
+             	menu.RestaurantName = reqPayload.RestaurantName
+             	menu.Items = append(menu.Items, reqPayload.Item)
+             	
+            error := mongo_collection.Insert(menu)
+            fmt.Println("error: ", error)
+        	
+        }else{
+        	menu.Items = append(menu.Items, reqPayload.Item)
+        	error := mongo_collection.Update(bson.M{"restaurantid": menu.RestaurantId}, bson.M{"$set": bson.M{"items": append(menu.Items, reqPayload.Item)}})       	
+        	fmt.Println("error: ", error)
+        }
+        
+        
+		formatter.JSON(response, http.StatusOK, menu)
+	}
 }
-
-
 
 
 // API to find an item in the menu
@@ -143,28 +180,6 @@ func updateItemsHandler(formatter *render.Render) http.HandlerFunc {
 	}
 }
 
-
-// API to delete an items in the menu
-func deleteItemsHandler(formatter *render.Render) http.HandlerFunc {
-	return func(response http.ResponseWriter, request *http.Request) {
-		params := mux.Vars(request)
-		var uuid string = params["id"]
-		fmt.Println( "Item ID: ", uuid )
-		session, err := mgo.Dial(database_server)
-        if err != nil {
-                panic(err)
-        }
-        defer session.Close()
-        //session.SetMode(mgo.Monotonic, true) need to check
-        mongo_collection := session.DB(database).C(collection)
-        var result[] menuItem
-        err = mongo_collection.Delete(bson.M{}).All(&result)
-        if err != nil {
-                log.Fatal(err)
-        }
-        fmt.Println("result: ", result)
-		formatter.JSON(response, http.StatusOK, result)
-	}
 
 
 
