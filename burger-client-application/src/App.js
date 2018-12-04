@@ -7,7 +7,7 @@ import Homepage from './components/homepage';
 import Order from './components/order/order-list';
 import './App.css';
 import ListRestaurant from "./components/restaurant/restaurant-list";
-
+import PaymentOverview from "./components/payment/payment";
 
 class App extends Component {
 
@@ -19,6 +19,7 @@ class App extends Component {
             <Route exact path= "/menu/:restaurantId" render = {(match) => (<Menu {...match}/>)}/>
             <Route exact path= "/order/:orderId" render = {(match) => (<Order {...match}/>)}/>
             <Route path="/listRestaurant" render={() => (<ListRestaurant/>)}/>
+            <Route path="/payment" render={() => (<PaymentOverview />) } />
           </Switch>
       </div>
     );

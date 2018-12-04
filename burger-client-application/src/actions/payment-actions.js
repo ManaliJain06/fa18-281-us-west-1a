@@ -1,0 +1,1 @@
+export const PAYMENT_GET_ALL = 'PAYMENT_GET_ALL';

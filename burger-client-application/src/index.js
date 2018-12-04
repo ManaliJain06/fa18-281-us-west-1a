@@ -8,9 +8,13 @@ import {createStore} from 'redux';
 import {BrowserRouter} from 'react-router-dom';
 import allreducers from './reducers/index'
 
+const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
 const store = createStore(
     allreducers,
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    compose(
+        devTools
+    )
+
 );
 
 ReactDOM.render(
