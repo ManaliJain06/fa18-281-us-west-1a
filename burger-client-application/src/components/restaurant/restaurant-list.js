@@ -4,6 +4,7 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import '../../index.css';
+import Header from '../header';
 
 class ListRestaurant extends Component{
 
@@ -15,16 +16,7 @@ class ListRestaurant extends Component{
         return (
             <div className="menu-home">
                 <div className="outerdiv">
-                    <div className="header">
-                        <div className="leftheader"> The Counter Custom burgers </div>
-                        <div className="rightheader">
-                            <div className="topnav">
-                                <a >Home</a>
-                                <a >Create Account</a>
-                                <a >Login</a>
-                            </div>
-                        </div>
-                    </div>
+                    <Header/>
                     <div className="content">
                         <div className="card">
                             <table className="tableRestaurant">
