@@ -26,7 +26,6 @@ var mongodb_database = "burger"
 var mongodb_collection = "order"
 var mongo_user = "mongo_admin"
 var mongo_pass = "cmpe281"
-
 // RabbitMQ Config
 // var rabbitmq_server = "rabbitmq"
 // var rabbitmq_port = "5672"
@@ -148,17 +147,18 @@ func burgerOrderHandler(formatter *render.Render) http.HandlerFunc {
 		newitem.Price = orderdetail.Price		
 		newitem.Description = orderdetail.Description
 		if err == nil {
-
-			fmt.Println("Orders: ", "Orders found")	
-			c.Update(bson.M{"orderId": orderdetail.OrderId}, bson.M{"$set": bson.M{"Cart": append(order.Cart, newitem)}})
 			order.Cart = append(order.Cart, newitem)
+			order.TotalAmount = (order.TotalAmount + newitem.Price)
+			fmt.Println("Orders: ", "Orders found")	
+			c.Update(bson.M{"orderId": orderdetail.OrderId}, bson.M{"$set": bson.M{"items": order.Cart}})
+			c.Update(bson.M{"orderId": orderdetail.OrderId}, bson.M{"$set": bson.M{"totalAmount": order.TotalAmount}})
 		}else {
 				fmt.Println("Orders: ", "Orders not found")	
 				order = BurgerOrder{
 				OrderId:     orderdetail.OrderId,
 				UserId:      uuid2.String(),
 				OrderStatus: "Order Placed",
-				TotalAmount: 50,
+				TotalAmount: newitem.Price,
 				Cart: []Items{
 					newitem,
 				},
