@@ -14,13 +14,9 @@ class App extends Component {
     return (
       <div className="App">
           <Switch>
-            {/*<Route path= "/" render = {() => (<Menu/>)}/>*/}
-
-                {/*<Route path= "/" render = {() => (<Homepage/>)}/>*/}
-                <Route path="/listRestaurant" render={() => (
-                        <ListRestaurant/>
-
-                )}/>
+            <Route exact path= "/" render = {() => (<Homepage/>)}/>
+            <Route exact path= "/menu/:restaurantId" render = {(match) => (<Menu {...match}/>)}/>
+            <Route path="/listRestaurant" render={() => (<ListRestaurant/>)}/>
           </Switch>
       </div>
     );

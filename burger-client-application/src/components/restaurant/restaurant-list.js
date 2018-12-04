@@ -2,20 +2,16 @@
 	UI Component to list all the restaurants
 */
 import React, {Component} from 'react';
+import {withRouter} from 'react-router-dom';
 import '../../index.css';
 
 class ListRestaurant extends Component{
 
     constructor(props) {
         super(props);
-        // let userState = this.props.loginStateProp;
-        // this.state={
-        //     zipcode: this.props.zipcode
-        // };
     }
 
     render(){
-        // console.log(this.state.zipcode);
         return (
             <div className="menu-home">
                 <div className="outerdiv">
@@ -60,7 +56,7 @@ class ListRestaurant extends Component{
                                     </td>
                                     <td>
                                         <input type="submit" value="Order" onClick={() => {
-                                            this.props.history.push("/listRestaurant");}}/>
+                                            this.props.history.push("/menu/1");}}/>
                                     </td>
                                 </tr>
 
@@ -85,7 +81,7 @@ class ListRestaurant extends Component{
                                     </td>
                                     <td>
                                         <input type="submit" value="Order" onClick={() => {
-                                            this.props.history.push("/listRestaurant");}}/>
+                                            this.props.history.push("/menu/1");}}/>
                                     </td>
                                 </tr>
 
@@ -99,4 +95,4 @@ class ListRestaurant extends Component{
     }
 }
 
-export default ListRestaurant;
+export default withRouter(ListRestaurant);

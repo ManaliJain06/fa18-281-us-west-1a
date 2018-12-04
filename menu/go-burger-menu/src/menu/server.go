@@ -44,8 +44,8 @@ func MenuServer() *negroni.Negroni {
 // Menu Service API Routes
 func initRoutes(router *mux.Router, formatter *render.Render) {
 	router.HandleFunc("/menu/ping", pingHandler(formatter)).Methods("GET")
-	router.HandleFunc("/menu/item", createMenuItemHandler(formatter)).Methods("POST")
-	router.HandleFunc("/menu/item/{id}", findItemHandler(formatter)).Methods("GET")
+	router.HandleFunc("/menu", createMenuItemHandler(formatter)).Methods("POST")
+	router.HandleFunc("/menu/{restaurantId}", findRestaurantMenu(formatter)).Methods("GET")
 	router.HandleFunc("/menu/item", updateItemsHandler(formatter)).Methods("PUT")
 
 }
@@ -105,8 +105,7 @@ func createMenuItemHandler(formatter *render.Render) http.HandlerFunc {
         }
         defer session.Close()
        mongo_collection := session.DB(database).C(collection)
-        //var newMenu bson.M
-
+        
        	var menu Menu;
         err = mongo_collection.Find(bson.M{"restaurantid" : reqPayload.RestaurantId}).One(&menu)
         if err != nil {
@@ -132,11 +131,11 @@ func createMenuItemHandler(formatter *render.Render) http.HandlerFunc {
 
 
 // API to find an item in the menu
-func findItemHandler(formatter *render.Render) http.HandlerFunc {
+func findRestaurantMenu(formatter *render.Render) http.HandlerFunc {
 	return func(response http.ResponseWriter, request *http.Request) {
 		params := mux.Vars(request)
-		var uuid string = params["id"]
-		fmt.Println( "Item ID: ", uuid )
+		var restaurantId string = params["restaurantId"]
+		fmt.Println( "restaurant ID: ", restaurantId )
 		session, err := mgo.Dial(database_server)
         if err != nil {
                 panic(err)
@@ -145,14 +144,15 @@ func findItemHandler(formatter *render.Render) http.HandlerFunc {
         //session.SetMode(mgo.Monotonic, true) need to check
         mongo_collection := session.DB(database).C(collection)
         var result bson.M
-        err = mongo_collection.Find(bson.M{"id" : uuid}).One(&result)
+        err = mongo_collection.Find(bson.M{"restaurantid" : restaurantId}).One(&result)
         if err != nil {
                 log.Fatal(err)
         }
-        fmt.Println("result: ", result)
+        fmt.Println("Result: ", result)
 		formatter.JSON(response, http.StatusOK, result)
 	}
 }
+
 
 // API to update an items in the menu
 func updateItemsHandler(formatter *render.Render) http.HandlerFunc {

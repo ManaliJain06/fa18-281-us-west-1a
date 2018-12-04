@@ -1,8 +1,9 @@
 import {combineReducers} from 'redux';
+import menu from './menu-reducer';
 
 const allReducers = combineReducers({
     //insert reducer name here to combine
-    // menu_reducer :menu_reducer,
+    menu:menu,
 
 });
 

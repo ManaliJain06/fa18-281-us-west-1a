@@ -1,0 +1,23 @@
+.table-menu{
+  margin: 5% 18% 2% 18%;
+  width: 60%;
+}
+
+.menu-table-header-row{
+  min-height: 100px;
+
+
+}
+
+.menu-table-item-row{
+  min-height: 100px;
+
+
+}
+.menu-table-item-col{
+  text-align: left;
+}
+
+.menu-home{
+    padding: 70px 80px 50px 70px;
+}

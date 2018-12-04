@@ -2,31 +2,31 @@
 	Client REST API calls to menu microservice
 */
 
-const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:8080';
+const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:8000';
 const headers = {
     'Accept': 'application/json'
 };
 
-export const getAllMenuItems = () =>
-    fetch(`${api}/menu/items`, {
+export const getRestaurantMenuItems = (restaurantId) =>
+    fetch(`${api}/menu/${restaurantId}`, {
         method: 'GET',
         headers: headers,
     }).then(res => {
         return res;
     }).catch(error => {
-        console.log("[menu-api] getAllMenuItems() Error !!!");
+        console.log("[menu-api] getRestaurantMenuItems() Error !!!");
         return error;
     });
 
-export const createNewMenuItem = () =>
+export const AddMenuItem = (menuItem) =>
     fetch(`${api}/menu/item`, {
         method: 'POST',
         headers: {
             ...headers,
             'Content-Type': 'application/json'
         },
-        credentials:'include'
-        // body: JSON.stringify()
+        credentials:'include',
+        body: JSON.stringify(menuItem)
     }).then(res => {
         return res;
     }).catch(error => {

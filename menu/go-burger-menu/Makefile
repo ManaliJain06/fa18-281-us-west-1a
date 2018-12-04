@@ -26,4 +26,30 @@ build:
 	go build menu
 
 start:
-	./menu 
+	./menu
+
+docker-build:
+	docker build -t menu .
+	docker images
+
+docker-run:
+	docker run --name menu -td -p 8000:8000 menu
+	docker ps
+
+
+docker-network:
+	docker network ls
+
+docker-network-inspect:
+	docker network inspect host
+
+docker-shell:
+	docker exec -it menu bash
+
+docker-clean:
+	docker stop menu
+	docker rm menu
+	docker rmi menu
+
+docker-ip:
+	docker-machine ip
