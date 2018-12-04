@@ -168,7 +168,6 @@ func updateItemsHandler(formatter *render.Render) http.HandlerFunc {
                 panic(err)
         }
         defer session.Close()
-        //session.SetMode(mgo.Monotonic, true) need to check
         item.Id = uuid.String()
         mongo_collection := session.DB(database).C(collection)
         error := mongo_collection.Insert(item)
