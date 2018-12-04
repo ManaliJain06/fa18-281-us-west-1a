@@ -6,7 +6,7 @@ import Menu from './components/menu/menu-list';
 import Homepage from './components/homepage';
 import './App.css';
 import ListRestaurant from "./components/restaurant/restaurant-list";
-
+import PaymentOverview from "./components/payment/payment";
 
 class App extends Component {
 
@@ -17,6 +17,7 @@ class App extends Component {
             <Route exact path= "/" render = {() => (<Homepage/>)}/>
             <Route exact path= "/menu/:restaurantId" render = {(match) => (<Menu {...match}/>)}/>
             <Route path="/listRestaurant" render={() => (<ListRestaurant/>)}/>
+            <Route path="/payment" render={() => (<PaymentOverview />) } />
           </Switch>
       </div>
     );
