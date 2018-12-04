@@ -16,12 +16,16 @@ import (
 	"github.com/unrolled/render"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"github.com/gorilla/handlers"
 )
 
 // MongoDB Config
-var mongodb_server = "dockerhost"
+var mongodb_server = "13.57.246.180"
+//var mongodb_server = "dockerhost"
 var mongodb_database = "burger"
 var mongodb_collection = "order"
+var mongo_user = "mongo_admin"
+var mongo_pass = "cmpe281"
 
 // RabbitMQ Config
 // var rabbitmq_server = "rabbitmq"
@@ -31,7 +35,7 @@ var mongodb_collection = "order"
 // var rabbitmq_pass = "guest"
 
 // NewServer configures and returns a Server.
-func NewServer() *negroni.Negroni {
+/*func NewServer() *negroni.Negroni {
 	formatter := render.New(render.Options{
 		IndentJSON: true,
 	})
@@ -40,16 +44,30 @@ func NewServer() *negroni.Negroni {
 	initRoutes(mx, formatter)
 	n.UseHandler(mx)
 	return n
+}*/
+func NewServer() *negroni.Negroni {
+	formatter := render.New(render.Options{
+		IndentJSON: true,
+	})
+	n := negroni.Classic()
+	router := mux.NewRouter()
+	initRoutes(router, formatter)
+	allowedHeaders := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
+	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"})
+	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
+
+	n.UseHandler(handlers.CORS(allowedHeaders,allowedMethods , allowedOrigins)(router))
+	return n
 }
 
 // API Routes
 func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/order", burgerOrderStatus(formatter)).Methods("GET")
-	mx.HandleFunc("/order/{OrderId}", burgerOrderStatus(formatter)).Methods("GET")
-	mx.HandleFunc("/order", burgerNewOrderHandler(formatter)).Methods("POST")
+	mx.HandleFunc("/order/{orderId}", burgerOrderStatus(formatter)).Methods("GET")
+	mx.HandleFunc("/order", burgerOrderHandler(formatter)).Methods("POST")
 	// mx.HandleFunc("/order/{OrderId}", burgerOrderUpdate(formatter)).Methods("PUT")
-	mx.HandleFunc("/order/{OrderId}", burgerOrderDelete(formatter)).Methods("DELETE")
+	mx.HandleFunc("/order/{orderId}", burgerOrderDelete(formatter)).Methods("DELETE")
 }
 
 // Helper Functions
@@ -76,21 +94,28 @@ func burgerOrderStatus(formatter *render.Render) http.HandlerFunc {
 		}
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
+		if err:= session.DB("admin").Login(mongo_user, mongo_pass); err != nil {
+			panic(err)
+		}
 		c := session.DB(mongodb_database).C(mongodb_collection)
 		params := mux.Vars(req)
-		var uuid string = params["OrderId"]
+		var uuid string = params["orderId"]
 		if uuid == "" {
-			var orders_array []burgerOrder
+			var orders_array []BurgerOrder
 			err = c.Find(bson.M{}).All(&orders_array)
 			if err != nil {
-				log.Fatal(err)
+				panic(err)
 			}
 			fmt.Println("Burger Orders:", orders_array)
 			formatter.JSON(w, http.StatusOK, orders_array)
 		} else {
-			fmt.Println("Order ID: ", uuid)
-			var result []burgerOrder
-			err = c.Find(bson.M{"OrderId": uuid}).One(&result)
+			fmt.Println("orderID: ", uuid)
+			var result BurgerOrder
+			err = c.Find(bson.M{"orderId":uuid}).One(&result)
+			if err != nil {
+				panic(err)
+			}
+			_ = json.NewDecoder(req.Body).Decode(&result)
 			fmt.Println("Burger Order: ", result)
 			formatter.JSON(w, http.StatusOK, result)
 		}
@@ -99,43 +124,58 @@ func burgerOrderStatus(formatter *render.Render) http.HandlerFunc {
 
 // API Create New Burger Order
 
-func burgerNewOrderHandler(formatter *render.Render) http.HandlerFunc {
+func burgerOrderHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		// Open MongoDB Session
+		var orderdetail RequiredPayload
+		_ = json.NewDecoder(req.Body).Decode(&orderdetail)
 		session, err := mgo.Dial(mongodb_server)
+		if err:= session.DB("admin").Login(mongo_user, mongo_pass); err != nil {
+			panic(err)
+		  }
 		if err != nil {
 			panic(err)
 		}
 		defer session.Close()
-		session.SetMode(mgo.Monotonic, true)
+		session.SetMode(mgo.Monotonic, true)		
 		c := session.DB(mongodb_database).C(mongodb_collection)
-		uuid1, _ := uuid.NewV4()
 		uuid2, _ := uuid.NewV4()
-		uuid3, _ := uuid.NewV4()
+		var order BurgerOrder
+		var newitem Items
+		err = c.Find(bson.M{"orderId" : orderdetail.OrderId}).One(&order)
+		newitem.ItemId = orderdetail.ItemId
+		newitem.ItemName = orderdetail.ItemName
+		newitem.Price = orderdetail.Price		
+		newitem.Description = orderdetail.Description
+		if err == nil {
 
-		var newOrder = burgerOrder{
-			OrderId:     uuid1.String(),
-			UserId:      uuid2.String(),
-			OrderStatus: "Order Placed",
-			TotalAmount: 50,
-			Cart: []items{
-				items{
-					ItemId:   uuid3.String(),
-					Quantity: 2,
+			fmt.Println("Orders: ", "Orders found")	
+			c.Update(bson.M{"orderId": orderdetail.OrderId}, bson.M{"$set": bson.M{"Cart": append(order.Cart, newitem)}})
+			order.Cart = append(order.Cart, newitem)
+		}else {
+				fmt.Println("Orders: ", "Orders not found")	
+				order = BurgerOrder{
+				OrderId:     orderdetail.OrderId,
+				UserId:      uuid2.String(),
+				OrderStatus: "Order Placed",
+				TotalAmount: 50,
+				Cart: []Items{
+					newitem,
 				},
-			},
+			}
+			_ = json.NewDecoder(req.Body).Decode(&order)
+			err = c.Insert(order)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
-		if orders == nil {
-			orders = make(map[string]burgerOrder)
-		}
-		orders[uuid1.String()] = newOrder
-		_ = json.NewDecoder(req.Body).Decode(&newOrder)
-		err = c.Insert(newOrder)
+		/*if orders == nil {
+			orders = make(map[string]BurgerOrder)
+		}*/
 		fmt.Println("Orders: ", orders)
-		formatter.JSON(w, http.StatusOK, newOrder)
+		formatter.JSON(w, http.StatusOK, order)
 	}
 }
-
 // API Delete Burger Order
 func burgerOrderDelete(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
@@ -144,21 +184,24 @@ func burgerOrderDelete(formatter *render.Render) http.HandlerFunc {
 			panic(err)
 		}
 		defer session.Close()
+		if err:= session.DB("admin").Login(mongo_user, mongo_pass); err != nil {
+			panic(err)
+		  }
 		session.SetMode(mgo.Monotonic, true)
 		c := session.DB(mongodb_database).C(mongodb_collection)
 		params := mux.Vars(req)
-		var uuid string = params["OrderId"]
-		fmt.Println("Order ID: ", uuid)
-		err = c.Remove(bson.M{"OrderId": uuid})
+		var uuid string = params["orderId"]
+		fmt.Println("order ID: ", uuid)
+		err = c.Remove(bson.M{"orderId": uuid})
 		fmt.Println("Delete Order: ", uuid)
 		formatter.JSON(w, http.StatusOK, uuid)
 	}
 }
 
 // API Update Burger Order
- /* func burgerOrderUpdate(formatter *render.Render) http.HandlerFunc {
+/*	func burgerOrderUpdate(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-    	var m burgerOrder
+    	var m BurgerOrder
     	_ = json.NewDecoder(req.Body).Decode(&m)
     	// fmt.Println("Update Gumball Inventory To: ", m.CountGumballs)
 		session, err := mgo.Dial(mongodb_server)
@@ -167,14 +210,17 @@ func burgerOrderDelete(formatter *render.Render) http.HandlerFunc {
         }
         defer session.Close()
         session.SetMode(mgo.Monotonic, true)
+		if err:= session.DB("admin").Login(mongo_user, mongo_pass); err != nil {
+			panic(err)
+		}
 		c := session.DB(mongodb_database).C(mongodb_collection)
-		// params := mux.Vars(req)
-		// var uuid string = params["OrderId"]
-        // query := bson.M{"OrderId" : uuid}
-        // change := bson.M{"$set": bson.M{ "CountGumballs" : m.CountGumballs}}
+		params := mux.Vars(req)
+		var uuid string = params["OrderId"]
+        query := bson.M{"OrderId" : uuid}
+        change := bson.M{"$set": bson.M{ "CountGumballs" : m.CountGumballs}}
         // err = c.Update(query, change)
         if err != nil {
-                log.Fatal(err)
+                log.Panic(err)
         }
        	var result bson.M
         err = c.Find(bson.M{"SerialNumber" : "1234998871109"}).One(&result)
@@ -183,8 +229,8 @@ func burgerOrderDelete(formatter *render.Render) http.HandlerFunc {
         }
         fmt.Println("Gumball Machine:", result )
 		formatter.JSON(w, http.StatusOK, result)
-	}
-}  */
+	} 
+} */
 
 // API Process Orders
 /* func gumballProcessOrdersHandler(formatter *render.Render) http.HandlerFunc {

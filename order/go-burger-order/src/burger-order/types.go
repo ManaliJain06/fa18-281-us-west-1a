@@ -6,16 +6,25 @@
 
 package main
 
-type items struct {
-	ItemId   string
-	Quantity int
-}
-type burgerOrder struct {
-	OrderId     string  `bson:"OrderId"`
-	UserId      string  `bson:"UserId"`
-	OrderStatus string  `bson:"OrderStatus"`
-	TotalAmount float32 `bson:"TotalAmount"`
-	Cart        []items `bson:"Cart"`
+type Items struct {
+	ItemId   string 	`json:"itemId"`
+	ItemName string 	`json:"itemName"`
+	Price 	 float32	`json:"price"`
+	Description string  `json:"description"`
+}	
+type BurgerOrder struct {
+	OrderId     string  `json:"orderId" bson:"orderId"`
+	UserId      string  `json:"userId" bson:"userId"`
+	OrderStatus string  `json:"OrderStatus" bson:"OrderStatus"`
+	Cart        []Items `json:"Cart" bson:"Cart"`
+	TotalAmount float32 `json:"TotalAmount" bson:"TotalAmount"`
 }
 
-var orders map[string]burgerOrder
+type RequiredPayload struct {
+	OrderId  string  	`json:"orderId" bson:"orderId"`
+	ItemId   string 	`json:"itemId"`
+	ItemName string 	`json:"itemName"`
+	Price 	 float32	`json:"price"`
+	Description string  `json:"description"`
+}
+var orders map[string]BurgerOrder
