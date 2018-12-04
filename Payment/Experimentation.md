@@ -178,7 +178,7 @@ docker images
 #### 7. Push docker image to dockerhub
 ```
 // Tag your image
-docker tag f3a64df81505 nerdijoe/golang-payments:latest
+docker tag c6ca4908b6ec nerdijoe/golang-payments:latest
 
 // push to your dockerhub
 docker push nerdijoe/golang-payments
@@ -196,9 +196,18 @@ docker-compose scale payments=1
 docker-compose up -d --scale payments=1 --no-recreate
 
 
+docker run --name payments -e AWS_MONGODB=mongodb://<username>:<password>@<mongo-ec2-instance-ip>:27017 -p 8000:8000 -d nerdijoe/golang-payments
+
+
 ```
 
 
+```
+docker-compose stop payments
+docker-compose rm payments
+```
+
+docker logs -f payments
 
 docker-ps:
 	 docker ps --all --format "table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}\t"
