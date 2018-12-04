@@ -2,6 +2,20 @@
 	UI Component to show payment web page
 */
 import React, { Component } from 'react';
+import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+import {
+  withRouter,
+
+} from 'react-router-dom'
+
+import axios from 'axios';
+import {paymentUrl} from '../../actions/urlConstant';
+
+
+import * as paymentActions from '../../apis/payment-api';
+
+
 import '../../index.css';
 import '../../stylesheets/payment.css';
 // import '../../stylesheets/bootstrap.min.css'
@@ -15,6 +29,23 @@ class payment extends Component {
 
 		}
 		this.handleButton = this.handleButton.bind(this);
+	}
+
+	componentDidMount = () => {
+		console.log('componentDidMount ---')
+		// this.props.PaymentGetAll();
+
+		axios.get(`${paymentUrl}/payments` )
+    .then( res => {
+      console.log('after axiosGetAll, res:', res);
+
+			// dispatch(getAll(res.data));
+			this.props.PaymentGetAll(res.data)
+    }).catch( res => {
+      console.log('xx  error axiosGetAll, error:', res);
+    })
+
+
 	}
 
 	handleButton(event) {
@@ -87,4 +118,32 @@ class payment extends Component {
 	}
 }
 
-export default payment;
+const mapStateToProps = (state) => {
+	return {
+		data: state.payment.data,
+
+	}
+}
+
+// const mapDispatchToProps = (dispatch) => {
+// 	return {
+// 		PaymentGetAll: () => { dispatch(paymentActions.axiosGetAll()); },
+// 	}
+// }
+
+function mapDispatchToProps (dispatch) {
+	return bindActionCreators({
+		PaymentGetAll: paymentActions.getAll,
+	}, dispatch)
+}
+
+// function mapDispatchToProps(dispatch) {
+// 	return bindActionCreators({
+// 			updateMenuList: updateMenuList
+// 	}, dispatch)
+// }
+
+
+const connectedPayment = connect(mapStateToProps, mapDispatchToProps)(payment);
+
+export default connectedPayment;
