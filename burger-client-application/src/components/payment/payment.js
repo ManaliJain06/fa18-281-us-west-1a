@@ -14,7 +14,7 @@ import {paymentUrl} from '../../actions/urlConstant';
 
 
 import * as paymentActions from '../../apis/payment-api';
-
+import { axiosGetAll, axiosCreatePayment} from '../../apis/payment-api'
 
 import '../../index.css';
 import '../../stylesheets/payment.css';
@@ -33,17 +33,17 @@ class payment extends Component {
 
 	componentDidMount = () => {
 		console.log('componentDidMount ---')
-		// this.props.PaymentGetAll();
+		this.props.PaymentGetAll();
 
-		axios.get(`${paymentUrl}/payments` )
-    .then( res => {
-      console.log('after axiosGetAll, res:', res);
+		// axios.get(`${paymentUrl}/payments` )
+    // .then( res => {
+    //   console.log('after axiosGetAll, res:', res);
 
-			// dispatch(getAll(res.data));
-			this.props.PaymentGetAll(res.data)
-    }).catch( res => {
-      console.log('xx  error axiosGetAll, error:', res);
-    })
+		// 	// dispatch(getAll(res.data));
+		// 	this.props.PaymentGetAll(res.data)
+    // }).catch( res => {
+    //   console.log('xx  error axiosGetAll, error:', res);
+    // })
 
 
 	}
@@ -51,6 +51,14 @@ class payment extends Component {
 	handleButton(event) {
 		event.preventDefault();
 		console.log(`handleButton orderId=${this.state.orderId}, totalAmount=${this.state.totalAmount}`);
+
+		const data = {
+			userId: 0,
+			orderId: "6",
+			totalAmount: 600,
+		}		
+
+		this.props.PaymentCreate(data);
 
 	}
 
@@ -125,17 +133,18 @@ const mapStateToProps = (state) => {
 	}
 }
 
-// const mapDispatchToProps = (dispatch) => {
-// 	return {
-// 		PaymentGetAll: () => { dispatch(paymentActions.axiosGetAll()); },
-// 	}
-// }
-
-function mapDispatchToProps (dispatch) {
-	return bindActionCreators({
-		PaymentGetAll: paymentActions.getAll,
-	}, dispatch)
+const mapDispatchToProps = (dispatch) => {
+	return {
+		PaymentGetAll: () => { dispatch(paymentActions.axiosGetAll()); },
+		PaymentCreate: (data) => { dispatch(paymentActions.axiosCreatePayment(data))} 
+	}
 }
+
+// function mapDispatchToProps (dispatch) {
+// 	return bindActionCreators({
+// 		PaymentGetAll: paymentActions.getAll,
+// 	}, dispatch)
+// }
 
 // function mapDispatchToProps(dispatch) {
 // 	return bindActionCreators({

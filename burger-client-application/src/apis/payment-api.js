@@ -37,7 +37,7 @@ export const axiosCreatePayment = (data) => (dispatch) => {
   }).then( res => {
     console.log('after axiosCreatePayment, res:', res);
     
-    // dispatch(setInputMode(res.data));
+    dispatch(createPayment(res.data));
 
   }).catch( res => {
     console.log('xx error axiosCreatePayment, error:', res);
@@ -45,10 +45,10 @@ export const axiosCreatePayment = (data) => (dispatch) => {
   
 }
 
-// export const createPayment = (data) => {
-//   return {
-//     type: actionType.PAYMENT_GET_ALL,
-//     data,
-//   }
-// }
+export const createPayment = (data) => {
+  return {
+    type: actionType.PAYMENT_CREATE,
+    data,
+  }
+}
 
