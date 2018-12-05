@@ -34,7 +34,7 @@ func MenuServer() *negroni.Negroni {
 	router := mux.NewRouter()
 	initRoutes(router, formatter)
 	allowedHeaders := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
-	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"})
+	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD","DELETE" "OPTIONS"})
 	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
 
 	n.UseHandler(handlers.CORS(allowedHeaders,allowedMethods , allowedOrigins)(router))
@@ -168,7 +168,6 @@ func updateItemsHandler(formatter *render.Render) http.HandlerFunc {
                 panic(err)
         }
         defer session.Close()
-        //session.SetMode(mgo.Monotonic, true) need to check
         item.Id = uuid.String()
         mongo_collection := session.DB(database).C(collection)
         error := mongo_collection.Insert(item)

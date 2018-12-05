@@ -36,6 +36,12 @@ docker-run:
 	docker run --name menu -td -p 8000:8000 menu
 	docker ps
 
+menu-tag:
+	docker tag menu arijitmandal/test:menu-aws
+	docker images
+
+push:
+	docker push arijitmandal/test
 
 docker-network:
 	docker network ls

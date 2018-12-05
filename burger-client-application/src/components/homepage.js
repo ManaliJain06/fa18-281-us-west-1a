@@ -7,6 +7,7 @@ import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import '../index.css';
 import burger from '../images/burger.jpg';
+import Header from './header';
 
 class Homepage extends Component{
 
@@ -22,16 +23,7 @@ class Homepage extends Component{
         console.log("home page render");
         return (
             <div className="outerdiv">
-                <div className="header">
-                    <div className="leftheader"> The Counter Custom burgers </div>
-                    <div className="rightheader">
-                        <div className="topnav">
-                            <a >Home</a>
-                            <a >Create Account</a>
-                            <a >Login</a>
-                        </div>
-                    </div>
-                </div>
+                <Header/>
                 <div className="content">
                     <div id="left">
                         <h3>1. Find your location</h3>
@@ -39,14 +31,14 @@ class Homepage extends Component{
                         <h3>3. Grab the keys</h3>
 
                         Enter your zipcode <br></br>
-                        <input type="text" id="fname" name="firstname" placeholder="Enter Zipcode"
+                        <input className = "home-page-textbox" type="text" id="fname" name="firstname" placeholder="Enter Zipcode"
                                onChange={(event) => {
                                 this.setState({
                                         zipcode: event.target.value
                                 });
                             }}/>
-                        <input type="submit" value="Go" onClick={() => {
-                            this.props.history.push("/listRestaurant");
+                        <input className = "home-page-button" type="submit" value="Go" onClick={() => {
+                            this.props.history.push(`/listRestaurant/${this.state.zipcode}`);
                         }}/>
 
                     </div>

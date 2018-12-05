@@ -14,7 +14,7 @@ func main() {
 
 	portNumber := os.Getenv("PORT")
 	if len(portNumber) == 0 {
-		portNumber = "3000"
+		portNumber = "8000"
 	}
 
 	server := NewServerConfiguration()
