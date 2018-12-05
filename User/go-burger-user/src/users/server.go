@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"fmt"
 	"github.com/codegangsta/negroni"
@@ -71,7 +70,6 @@ func GetUser(w http.ResponseWriter, req *http.Request) {
     if err != nil {
 		message := struct {Message string}{"Some error occured while connecting to database!!"}
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Fatal(err)
 		json.NewEncoder(w).Encode(message)
 		return
     }
@@ -82,9 +80,11 @@ func GetUser(w http.ResponseWriter, req *http.Request) {
     var result bson.M
     err = c.Find(query).One(&result)
     if err != nil {
-            log.Fatal(err)
+		message := struct {Message string}{"User not found!!"}
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(message)
+		return
     }
-    fmt.Println("User:", result )
 	json.NewEncoder(w).Encode(result)
 }
 
@@ -94,7 +94,6 @@ func GetAllUser(w http.ResponseWriter, req *http.Request) {
     if err != nil {
 		message := struct {Message string}{"Some error occured while connecting to database!!"}
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Fatal(err)
 		json.NewEncoder(w).Encode(message)
 		return
     }
@@ -105,7 +104,10 @@ func GetAllUser(w http.ResponseWriter, req *http.Request) {
     var result []bson.M
     err = c.Find(query).All(&result)
     if err != nil {
-            log.Fatal(err)
+		message := struct {Message string}{"No users were found!!"}
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(message)
+		return
     }
 	fmt.Println("User:", result )
 	json.NewEncoder(w).Encode(result)
@@ -122,7 +124,6 @@ func CreateUser(w http.ResponseWriter, req *http.Request) {
     if err != nil {
 		message := struct {Message string}{"Some error occured while connecting to database!!"}
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Fatal(err)
 		json.NewEncoder(w).Encode(message)
 		return
     }
@@ -133,19 +134,22 @@ func CreateUser(w http.ResponseWriter, req *http.Request) {
     var result bson.M
 	err = c.Find(query).One(&result)
 	if err != nil {
+		message := struct {Message string}{"No user with email" + person.Email +" was found !!"}
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Fatal(err)
+		json.NewEncoder(w).Encode(message)
 		return
 	}else if result != nil {
 		message := struct {Message string}{"User already exists!!"}
-
 		w.WriteHeader(http.StatusConflict)
 		json.NewEncoder(w).Encode(message)
 		return
 	}
     err = c.Insert(person)
     if err != nil {
-            log.Fatal(err)
+		message := struct {Message string}{"Some error occured while querying to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
 	}
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(person)
@@ -158,7 +162,6 @@ func DeleteUser(w http.ResponseWriter, req *http.Request) {
     if err != nil {
 		message := struct {Message string}{"Some error occured while connecting to database!!"}
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Fatal(err)
 		json.NewEncoder(w).Encode(message)
 		return
     }
@@ -168,7 +171,10 @@ func DeleteUser(w http.ResponseWriter, req *http.Request) {
 	query := bson.M{"id":params["Id"]}
     err = c.Remove(query)
     if err != nil {
-            log.Fatal(err)
+		message := struct {Message string}{"Some error occured while querying to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
     }
 	json.NewEncoder(w).Encode(params["Id"])
 }
@@ -181,7 +187,6 @@ func UpdateUser(w http.ResponseWriter, req *http.Request) {
     if err != nil {
 		message := struct {Message string}{"Some error occured while connecting to database!!"}
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Fatal(err)
 		json.NewEncoder(w).Encode(message)
 		return
     }
@@ -197,7 +202,10 @@ func UpdateUser(w http.ResponseWriter, req *http.Request) {
 						"password":person.Password}}
     err = c.Update(query, updator)
     if err != nil {
-            log.Fatal(err)
+		message := struct {Message string}{"Some error occured while querying to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
     }
 	json.NewEncoder(w).Encode(updator)
 }
@@ -209,7 +217,6 @@ func UserSignIn(w http.ResponseWriter, req *http.Request) {
     if err != nil {
 		message := struct {Message string}{"Some error occured while connecting to database!!"}
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Fatal(err)
 		json.NewEncoder(w).Encode(message)
 		return
     }
@@ -220,14 +227,16 @@ func UserSignIn(w http.ResponseWriter, req *http.Request) {
 	var result User
     err = c.Find(query).One(&result)
     if err != nil {
-            log.Fatal(err)
+		message := struct {Message string}{"No user with email" + person.Email +" was found !!"}
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(message)
+		return
 	}
 	if result == (User{}) {
 		var message string
 		message = "Login Failed"
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(message)
-
 	}else {
 		json.NewEncoder(w).Encode(result)
 	}
