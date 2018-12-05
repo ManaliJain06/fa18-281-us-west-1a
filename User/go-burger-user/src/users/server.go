@@ -109,13 +109,11 @@ func GetAllUser(w http.ResponseWriter, req *http.Request) {
 		json.NewEncoder(w).Encode(message)
 		return
     }
-	fmt.Println("User:", result )
 	json.NewEncoder(w).Encode(result)
 }
 
 func CreateUser(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	
 	var person User
 	_ = json.NewDecoder(req.Body).Decode(&person)
 	unqueId := uuid.Must(uuid.NewV4())
@@ -168,7 +166,7 @@ func DeleteUser(w http.ResponseWriter, req *http.Request) {
     defer session.Close()
     session.SetMode(mgo.Monotonic, true)
 	c := session.DB(mongodb_database).C(mongodb_collection)
-	query := bson.M{"id":params["Id"]}
+	query := bson.M{"id":params["id"]}
     err = c.Remove(query)
     if err != nil {
 		message := struct {Message string}{"Some error occured while querying to database!!"}
@@ -176,7 +174,7 @@ func DeleteUser(w http.ResponseWriter, req *http.Request) {
 		json.NewEncoder(w).Encode(message)
 		return
     }
-	json.NewEncoder(w).Encode(params["Id"])
+	json.NewEncoder(w).Encode(struct {message string }{"user with id:"+params["id"+" was deleted"]})
 }
 func UpdateUser(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -207,7 +205,7 @@ func UpdateUser(w http.ResponseWriter, req *http.Request) {
 		json.NewEncoder(w).Encode(message)
 		return
     }
-	json.NewEncoder(w).Encode(updator)
+	json.NewEncoder(w).Encode(struct {message string }{"user with id:"+params["id"+" was Updated"]})
 }
 func UserSignIn(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -233,11 +231,15 @@ func UserSignIn(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	if result == (User{}) {
-		var message string
-		message = "Login Failed"
+		message := struct {Message string}{"Login Failed"}
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(message)
-	}else {
-		json.NewEncoder(w).Encode(result)
 	}
+	userData := bson.M{ 
+						"email":result.Email,
+						"firstName":result.Firstname,
+						"lastName":result.Lastname,
+						"address":result.Address,
+						"id":result.Id}
+	json.NewEncoder(w).Encode(userData)
 }
