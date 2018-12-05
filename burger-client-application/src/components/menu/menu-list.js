@@ -23,7 +23,6 @@ class Menu extends Component{
           if(response.status===200){
               response.json().then((data)=>{
                   console.log("[Menu] items: ", data);
-
                   this.props.updateMenuList(data);
               });
           }});
@@ -59,8 +58,6 @@ class Menu extends Component{
                 this.props.updateCart(data);
             });
         }});
-
-        //this.props.updateCart( );
   }
 
   getItems(items){
@@ -70,9 +67,12 @@ class Menu extends Component{
             <td className = "menu-table-item-col">{item.name}</td>
             <td className = "menu-table-item-col">{item.description}</td>
             <td className = "menu-table-item-col">{item.calories}</td>
-            <td className = "menu-table-item-col">{item.price}</td>
+            <td className = "menu-table-item-col">$ {item.price}</td>
             <td className = "menu-table-item-col">
-              <button onClick={()=>{this.addItem(item)}}> Add to cart </button>
+            <span onClick={()=>{this.addItem(item)}}> <i className="fas fa-cart-plus"
+              style={{fontSize:24,color:"#72182a",cursor:"pointer"}}/>
+            </span>
+
             </td>
         </tr>
       )
@@ -104,7 +104,7 @@ render(){
   console.log("[Menu] render url param: ",this.props.match.params.restaurantId);
   return (
       <div className="menu-home">
-          <Header/>
+          <Header showCart={{status:true}}/>
           {this.displayMenu()}
       </div>
   )

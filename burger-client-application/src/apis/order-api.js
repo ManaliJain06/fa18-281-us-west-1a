@@ -18,6 +18,21 @@ export const getOrderItems = (orderId) =>
         return error;
     });
 
+export const deleteOrderItem = (orderId,itemId) =>
+    fetch(`${api}/order/${orderId}`, {
+        method: 'DELETE',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({itemId:itemId})
+    }).then(res => {
+        return res;
+    }).catch(error => {
+        console.log("[order-api] getOrderItems() Error !!!");
+        return error;
+    });
+
 export const  addOrderItem= (menuItem) =>
     fetch(`${api}/order`, {
         method: 'POST',
