@@ -124,14 +124,30 @@ func UpdateUser(w http.ResponseWriter, req *http.Request) {
 }
 func UserSignIn(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	params := mux.Vars(req)
-	for index, item := range people {
-		if item.Id == params["id"] {
-			people = append(people[:index], people[index+1:]...)
-			break
-		}
+	var person User
+	_ = json.NewDecoder(req.Body).Decode(&person)
+	session, err := mgo.Dial(mongodb_server)
+    if err != nil {
+           panic(err)
+    }
+    defer session.Close()
+    session.SetMode(mgo.Monotonic, true)
+	c := session.DB(mongodb_database).C(mongodb_collection)
+	query := bson.M{"email":person.Email}
+	var result User
+    err = c.Find(query).One(&result)
+    if err != nil {
+            log.Fatal(err)
 	}
-	json.NewEncoder(w).Encode(people)
+	if result == (User{}) {
+		var message string
+		message = "Login Failed"
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(message)
+
+	}else {
+		json.NewEncoder(w).Encode(result)
+	}
 }
 
 func main() {
