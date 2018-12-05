@@ -49,7 +49,9 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/restaurant", addRestaurantHandler(formatter)).Methods("POST")
 	mx.HandleFunc("/restaurant/zipcode/{zipcode}", getRestaurantHandler(formatter)).Methods("GET")
+	mx.HandleFunc("/restaurant/{restaurantId}", getRestaurantByIDHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/restaurant/{restaurantId}", deleteRestaurantHandler(formatter)).Methods("DELETE")
+	// mx.handleFunc("/restaurant/{restaurantId}", updateRestaurantHandler(formatter)).Methods("PUT")
 }
 
 // Handler for API Ping
@@ -64,32 +66,38 @@ Handler method for adding restaurant
 */
 func addRestaurantHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
+		// w.Header().Set("Content-Type", "application/json")
 		uuidForRestaurant,_ := uuid.NewV4()
-
 		session, err := mgo.Dial(mongodb_server)
 		if err != nil {
-			panic(err)
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
 		}
 		defer session.Close()
+
+		if err := session.DB(adminDatabase).Login(mongo_user, mongo_pass); err != nil {
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
+		  }
 		session.SetMode(mgo.Monotonic, true)
-		c := session.DB(mongodb_database).C(mongodb_collection)
+		collection := session.DB(mongodb_database).C(mongodb_collection)
 
 		var res restaurant
 		_=json.NewDecoder(req.Body).Decode(&res)
 		
 		res.RestaurantId = uuidForRestaurant.String()
-		fmt.Println("Restuanats: ", res)
-		err = c.Insert(res)
+		fmt.Println("Restaurants: ", res)
+		err = collection.Insert(res)
 		if err != nil {
-			log.Fatal(err)
-		}
+			formatter.JSON(w, http.StatusNotFound, "Error occureed. Cannot add restaurant")
+			return
+		} 
 		formatter.JSON(w, http.StatusOK, res)
 	}
 }
 
 /*
-Handler method for getting restaurant based on a ziplocation
+Handler method for getting all restaurants based on a ziplocation
 */
 func getRestaurantHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
@@ -97,12 +105,14 @@ func getRestaurantHandler(formatter *render.Render) http.HandlerFunc {
 
 		session, err := mgo.Dial(mongodb_server)
 		if err != nil {
-			panic(err)
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
 		}
 		defer session.Close()
 
 		if err := session.DB(adminDatabase).Login(mongo_user, mongo_pass); err != nil {
-			panic(err)
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
 		  }
 		session.SetMode(mgo.Monotonic, true)
 		collection := session.DB(mongodb_database).C(mongodb_collection)
@@ -114,55 +124,78 @@ func getRestaurantHandler(formatter *render.Render) http.HandlerFunc {
 		var res  []bson.M
         err = collection.Find(bson.M{"zipcode" : zipcode}).All(&res)
 		
-		if err != nil {
-			log.Fatal(err)
+		if res == nil || len(res) <= 0 || err != nil{
+			formatter.JSON(w, http.StatusNotFound, "Cannot find any restaurants for that zipcode") 
+		} else {
+			fmt.Println("Result: ", res)
+			formatter.JSON(w, http.StatusOK, res)
 		}
-		fmt.Println("Result: ", res)
-		formatter.JSON(w, http.StatusOK, res)
 	}
 }
+/*
+Handler method for getting restaurant based on a Id
+*/
+func getRestaurantByIDHandler(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		//w.Header().Set("Content-Type", "application/json")
 
-// func burgerOrderDelete(formatter *render.Render) http.HandlerFunc {
-// 	return func(w http.ResponseWriter, req *http.Request) {
-// 		session, err := mgo.Dial(mongodb_server)
-// 		if err != nil {
-// 			panic(err)
-// 		}
-// 		defer session.Close()
-// 		if err:= session.DB("admin").Login(mongo_user, mongo_pass); err != nil {
-// 			panic(err)
-// 		  }
-// 		session.SetMode(mgo.Monotonic, true)
-// 		c := session.DB(mongodb_database).C(mongodb_collection)
-// 		params := mux.Vars(req)
-// 		var uuid string = params["OrderId"]
-// 		fmt.Println("Order ID: ", uuid)
-// 		err = c.Remove(bson.M{"OrderId": uuid})
-// 		fmt.Println("Delete Order: ", uuid)
-// 		formatter.JSON(w, http.StatusOK, uuid)
-// 	}
-// }
+		session, err := mgo.Dial(mongodb_server)
+		if err != nil {
+			log.Fatal(err);
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
+		}
+		defer session.Close()
 
+		if err := session.DB(adminDatabase).Login(mongo_user, mongo_pass); err != nil {
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
+		  }
+		session.SetMode(mgo.Monotonic, true)
+		collection := session.DB(mongodb_database).C(mongodb_collection)
+
+		params := mux.Vars(req)
+		var restaurantId string = params["restaurantId"]
+		
+		var res  []bson.M
+        err = collection.Find(bson.M{"restaurantId" : restaurantId}).One(&res)
+		
+		if res == nil || err != nil {
+			formatter.JSON(w, http.StatusNotFound, "Cannot find restaurant")
+		} else {	
+			fmt.Println("Result: ", res)
+			res := json.NewEncoder(w).Encode(res)
+			formatter.JSON(w, http.StatusOK, res)
+		}
+	}
+}
 func deleteRestaurantHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		
 		session, err := mgo.Dial(mongodb_server)
 		if err != nil {
-			panic(err)
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
 		}
 		defer session.Close()
+
+		if err := session.DB(adminDatabase).Login(mongo_user, mongo_pass); err != nil {
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
+		  }
 		session.SetMode(mgo.Monotonic, true)
 		c := session.DB(mongodb_database).C(mongodb_collection)
 		
 		params := mux.Vars(req)
 
 		var result bson.M
-		err = c.Find(bson.M{"RestaurantId": params["restaurantId"]}).One(&result)
-		if err != nil {
-			log.Fatal(err)
-		} 
-		
-		formatter.JSON(w, http.StatusOK, result)
+		err = c.Find(bson.M{"restaurantid": params["restaurantId"]}).One(&result)
+		if err == nil {
+			c.Remove(bson.M{"restaurantid": params["restaurantId"]})
+			formatter.JSON(w, http.StatusOK, result)
+		} else {
+			formatter.JSON(w, http.StatusNotFound, "Restaurant not found for delete")
+		}	
 	}
 }
 
@@ -171,44 +204,50 @@ func deleteRestaurantHandler(formatter *render.Render) http.HandlerFunc {
 		
 // 		session, err := mgo.Dial(mongodb_server)
 // 		if err != nil {
-// 			panic(err)
+// 			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+// 			return
 // 		}
 // 		defer session.Close()
+
+// 		if err := session.DB(adminDatabase).Login(mongo_user, mongo_pass); err != nil {
+// 			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+// 			return
+// 		  }
 // 		session.SetMode(mgo.Monotonic, true)
 // 		c := session.DB(mongodb_database).C(mongodb_collection)
 		
 // 		params := mux.Vars(req)
 
-// 		var res restaurant
-// 		_=json.NewDecoder(req.Body).Decode(&res)
+// 		var newRes restaurant
+// 		_=json.NewDecoder(req.Body).Decode(&newRes)
 
 // 		var newRestaurant bson.M
-// 		err = c.Find(bson.M{"RestaurantId": params["restaurantId"]}).One(&newRestaurant)
+// 		err = c.Find(bson.M{"restaurantId":res.restaurantId}).One(&newRestaurant)
 // 		if err != nil {
-// 			log.Fatal(err)
-// 		} 
+// 			formatter.JSON(w, http.StatusNotFound, "Restaurant not found for update")
+// 			return 
+// 		} else {
+// 			query := bson.M{"id":params["id"]}
+// 			updatorQuery := bson.M{"$set": bson.M{"restaurantName": res.restaurantName
+// 						"zipcode": res.zipcode
+// 						"phone": res.phone
+// 						"addressLine1": res.addressLine1
+// 						"addressLine2": res.addressLine2
+// 						"city": res.city
+// 						"state": res.state
+// 						"country": res.country
+// 						"hours": res.hours
+// 						"acceptedCards": res.acceptedCards
+// 						"distance": res.distance
+// 						"email": res.email}}
+//     		err = c.Update(query, updatorQuery)
 
-// 		newRestaurant["restaurantName"] = res.restaurantName
-// 		newRestaurant["zipcode"] = res.zipcode
-// 		newRestaurant["phone"] = res.phone
-// 		newRestaurant["addressLine1"] = res.addressLine1
-// 		newRestaurant["addressLine2"] = res.addressLine2
-// 		newRestaurant["city"] = res.city
-// 		newRestaurant["state"] = res.state
-// 		newRestaurant["country"] = res.country
-// 		newRestaurant["hours"] = res.hours
-// 		newRestaurant["acceptedCards"] = res.acceptedCards
-// 		newRestaurant["distance"] = res.distance
-// 		newRestaurant["email"] = res.email
-
-
-// 		query := bson.M{"restaurantId": params["restaurantId"]}
-// 		// change := bson.M{"$set": bson.M{ "CountGumballs" : m.CountGumballs}}
-// 		err = c.Update(query, &newRestaurant)
-// 		if err != nil {
-// 			log.Fatal(err)
+//     		if err != nil {
+// 				formatter.JSON(w, http.StatusInternalServerError, "Error Occured while Updating")
+// 				return
+// 			} else {
+// 				formatter.JSON(w, http.StatusOK, newRestaurant)
+// 			}
 // 		}
-
-// 		formatter.JSON(w, http.StatusOK, newRestaurant)
 // 	}
 // }

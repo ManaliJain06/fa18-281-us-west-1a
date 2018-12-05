@@ -17,7 +17,6 @@ const store = createStore(
     compose(
         middlewares,
     )
-
 );
 
 ReactDOM.render(

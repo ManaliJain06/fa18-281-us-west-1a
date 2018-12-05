@@ -44,10 +44,10 @@ func MenuServer() *negroni.Negroni {
 // Menu Service API Routes
 func initRoutes(router *mux.Router, formatter *render.Render) {
 	router.HandleFunc("/menu/ping", pingHandler(formatter)).Methods("GET")
-	router.HandleFunc("/menu/", createMenuItemHandler(formatter)).Methods("POST")
+	router.HandleFunc("/menu", createMenuItemHandler(formatter)).Methods("POST")
 	router.HandleFunc("/menu/{restaurantId}", findRestaurantMenu(formatter)).Methods("GET")
-	router.HandleFunc("/menu/", updateMenuItemHandler(formatter)).Methods("PUT")
-	router.HandleFunc("/menu/", deleteMenuItemHandler(formatter)).Methods("DELETE")
+	router.HandleFunc("/menu", updateMenuItemHandler(formatter)).Methods("PUT")
+	router.HandleFunc("/menu", deleteMenuItemHandler(formatter)).Methods("DELETE")
 
 }
 

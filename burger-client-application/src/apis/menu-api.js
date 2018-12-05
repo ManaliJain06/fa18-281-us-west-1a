@@ -19,7 +19,7 @@ export const getRestaurantMenuItems = (restaurantId) =>
     });
 
 export const AddMenuItem = (menuItem) =>
-    fetch(`${api}/menu/item`, {
+    fetch(`${api}/menu/`, {
         method: 'POST',
         headers: {
             ...headers,

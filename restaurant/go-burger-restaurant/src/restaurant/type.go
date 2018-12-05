@@ -6,7 +6,7 @@ type restaurant struct {
 	Zipcode			string  `json:"zipcode"`
 	Phone			string	`json:"phone"`
 	AddressLine1	string  `json:"addressLine1"`
-	AddressLine2	string  `json:"addressLine1"`
+	AddressLine2	string  `json:"addressLine2"`
 	City			string  `json:"city"`
 	State			string  `json:"state"`
 	Country			string  `json:"country"`

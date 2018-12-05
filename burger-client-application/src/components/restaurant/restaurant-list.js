@@ -35,16 +35,7 @@ class ListRestaurant extends Component{
             if(this.props.restaurants.restaurantList && this.props.restaurants.restaurantList.length>0){
                 return (
                     <div className="outerdiv">
-                        <div className="header">
-                            <div className="leftheader"> The Counter Custom burgers </div>
-                            <div className="rightheader">
-                                <div className="topnav">
-                                    <a >Home</a>
-                                    <a >Create Account</a>
-                                    <a >Login</a>
-                                </div>
-                            </div>
-                        </div>
+                        <Header showCart={{status:true}}/>
                         <div className="content">
                             <div className="card">
                                 <table className="tableRestaurant">
@@ -60,18 +51,17 @@ class ListRestaurant extends Component{
 
                                                 <tr className = "row">
                                                     <td className = "streetaddress">{res.restaurantName} <br></br>
-                                                        {res.AddressLine1} <br></br>
+                                                        {res.addressLine1} <br></br>
                                                         {res.city} {res.state}<br></br>
-                                                        {res.AddressLine2} <br></br>
-                                                        <div>"Phone: "</div> {res.phone} <br></br>
+                                                        {res.addressLine2} <br></br>
+                                                        <div>Phone: </div> {res.phone} <br></br>
                                                     </td>
                                                     <td>{res.hours}</td>
                                                     <td>{res.distance}</td>
-                                                    <td> <input type="submit" value="Order" onClick={() => {
-                                                        this.props.history.push("/menu/"+res.restaurantId);}}/>
+                                                    <td> <input className = "home-page-button" type="submit" value="Order" onClick={() => {
+                                                        this.props.history.push("/menu/"+res.restaurantid);}}/>
                                                     </td>
                                                 </tr>
-
                                         ))
                                     }
                                     </tbody>
@@ -81,7 +71,9 @@ class ListRestaurant extends Component{
                     </div>
                 )
             } else {
-                    return null
+                return (
+                    <Header showCart={{status:true}}/>
+                )
                 }
         }
     }
