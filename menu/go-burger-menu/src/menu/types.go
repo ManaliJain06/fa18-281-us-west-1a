@@ -7,16 +7,15 @@ package main
 // Item structure 
 type Item struct {
 
-	Id             	string 	
-	Name		    string    	
-	Price 			int	    
-	Description 	string	
-	Calories		int
+	Id             	string 	`json:"id"`
+	Name		    string   `json:"name"` 	
+	Price 			int	    `json:"price"`
+	Description 	string	`json:"description"`
+	Calories		int     `json:"calories"`
 }
 
 type Menu struct {
 	RestaurantId	string	`json:"resId"`
-	RestaurantName	string 	
 	Items 			[]Item   `json:"items"`
 }
 
@@ -31,8 +30,12 @@ type menuItem struct {
 
 type restaurantReqBody struct {
 	RestaurantId	string	`json:"resId"`
-	RestaurantName	string 	
 	Item			Item   `json:"item"`
+}
+
+type deleteReqBody struct {
+	RestaurantId	string	`json:"resId"`
+	ItemId			string `json:"itemId`
 }
 
 
