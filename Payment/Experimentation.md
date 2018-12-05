@@ -217,4 +217,6 @@ docker-ps-ports:
 
 
 
-
+Enable CORS
+// Added Handler package
+go get -v github.com/gorilla/handlers

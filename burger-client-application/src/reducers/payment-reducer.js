@@ -3,6 +3,10 @@ import * as actionType from '../actions/payment-actions';
 const initialState = {
   data: [],
   paymentData: {},
+  orderDetail: {
+    orderId: '',
+    totalAmount: 0,
+  },
 }
 
 const PaymentReducer = (state = initialState, action) => {
@@ -19,14 +23,25 @@ const PaymentReducer = (state = initialState, action) => {
     }
     case actionType.PAYMENT_CREATE: {
       console.log('Payment Create');
-      console.log('action.data =', action.data)
+      console.log('action.data =', action.data);
 
       return {
         ...state,
         paymentData: action.data,
-        
+
       }
     }
+    case actionType.PAYMENT_GET_ORDER_DETAIL: {
+      console.log('Payment get order detail');
+      console.log('action.data=', action.data);
+
+      return {
+        ...state,
+        orderDetail: action.data,
+      }
+    }
+
+
     default:
       return state;
   }
