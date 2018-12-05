@@ -5,6 +5,9 @@
 */
 
 package main
+import (
+	"net"
+)
 
 type Items struct {
 	ItemId   string 	`json:"itemId"`
@@ -18,6 +21,7 @@ type BurgerOrder struct {
 	OrderStatus string  `json:"orderStatus" bson:"orderStatus"`
 	Cart        []Items `json:"items" bson:"items"`
 	TotalAmount float32 `json:"totalAmount" bson:"totalAmount"`
+	IpAddress	net.IP	`json:"ipaddress" bson:"ipaddress"`
 }
 
 type RequiredPayload struct {
