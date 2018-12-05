@@ -34,7 +34,7 @@ func MenuServer() *negroni.Negroni {
 	router := mux.NewRouter()
 	initRoutes(router, formatter)
 	allowedHeaders := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
-	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"})
+	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD","DELETE" "OPTIONS"})
 	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
 
 	n.UseHandler(handlers.CORS(allowedHeaders,allowedMethods , allowedOrigins)(router))

@@ -1,6 +1,13 @@
 .table-menu{
   margin: 5% 18% 2% 18%;
   width: 60%;
+  border-spacing: 10px;
+}
+
+.table-menu th{
+  border-bottom: 3px solid #72182a;
+  text-align: center;
+  padding: 5px;
 }
 
 .menu-table-header-row{
@@ -19,5 +26,17 @@
 }
 
 .menu-home{
-    padding: 70px 80px 50px 70px;
+    padding: 20px 80px 50px 70px;
+}
+
+.order-table-total-text{
+  text-align: right;
+  font-weight: bold;
+  border-top: 5px solid black;
+
+}
+.order-table-total-amount{
+  text-align: left;
+  font-weight: bold;
+  border-top: 5px solid black;
 }
