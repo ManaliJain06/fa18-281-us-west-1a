@@ -2,20 +2,66 @@ package main
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"fmt"
-
+	"github.com/codegangsta/negroni"
+	"github.com/unrolled/render"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/satori/go.uuid"
+	"net"
 )
 
-var people []User
-var mongodb_server = "localhost"
+var mongodb_server = "13.56.140.21:27017"
 var mongodb_database = "burger"
 var mongodb_collection = "Users"
+var mongo_admin_database = "admin"
+var mongo_username = "mongo-admin"
+var mongo_password = "cmpe281"
+
+func MenuServer() *negroni.Negroni {
+	formatter := render.New(render.Options{
+		IndentJSON: true,
+	})
+	n := negroni.Classic()
+	router := mux.NewRouter()
+	initRoutes(router, formatter)
+	allowedHeaders := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
+	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD","DELETE", "OPTIONS"})
+	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
+
+	n.UseHandler(handlers.CORS(allowedHeaders,allowedMethods , allowedOrigins)(router))
+	return n
+}
+
+func initRoutes(router *mux.Router, formatter *render.Render) {
+	router.HandleFunc("/users", GetAllUser).Methods("GET")
+	router.HandleFunc("/users/{id}", GetUser).Methods("GET")
+	router.HandleFunc("/users/signup", CreateUser).Methods("POST")
+	router.HandleFunc("/users/signin", UserSignIn).Methods("POST")
+	router.HandleFunc("/users/{id}", DeleteUser).Methods("DELETE")
+	router.HandleFunc("/users/{id}", UpdateUser).Methods("PUT")
+	router.HandleFunc("/users/test/ping", checkPing(formatter)).Methods("GET")
+}
+
+func checkPing(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		message := "Burger Users API Server Working on machine: " + getSystemIp()
+		formatter.JSON(w, http.StatusOK, struct{ Test string }{message})
+	}
+}
+
+func getSystemIp() string {
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+    if err != nil {
+		return "" 
+	}
+     defer conn.Close()
+	 localAddr := conn.LocalAddr().(*net.UDPAddr).String()
+	 return localAddr
+}
 
 func GetUser(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -25,18 +71,35 @@ func GetUser(w http.ResponseWriter, req *http.Request) {
     fmt.Println("Get data of user: ", params["id"])
 	session, err := mgo.Dial(mongodb_server)
     if err != nil {
-           panic(err)
-    }
+		message := struct {Message string}{"Some error occured while connecting to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
+	err = session.DB(mongo_admin_database).Login(mongo_username, mongo_password)
+	if err != nil {
+		message := struct {Message string}{"Some error occured while login to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
     defer session.Close()
     session.SetMode(mgo.Monotonic, true)
     c := session.DB(mongodb_database).C(mongodb_collection)
     query := bson.M{"id" : params["id"]}
     var result bson.M
     err = c.Find(query).One(&result)
-    if err != nil {
-            log.Fatal(err)
-    }
-    fmt.Println("User:", result )
+    if err != nil && err != mgo.ErrNotFound{
+		message := struct {Message string}{"Some error occured while querying to database!!"}
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(message)
+		return
+    }else if err == mgo.ErrNotFound{
+		message := struct {Message string}{"User not found"}
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
 	json.NewEncoder(w).Encode(result)
 }
 
@@ -44,8 +107,18 @@ func GetAllUser(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	session, err := mgo.Dial(mongodb_server)
     if err != nil {
-           panic(err)
-    }
+		message := struct {Message string}{"Some error occured while connecting to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
+	err = session.DB(mongo_admin_database).Login(mongo_username, mongo_password)
+	if err != nil {
+		message := struct {Message string}{"Some error occured while login to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
     defer session.Close()
     session.SetMode(mgo.Monotonic, true)
     c := session.DB(mongodb_database).C(mongodb_collection)
@@ -53,30 +126,59 @@ func GetAllUser(w http.ResponseWriter, req *http.Request) {
     var result []bson.M
     err = c.Find(query).All(&result)
     if err != nil {
-            log.Fatal(err)
+		message := struct {Message string}{"No users were found!!"}
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(message)
+		return
     }
-	fmt.Println("User:", result )
 	json.NewEncoder(w).Encode(result)
 }
 
 func CreateUser(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
 	var person User
 	_ = json.NewDecoder(req.Body).Decode(&person)
 	unqueId := uuid.Must(uuid.NewV4())
 	person.Id = unqueId.String()
 	session, err := mgo.Dial(mongodb_server)
     if err != nil {
-           panic(err)
-    }
+		message := struct {Message string}{"Some error occured while connecting to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
+	err = session.DB(mongo_admin_database).Login(mongo_username, mongo_password)
+	if err != nil {
+		message := struct {Message string}{"Some error occured while login to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
     defer session.Close()
     session.SetMode(mgo.Monotonic, true)
-    c := session.DB(mongodb_database).C(mongodb_collection)
+	c := session.DB(mongodb_database).C(mongodb_collection)
+	query := bson.M{"email" : person.Email}
+    var result bson.M
+	err = c.Find(query).One(&result)
+	if err != nil && err != mgo.ErrNotFound{
+		message := struct {Message string}{"Some error occured while querying to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
+	}else if result != nil {
+		message := struct {Message string}{"User already exists!!"}
+		w.WriteHeader(http.StatusConflict)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
     err = c.Insert(person)
     if err != nil {
-            log.Fatal(err)
-    }
+		message := struct {Message string}{"Some error occured while querying to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(person)
 }
 
@@ -85,17 +187,31 @@ func DeleteUser(w http.ResponseWriter, req *http.Request) {
 	params := mux.Vars(req)
 	session, err := mgo.Dial(mongodb_server)
     if err != nil {
-           panic(err)
-    }
+		message := struct {Message string}{"Some error occured while connecting to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
+	err = session.DB(mongo_admin_database).Login(mongo_username, mongo_password)
+	if err != nil {
+		message := struct {Message string}{"Some error occured while login to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
     defer session.Close()
     session.SetMode(mgo.Monotonic, true)
 	c := session.DB(mongodb_database).C(mongodb_collection)
-	query := bson.M{"id":params["Id"]}
+	query := bson.M{"id":params["id"]}
     err = c.Remove(query)
     if err != nil {
-            log.Fatal(err)
+		message := struct {Message string}{"Some error occured while querying to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		fmt.Println("error:"+ err.Error())
+		return
     }
-	json.NewEncoder(w).Encode(people)
+	json.NewEncoder(w).Encode(struct {Message string }{"user with id:"+params["id"]+" was deleted"})
 }
 func UpdateUser(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -104,8 +220,18 @@ func UpdateUser(w http.ResponseWriter, req *http.Request) {
 	params := mux.Vars(req)
 	session, err := mgo.Dial(mongodb_server)
     if err != nil {
-           panic(err)
-    }
+		message := struct {Message string}{"Some error occured while connecting to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
+	err = session.DB(mongo_admin_database).Login(mongo_username, mongo_password)
+	if err != nil {
+		message := struct {Message string}{"Some error occured while login to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
     defer session.Close()
     session.SetMode(mgo.Monotonic, true)
 	c := session.DB(mongodb_database).C(mongodb_collection)
@@ -117,30 +243,61 @@ func UpdateUser(w http.ResponseWriter, req *http.Request) {
 						"address":person.Address,
 						"password":person.Password}}
     err = c.Update(query, updator)
-    if err != nil {
-            log.Fatal(err)
-    }
-	json.NewEncoder(w).Encode(updator)
+    if err != nil && err != mgo.ErrNotFound{
+		message := struct {Message string}{"Some error occured while querying to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
+    }else if err == mgo.ErrNotFound{
+		message := struct {Message string}{"User not found!!"}
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
+	json.NewEncoder(w).Encode(struct {Message string }{"user with id:"+params["id"]+" was Updated"})
 }
 func UserSignIn(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	params := mux.Vars(req)
-	for index, item := range people {
-		if item.Id == params["id"] {
-			people = append(people[:index], people[index+1:]...)
-			break
-		}
+	var person User
+	_ = json.NewDecoder(req.Body).Decode(&person)
+	session, err := mgo.Dial(mongodb_server)
+    if err != nil {
+		message := struct {Message string}{"Some error occured while connecting to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
 	}
-	json.NewEncoder(w).Encode(people)
-}
-
-func main() {
-	router := mux.NewRouter()
-	router.HandleFunc("/users", GetAllUser).Methods("GET")
-	router.HandleFunc("/users/{id}", GetUser).Methods("GET")
-	router.HandleFunc("/users/signup", CreateUser).Methods("POST")
-	router.HandleFunc("/users/signin", UserSignIn).Methods("POST")
-	router.HandleFunc("/users/{id}", DeleteUser).Methods("DELETE")
-	router.HandleFunc("/users/{id}", UpdateUser).Methods("PUT")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	err = session.DB(mongo_admin_database).Login(mongo_username, mongo_password)
+	if err != nil {
+		message := struct {Message string}{"Some error occured while login to database!!"}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
+    defer session.Close()
+    session.SetMode(mgo.Monotonic, true)
+	c := session.DB(mongodb_database).C(mongodb_collection)
+	query := bson.M{"email":person.Email,
+					"password":person.Password}
+	var result User
+    err = c.Find(query).One(&result)
+    if err != nil && err != mgo.ErrNotFound{
+		message := struct {Message string}{"Some error occured while querying to database!!"}
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
+	if err == mgo.ErrNotFound {
+		message := struct {Message string}{"Login Failed"}
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
+	userData := bson.M{ 
+						"email":result.Email,
+						"firstName":result.Firstname,
+						"lastName":result.Lastname,
+						"address":result.Address,
+						"id":result.Id}
+	json.NewEncoder(w).Encode(userData)
 }
