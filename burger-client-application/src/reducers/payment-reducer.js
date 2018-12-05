@@ -2,6 +2,7 @@ import * as actionType from '../actions/payment-actions';
 
 const initialState = {
   data: [],
+  paymentData: {},
 }
 
 const PaymentReducer = (state = initialState, action) => {
@@ -12,10 +13,20 @@ const PaymentReducer = (state = initialState, action) => {
       
       return {
         ...state,
-        data: action.data
+        data: action.data,
+
       }
     }
+    case actionType.PAYMENT_CREATE: {
+      console.log('Payment Create');
+      console.log('action.data =', action.data)
 
+      return {
+        ...state,
+        paymentData: action.data,
+        
+      }
+    }
     default:
       return state;
   }
