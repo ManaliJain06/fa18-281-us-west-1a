@@ -21,8 +21,8 @@ import (
 )
 
 // MongoDB Config
-//var mongodb_server = "13.57.246.180"
-var mongodb_server = "10.0.0.117"
+var mongodb_server = "13.57.246.180"
+//var mongodb_server = "10.0.0.117"
 //var mongodb_server = "dockerhost"
 var mongodb_database = "burger"
 var mongodb_collection = "order"
@@ -83,7 +83,7 @@ func failOnError(err error, msg string) {
 // API Ping Handler
 func pingHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		formatter.JSON(w, http.StatusOK, struct{ Test string }{"burger-order API is up!"})
+		formatter.JSON(w, http.StatusOK, struct{ Test string }{"burger-order API is up!" })
 	}
 }
 
@@ -95,7 +95,8 @@ func burgerOrderStatus(formatter *render.Render) http.HandlerFunc {
 		session.SetMode(mgo.Monotonic, true)
 		err:= session.DB("admin").Login(mongo_user, mongo_pass)
 		if err!=nil{
-			panic(err)
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
 		}
 		c := session.DB(mongodb_database).C(mongodb_collection)
 		params := mux.Vars(req)
@@ -110,6 +111,7 @@ func burgerOrderStatus(formatter *render.Render) http.HandlerFunc {
 			var result BurgerOrder
 			err = c.Find(bson.M{"orderId":uuid}).One(&result)
 			if err!=nil {
+				formatter.JSON(w, http.StatusNotFound, "Order Not Found")
 				return
 			}
 			_ = json.NewDecoder(req.Body).Decode(&result)
@@ -128,7 +130,8 @@ func burgerOrderHandler(formatter *render.Render) http.HandlerFunc {
 		_ = json.NewDecoder(req.Body).Decode(&orderdetail)
 		session, err := mgo.Dial(mongodb_server)
 		if err:= session.DB("admin").Login(mongo_user, mongo_pass); err != nil {
-			panic(err)
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
 		}
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)		
@@ -142,22 +145,6 @@ func burgerOrderHandler(formatter *render.Render) http.HandlerFunc {
 		newitem.ItemName = orderdetail.ItemName
 		newitem.Price = orderdetail.Price		
 		newitem.Description = orderdetail.Description
-		ifaces, _ := net.Interfaces()
-		// GET IP
-		for _, i := range ifaces {
-			addrs, _ := i.Addrs()
-			for _, addr := range addrs {
-				var ip net.IP
-				switch v := addr.(type) {
-				case *net.IPNet:
-						ip = v.IP
-						order.IpAddress = ip
-				case *net.IPAddr:
-						ip = v.IP
-						order.IpAddress = ip
-				}
-			}
-		}
 		if err == nil {
 			order.Cart = append(order.Cart, newitem)
 			order.TotalAmount = (order.TotalAmount + newitem.Price)
@@ -179,7 +166,8 @@ func burgerOrderHandler(formatter *render.Render) http.HandlerFunc {
 			_ = json.NewDecoder(req.Body).Decode(&order)
 			err = c.Insert(order)
 			if err != nil {
-				log.Fatal(err)
+				formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+				return
 			}
 		}
 		fmt.Println("Orders: ", orders)
@@ -191,11 +179,13 @@ func burgerOrderDelete(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		session, err := mgo.Dial(mongodb_server)
 		if err != nil {
-			panic(err)
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
 		}
 		defer session.Close()
 		if err:= session.DB("admin").Login(mongo_user, mongo_pass); err != nil {
-			panic(err)
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
 		  }
 		session.SetMode(mgo.Monotonic, true)
 		c := session.DB(mongodb_database).C(mongodb_collection)
@@ -208,6 +198,7 @@ func burgerOrderDelete(formatter *render.Render) http.HandlerFunc {
 		err = c.Find(bson.M{"orderId":uuid}).One(&result)
 		if err!=nil{
 			fmt.Println("order not found")
+			formatter.JSON(w, http.StatusNotFound, "Order Not Found")
 			return
 		}
 		for i := 0; i < len(result.Cart); i++ {
@@ -219,7 +210,6 @@ func burgerOrderDelete(formatter *render.Render) http.HandlerFunc {
 		}
 		c.Update(bson.M{"orderId": uuid}, bson.M{"$set": bson.M{"items": result.Cart}})
 		c.Update(bson.M{"orderId": uuid}, bson.M{"$set": bson.M{"totalAmount": result.TotalAmount}})
-		//err = c.Remove(bson.M{"orderId": uuid})
 		fmt.Println("Delete Item: ", orderdetail.ItemId, "from order", uuid)
 		formatter.JSON(w, http.StatusOK, result)
 	}
@@ -234,7 +224,8 @@ func burgerOrderDelete(formatter *render.Render) http.HandlerFunc {
 		session.SetMode(mgo.Monotonic, true)
 		err:= session.DB("admin").Login(mongo_user, mongo_pass)
 		if err!=nil{
-			panic(err)
+			formatter.JSON(w, http.StatusInternalServerError, "Order Not Found")
+			return
 		}
 		c := session.DB(mongodb_database).C(mongodb_collection)
 		params := mux.Vars(req)
@@ -244,6 +235,7 @@ func burgerOrderDelete(formatter *render.Render) http.HandlerFunc {
 		err = c.Find(bson.M{"orderId": uuid}).One(&orderpaid)
         if err != nil {
 			fmt.Println("Order not found") 
+			formatter.JSON(w, http.StatusNotFound, "Order Not Found")
 			return
         }
 		orderpaid.OrderStatus = "Paid"
