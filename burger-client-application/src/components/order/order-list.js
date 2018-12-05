@@ -1,12 +1,8 @@
 /*
 	UI Component to show order
 */
-
-/*
-	UI Component to show all menu items
-*/
-
 import React, {Component} from 'react';
+import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as orderApi from './../../apis/order-api';
@@ -14,6 +10,18 @@ import {updateCart} from './../../actions/order-actions';
 import '../../stylesheets/menu-list.css';
 import uuidv4 from "uuid";
 import Header from '../header';
+
+const checkoutButtonStyle = {
+  float:"right",
+  marginRight:"5%",
+  width:"25%",
+  fontSize:20,
+  borderRadius:8,
+  borderColor:"#72182a",
+  borderWidth:2,
+  color:"#72182a",
+  cursor:"pointer"
+}
 
 class Order extends Component{
 
@@ -59,7 +67,7 @@ class Order extends Component{
           <tr className = "menu-table-item-row">
               <td className = "menu-table-item-col">{item.itemName}</td>
               <td className = "menu-table-item-col">{item.description}</td>
-              <td className = "menu-table-item-col">{item.price}</td>
+              <td className = "menu-table-item-col"> $ {item.price}</td>
               <td className = "menu-table-item-col">
                 <span onClick={()=>{this.deleteItem(item)}}><i className="fa fa-close"
                   style={{fontSize:24,color:"#72182a",cursor:"pointer"}}/>
@@ -68,30 +76,30 @@ class Order extends Component{
           </tr>
         )
       })
-
-
   }
 
   displayOrder(){
     if(this.props.order.items && this.props.order.items.length > 0){
       console.log("[Order] displayOrderItems items: ",this.props.order.items )
       return(
+        <div className = "menu-item-div">
         <table className="table-menu">
           <tbody>
-          <tr className = "menu-table-header-row">
-              <th  className = "menu-table-item-col">Name</th>
-              <th  className = "menu-table-item-col">Content</th>
-              <th  className = "menu-table-item-col">Price</th>
-          </tr>
-          {this.getOrderItems(this.props.order.items)}
-          <tr className = "order-table-total-row">
-            <td className="order-table-total-amount"><span><i></i></span></td>
-            <td className = "order-table-total-text">Total Amount </td>
-            <td className = "order-table-total-amount"> {this.props.order && this.props.order.totalAmount?this.props.order.totalAmount:0}</td>
-          </tr>
+              <tr className = "menu-table-header-row">
+                  <th  className = "menu-table-item-col"> Name</th>
+                  <th  className = "menu-table-item-col"> Content</th>
+                  <th  className = "menu-table-item-col"> Price</th>
+              </tr>
+              {this.getOrderItems(this.props.order.items)}
+              <tr className = "order-table-total-row">
+                <td className="order-table-total-amount"></td>
+                <td className = "order-table-total-text"> Total Amount </td>
+                <td className = "order-table-total-amount"> $ {this.props.order && this.props.order.totalAmount?this.props.order.totalAmount:0}</td>
+              </tr>
           </tbody>
-
-        </table>)
+        </table>
+        <button style={checkoutButtonStyle} onClick={()=>{this.props.history.push("/payment")}}>Checkout </button>
+      </div>)
 
     }else{
       return (<h2> No items in the cart !!! </h2>)
@@ -122,4 +130,4 @@ function mapDispatchToProps(dispatch) {
     }, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Order);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Order));

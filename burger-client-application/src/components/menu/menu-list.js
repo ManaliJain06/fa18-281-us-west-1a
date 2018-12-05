@@ -83,6 +83,7 @@ class Menu extends Component{
     if(this.props.menu.items && this.props.menu.items.length > 0){
       console.log("[Menu] displayMenuItems items: ",this.props.menu.items )
       return(
+        <div className = "menu-item-div">
         <table className="table-menu">
           <tbody>
           <tr className = "menu-table-header-row">
@@ -93,10 +94,11 @@ class Menu extends Component{
           </tr>
           {this.getItems(this.props.menu.items)}
           </tbody>
-        </table>)
+        </table>
+        </div>)
 
     }else{
-      return null
+      return  null
     }
   }
 

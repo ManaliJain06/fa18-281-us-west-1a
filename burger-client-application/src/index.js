@@ -16,7 +16,6 @@ const store = createStore(
     allreducers,
     compose(
         middlewares,
-        devTools
     )
 
 );

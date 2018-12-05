@@ -1,7 +1,11 @@
 .table-menu{
-  margin: 5% 18% 2% 18%;
-  width: 60%;
+  width: 100%;
   border-spacing: 10px;
+}
+
+.menu-item-div{
+  margin: 3% 10% 2% 10%;
+  width:75%;
 }
 
 .table-menu th{
