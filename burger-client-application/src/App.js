@@ -16,7 +16,7 @@ class App extends Component {
           <Switch>
             <Route exact path= "/" render = {() => (<Homepage/>)}/>
             <Route exact path= "/menu/:restaurantId" render = {(match) => (<Menu {...match}/>)}/>
-            <Route path="/listRestaurant" render={() => (<ListRestaurant/>)}/>
+            <Route exact path="/listRestaurant/:zipcode" render={(match) => (<ListRestaurant {...match}/>)}/>
           </Switch>
       </div>
     );

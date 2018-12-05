@@ -41,3 +41,19 @@ Backup of *.doc*
 # Excel Backup File
 *.xlk
 
+.idea
+
+.exec
+
+.DS_Store
+_obj
+_test
+_testmain.go
+
+/VERSION.cache
+/pkg/
+github.com
+/src/gopkg.in/
+/src/goinstall.log
+/go-burger-restaurant/src/restaurant.exe
+

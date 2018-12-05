@@ -14,15 +14,18 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/unrolled/render"
 	"github.com/satori/go.uuid"
+	"github.com/gorilla/handlers"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
 // Configuration parameters for MongoDB databse
-var mongodb_server = "localhost"
+var mongodb_server = "54.67.41.59:27017"
 var mongodb_database = "burger"
-var mongodb_collection = "restaurantLocation"
-
+var mongodb_collection = "restaurant"
+var mongo_user = "mongo-admin"
+var mongo_pass = "cmpe281"
+var adminDatabase = "admin"
 /*
 Reference for Server configuration taken from - https://github.com/paulnguyen/cmpe281/blob/master/golabs/godata/go-gumball-mongo/src/gumball/server.go
 */
@@ -33,7 +36,11 @@ func NewServerConfiguration() *negroni.Negroni {
 	n := negroni.Classic()
 	mx := mux.NewRouter()
 	initRoutes(mx, formatter)
-	n.UseHandler(mx)
+	allowedHeaders := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
+    allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"})
+    allowedOrigins := handlers.AllowedOrigins([]string{"*"})
+
+    n.UseHandler(handlers.CORS(allowedHeaders, allowedMethods, allowedOrigins)(mx))
 	return n
 }
 
@@ -41,14 +48,14 @@ func NewServerConfiguration() *negroni.Negroni {
 func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/restaurant", addRestaurantHandler(formatter)).Methods("POST")
-	mx.HandleFunc("/restaurant/zipcode/{zipcode}", addRestaurantHandler(formatter)).Methods("GET")
+	mx.HandleFunc("/restaurant/zipcode/{zipcode}", getRestaurantHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/restaurant/{restaurantId}", deleteRestaurantHandler(formatter)).Methods("DELETE")
 }
 
 // Handler for API Ping
 func pingHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 1.0 alive!"})
+		formatter.JSON(w, http.StatusOK, struct{ Test string }{"Restaurant API version 1.0 alive!"})
 	}
 }
 
@@ -86,28 +93,55 @@ Handler method for getting restaurant based on a ziplocation
 */
 func getRestaurantHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
+		//w.Header().Set("Content-Type", "application/json")
 
 		session, err := mgo.Dial(mongodb_server)
 		if err != nil {
 			panic(err)
 		}
 		defer session.Close()
+
+		if err := session.DB(adminDatabase).Login(mongo_user, mongo_pass); err != nil {
+			panic(err)
+		  }
 		session.SetMode(mgo.Monotonic, true)
-		c := session.DB(mongodb_database).C(mongodb_collection)
+		collection := session.DB(mongodb_database).C(mongodb_collection)
 
 		params := mux.Vars(req)
 		var zipcode string = params["zipcode"]
+		fmt.Println(zipcode);
 		
-		var res bson.M
-        err = c.Find(bson.M{"zipcode" : zipcode}).One(&res)
+		var res  []bson.M
+        err = collection.Find(bson.M{"zipcode" : zipcode}).All(&res)
 		
 		if err != nil {
 			log.Fatal(err)
 		}
+		fmt.Println("Result: ", res)
 		formatter.JSON(w, http.StatusOK, res)
 	}
 }
+
+// func burgerOrderDelete(formatter *render.Render) http.HandlerFunc {
+// 	return func(w http.ResponseWriter, req *http.Request) {
+// 		session, err := mgo.Dial(mongodb_server)
+// 		if err != nil {
+// 			panic(err)
+// 		}
+// 		defer session.Close()
+// 		if err:= session.DB("admin").Login(mongo_user, mongo_pass); err != nil {
+// 			panic(err)
+// 		  }
+// 		session.SetMode(mgo.Monotonic, true)
+// 		c := session.DB(mongodb_database).C(mongodb_collection)
+// 		params := mux.Vars(req)
+// 		var uuid string = params["OrderId"]
+// 		fmt.Println("Order ID: ", uuid)
+// 		err = c.Remove(bson.M{"OrderId": uuid})
+// 		fmt.Println("Delete Order: ", uuid)
+// 		formatter.JSON(w, http.StatusOK, uuid)
+// 	}
+// }
 
 func deleteRestaurantHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
@@ -132,49 +166,49 @@ func deleteRestaurantHandler(formatter *render.Render) http.HandlerFunc {
 	}
 }
 
-func updateRestaurantHandler(formatter *render.Render) http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
+// func updateRestaurantHandler(formatter *render.Render) http.HandlerFunc {
+// 	return func(w http.ResponseWriter, req *http.Request) {
 		
-		session, err := mgo.Dial(mongodb_server)
-		if err != nil {
-			panic(err)
-		}
-		defer session.Close()
-		session.SetMode(mgo.Monotonic, true)
-		c := session.DB(mongodb_database).C(mongodb_collection)
+// 		session, err := mgo.Dial(mongodb_server)
+// 		if err != nil {
+// 			panic(err)
+// 		}
+// 		defer session.Close()
+// 		session.SetMode(mgo.Monotonic, true)
+// 		c := session.DB(mongodb_database).C(mongodb_collection)
 		
-		params := mux.Vars(req)
+// 		params := mux.Vars(req)
 
-		var res restaurant
-		_=json.NewDecoder(req.Body).Decode(&res)
+// 		var res restaurant
+// 		_=json.NewDecoder(req.Body).Decode(&res)
 
-		var newRestaurant bson.M
-		err = c.Find(bson.M{"RestaurantId": params["restaurantId"]}).One(&newRestaurant)
-		if err != nil {
-			log.Fatal(err)
-		} 
+// 		var newRestaurant bson.M
+// 		err = c.Find(bson.M{"RestaurantId": params["restaurantId"]}).One(&newRestaurant)
+// 		if err != nil {
+// 			log.Fatal(err)
+// 		} 
 
-		newRestaurant["restaurantName"] = res.restaurantName
-		newRestaurant["zipcode"] = res.zipcode
-		newRestaurant["phone"] = res.phone
-		newRestaurant["addressLine1"] = res.addressLine1
-		newRestaurant["addressLine2"] = res.addressLine2
-		newRestaurant["city"] = res.city
-		newRestaurant["state"] = res.state
-		newRestaurant["country"] = res.country
-		newRestaurant["hours"] = res.hours
-		newRestaurant["acceptedCards"] = res.acceptedCards
-		newRestaurant["distance"] = res.distance
-		newRestaurant["email"] = res.email
+// 		newRestaurant["restaurantName"] = res.restaurantName
+// 		newRestaurant["zipcode"] = res.zipcode
+// 		newRestaurant["phone"] = res.phone
+// 		newRestaurant["addressLine1"] = res.addressLine1
+// 		newRestaurant["addressLine2"] = res.addressLine2
+// 		newRestaurant["city"] = res.city
+// 		newRestaurant["state"] = res.state
+// 		newRestaurant["country"] = res.country
+// 		newRestaurant["hours"] = res.hours
+// 		newRestaurant["acceptedCards"] = res.acceptedCards
+// 		newRestaurant["distance"] = res.distance
+// 		newRestaurant["email"] = res.email
 
 
-		query := bson.M{"restaurantId": params["restaurantId"]}
-		// change := bson.M{"$set": bson.M{ "CountGumballs" : m.CountGumballs}}
-		err = c.Update(query, &newRestaurant)
-		if err != nil {
-			log.Fatal(err)
-		}
+// 		query := bson.M{"restaurantId": params["restaurantId"]}
+// 		// change := bson.M{"$set": bson.M{ "CountGumballs" : m.CountGumballs}}
+// 		err = c.Update(query, &newRestaurant)
+// 		if err != nil {
+// 			log.Fatal(err)
+// 		}
 
-		formatter.JSON(w, http.StatusOK, newRestaurant)
-	}
-}
+// 		formatter.JSON(w, http.StatusOK, newRestaurant)
+// 	}
+// }
