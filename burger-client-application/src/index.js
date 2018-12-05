@@ -4,14 +4,21 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {Provider} from 'react-redux';
-import {createStore, compose} from 'redux';
+import {createStore, compose, applyMiddleware} from 'redux';
+import logger from 'redux-logger';
+import thunk from 'redux-thunk';
 import {BrowserRouter} from 'react-router-dom';
 import allreducers from './reducers/index'
 
+const middlewares = applyMiddleware(logger, thunk);
 const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
 const store = createStore(
     allreducers,
-    compose(devTools)
+    compose(
+        middlewares,
+        devTools
+    )
+
 );
 
 ReactDOM.render(
