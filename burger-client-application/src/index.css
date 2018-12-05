@@ -1,23 +1,9 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
 .outerdiv {
-  padding: 100px 100px 50px 100px;
+  /*padding: 100px 100px 50px 100px;*/
+  padding: 20px 80px 50px 70px;
 }
 
 .header {
-  font-size: 27px;
   color: #72182a;
   padding: 0px 50px 50px 50px;
   font-weight: bold;
@@ -28,10 +14,12 @@ code {
 
 .leftheader {
   float: left;
+  font-size: 25px;
 }
 
 .rightheader {
   float: right;
+  font-size: 20px;
 }
 
 .content {
@@ -39,11 +27,15 @@ code {
   align-content: center;
 }
 
+.topnav span{
+  padding: 10px;
+}
+
 .topnav a {
   float: right;
   color: black;
   text-align: center;
-  padding: 14px 16px;
+  padding: 8px 16px;
   text-decoration: none;
   font-size: 23px;
   text-transform: uppercase;
@@ -56,18 +48,20 @@ code {
 
 #left {
   float: left;
-  width: 50%;
+  width: 40%;
   /*background-color: #DDD;*/
-  align-content: center;
+  text-align: left;
   text-transform: uppercase;
   color: #72182a;
-  font-size: 30px;
+  font-size: 25px;
 }
 #right {
-  float: left;
+  float: right;
+  width: 40%;
+  padding-right: 10%;
 }
 
-input[type=text] {
+/*input[type=text] {
   padding: 15px 80px;
   margin: 8px 0;
   display: inline-block;
@@ -84,6 +78,25 @@ input[type=submit] {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}*/
+
+.home-page-button {
+  background-color: #72182a;
+  color: white;
+  padding: 15px 20px;
+  margin: 8px 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.home-page-textbox{
+  padding: 15px 80px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
 .card {

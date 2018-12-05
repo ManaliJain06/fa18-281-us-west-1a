@@ -35,22 +35,41 @@ class Order extends Component{
   }
 
   deleteItem(item){
+    let orderId = localStorage.getItem('orderId');
+    console.log("[Order] deleteItem item ", item, "  orderId: ",orderId);
+    if(orderId){
+      orderApi.deleteOrderItem(orderId, item.itemId).then((response)=>{
+          if(response.status===200){
+              response.json().then((data)=>{
+                  console.log("[Order] deleteItem success data: ", data);
+
+                  this.props.updateCart(data);
+              });
+          }});
+
+    }else{
+      alert("Could not find a existing order !!!")
+    }
 
   }
 
   getOrderItems(items){
-    return items.map((item)=>{
-      return(
-        <tr className = "menu-table-item-row">
-            <td className = "menu-table-item-col">{item.itemName}</td>
-            <td className = "menu-table-item-col">{item.description}</td>
-            <td className = "menu-table-item-col">{item.price}</td>
-            <td className = "menu-table-item-col">
-              <button onClick={()=>{this.deleteItem(item)}}> X </button>
-            </td>
-        </tr>
-      )
-    })
+      return items.map((item)=>{
+        return(
+          <tr className = "menu-table-item-row">
+              <td className = "menu-table-item-col">{item.itemName}</td>
+              <td className = "menu-table-item-col">{item.description}</td>
+              <td className = "menu-table-item-col">{item.price}</td>
+              <td className = "menu-table-item-col">
+                <span onClick={()=>{this.deleteItem(item)}}><i className="fa fa-close"
+                  style={{fontSize:24,color:"#72182a",cursor:"pointer"}}/>
+                </span>
+              </td>
+          </tr>
+        )
+      })
+
+
   }
 
   displayOrder(){
@@ -65,11 +84,17 @@ class Order extends Component{
               <th  className = "menu-table-item-col">Price</th>
           </tr>
           {this.getOrderItems(this.props.order.items)}
+          <tr className = "order-table-total-row">
+            <td className="order-table-total-amount"><span><i></i></span></td>
+            <td className = "order-table-total-text">Total Amount </td>
+            <td className = "order-table-total-amount"> {this.props.order && this.props.order.totalAmount?this.props.order.totalAmount:0}</td>
+          </tr>
           </tbody>
+
         </table>)
 
     }else{
-      return null
+      return (<h2> No items in the cart !!! </h2>)
     }
   }
 
