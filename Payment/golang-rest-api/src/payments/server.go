@@ -118,7 +118,9 @@ func getAllPayments(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		session, err := mgo.Dial(mongodb_server)
 		if err != nil {
-			panic(err)
+			// panic(err)
+			formatter.JSON(w, http.StatusInternalServerError, "Mongo Connection Error")
+			return
 		}
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
@@ -126,7 +128,9 @@ func getAllPayments(formatter *render.Render) http.HandlerFunc {
 		var result []bson.M
 		err = c.Find(nil).All(&result)
 		if err != nil {
-			log.Fatal(err)
+			// log.Fatal(err)
+			formatter.JSON(w, http.StatusNotFound, "Get All Payment Error")
+			return
 		}
 		fmt.Println("getAllPayments:", result)
 		formatter.JSON(w, http.StatusOK, result)
@@ -137,7 +141,9 @@ func getPaymentByID(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		session, err := mgo.Dial(mongodb_server)
 		if err != nil {
-			panic(err)
+			// panic(err)
+			formatter.JSON(w, http.StatusInternalServerError, "Mongo Connection Error")
+			return
 		}
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
@@ -149,7 +155,9 @@ func getPaymentByID(formatter *render.Render) http.HandlerFunc {
 
 		err = c.Find(bson.M{"paymentid": params["id"]}).One(&result)
 		if err != nil {
-			log.Fatal(err)
+			// log.Fatal(err)
+			formatter.JSON(w, http.StatusNotFound, "Get Payment by ID Error")
+			return
 		}
 		fmt.Println("getPaymentByID:", result)
 		formatter.JSON(w, http.StatusOK, result)
@@ -170,7 +178,9 @@ func createPayments(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		session, err := mgo.Dial(mongodb_server)
 		if err != nil {
-			panic(err)
+			// panic(err)
+			formatter.JSON(w, http.StatusInternalServerError, "Mongo Connection Error")
+			return
 		}
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
@@ -189,7 +199,9 @@ func createPayments(formatter *render.Render) http.HandlerFunc {
 		// err = c.Find(bson.M{"SerialNumber" : "1234998871109"}).One(&result)
 		err = c.Insert(payment)
 		if err != nil {
-			log.Fatal(err)
+			// log.Fatal(err)
+			formatter.JSON(w, http.StatusNotFound, "Create Payment Error")
+			return
 		}
 		fmt.Println("Create new payment:", payment)
 		formatter.JSON(w, http.StatusOK, payment)
@@ -217,7 +229,9 @@ func deletePayment(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		session, err := mgo.Dial(mongodb_server)
 		if err != nil {
-			panic(err)
+			// panic(err)
+			formatter.JSON(w, http.StatusInternalServerError, "Mongo Connection Error")
+			return
 		}
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
@@ -227,11 +241,15 @@ func deletePayment(formatter *render.Render) http.HandlerFunc {
 
 		err = c.Find(bson.M{"paymentid": params["id"]}).One(&result)
 		if err != nil {
-			log.Fatal(err)
+			// log.Fatal(err)
+			formatter.JSON(w, http.StatusNotFound, "Delete Payment: cannot find ID Error")
+			return
 		} else {
 			err = c.Remove(bson.M{"paymentid": params["id"]})
 			if err != nil {
-				log.Fatal(err)
+			// log.Fatal(err)
+			formatter.JSON(w, http.StatusNotFound, "Delete Payment: delete Error")
+			return
 			}
 		}
 		fmt.Println("deletePayment ", result)
@@ -261,7 +279,9 @@ func editPayment(formatter *render.Render) http.HandlerFunc {
 		fmt.Println("Edit payment to these attributes: ", payment)
 		session, err := mgo.Dial(mongodb_server)
 		if err != nil {
-			panic(err)
+			// panic(err)
+			formatter.JSON(w, http.StatusInternalServerError, "Mongo Connection Error")
+			return
 		}
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
@@ -271,7 +291,9 @@ func editPayment(formatter *render.Render) http.HandlerFunc {
 		var fetchedPayment bson.M
 		err = c.Find(bson.M{"paymentid": params["id"]}).One(&fetchedPayment)
 		if err != nil {
-			log.Fatal(err)
+			// log.Fatal(err)
+			formatter.JSON(w, http.StatusNotFound, "Edit Payment Error")
+			return
 		}
 
 		fmt.Println("fetchedPayment", fetchedPayment)

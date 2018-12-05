@@ -7,6 +7,8 @@ import Order from './components/order/order-list';
 import './App.css';
 import ListRestaurant from "./components/restaurant/restaurant-list";
 import PaymentOverview from "./components/payment/payment";
+import PaymentSuccess from './components/payment/paymentSuccess';
+import PaymentError from './components/payment/paymentError';
 
 class App extends Component {
 
@@ -19,6 +21,9 @@ class App extends Component {
             <Route exact path= "/order/:orderId" render = {(match) => (<Order {...match} />)}/>
             <Route exact path="/listRestaurant/:zipcode" render={(match) => (<ListRestaurant {...match}/>)}/>
             <Route path="/payment" render={() => (<PaymentOverview />) } />
+            <Route path="/paymentSuccess" render={() => (<PaymentSuccess />) } />
+            <Route path="/paymentError" render={() => (<PaymentError />) } />
+
           </Switch>
       </div>
     );
