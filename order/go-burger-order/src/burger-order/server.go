@@ -189,12 +189,29 @@ func burgerOrderDelete(formatter *render.Render) http.HandlerFunc {
 		  }
 		session.SetMode(mgo.Monotonic, true)
 		c := session.DB(mongodb_database).C(mongodb_collection)
+		var orderdetail RequiredPayload
+		_ = json.NewDecoder(req.Body).Decode(&orderdetail)
 		params := mux.Vars(req)
 		var uuid string = params["orderId"]
+		var result BurgerOrder
 		fmt.Println("order ID: ", uuid)
-		err = c.Remove(bson.M{"orderId": uuid})
-		fmt.Println("Delete Order: ", uuid)
-		formatter.JSON(w, http.StatusOK, uuid)
+		err = c.Find(bson.M{"orderId":uuid}).One(&result)
+		if err!=nil{
+			fmt.Println("order not found")
+			panic(err)
+		}
+		for i := 0; i < len(result.Cart); i++ {
+			if result.Cart[i].ItemId == orderdetail.ItemId {
+				result.TotalAmount = result.TotalAmount - result.Cart[i].Price
+				result.Cart = append(result.Cart[0:i],result.Cart[i+1:]...)
+				break
+			}
+		}
+		c.Update(bson.M{"orderId": uuid}, bson.M{"$set": bson.M{"items": result.Cart}})
+		c.Update(bson.M{"orderId": uuid}, bson.M{"$set": bson.M{"totalAmount": result.TotalAmount}})
+		//err = c.Remove(bson.M{"orderId": uuid})
+		fmt.Println("Delete Item: ", orderdetail.ItemId, "from order", uuid)
+		formatter.JSON(w, http.StatusOK, result)
 	}
 }
 
