@@ -8,6 +8,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as restaurantApi from './../../apis/restaurant-api';
 import {restaurantList} from './../../actions/restaurant-actions';
+import Header from '../header';
 
 class ListRestaurant extends Component{
 
@@ -100,4 +101,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ListRestaurant));
-

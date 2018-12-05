@@ -25,7 +25,6 @@ export const AddMenuItem = (menuItem) =>
             ...headers,
             'Content-Type': 'application/json'
         },
-        credentials:'include',
         body: JSON.stringify(menuItem)
     }).then(res => {
         return res;

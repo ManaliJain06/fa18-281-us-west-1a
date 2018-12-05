@@ -1,3 +1,0 @@
-/*
-	UI Component to show order
-*/
