@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"net"
+	"os"
 
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
@@ -20,18 +21,21 @@ import (
 )
 
 // MongoDB Config
-var mongodb_server = "13.57.246.180"
+
 //var mongodb_server = "10.0.0.117"
 //var mongodb_server = "dockerhost"
-var mongodb_database = "burger"
-var mongodb_collection = "order"
-var mongo_user = "mongo_admin"
-var mongo_pass = "cmpe281"
+
+var mongodb_server = os.Getenv("Server")
+var mongodb_database = os.Getenv("Database")
+var mongodb_collection = os.Getenv("Collection")
+var mongo_user = os.Getenv("User")
+var mongo_pass = os.Getenv("Pass")   
 
 // RabbitMQ Config
 // var rabbitmq_server = "rabbitmq"
 // var rabbitmq_port = "5672"
 // var rabbitmq_queue = "gumball"
+
 // var rabbitmq_user = "guest"
 // var rabbitmq_pass = "guest"
 
@@ -63,9 +67,10 @@ func NewServer() *negroni.Negroni {
 
 // API Routes
 func initRoutes(mx *mux.Router, formatter *render.Render) {
-	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
+	mx.HandleFunc("/order/ping", pingHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/order", burgerOrderStatus(formatter)).Methods("GET")
 	mx.HandleFunc("/order/{orderId}", burgerOrderStatus(formatter)).Methods("GET")
+	mx.HandleFunc("/orders/{userId}", burgerOrderStatusByUser(formatter)).Methods("GET")
 	mx.HandleFunc("/order", burgerOrderHandler(formatter)).Methods("POST")
 	mx.HandleFunc("/order/{orderId}", burgerOrderPaid(formatter)).Methods("PUT")
 	mx.HandleFunc("/order/{orderId}", burgerItemDelete(formatter)).Methods("DELETE")
@@ -131,8 +136,40 @@ func burgerOrderStatus(formatter *render.Render) http.HandlerFunc {
 	}
 }
 
-// API Create New Burger Order
+// API Get orders by userId
+func burgerOrderStatusByUser(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		session, _ := mgo.Dial(mongodb_server)
+		defer session.Close()
+		session.SetMode(mgo.Monotonic, true)
+		err:= session.DB("admin").Login(mongo_user, mongo_pass)
+		if err!=nil{
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
+		}
+		c := session.DB(mongodb_database).C(mongodb_collection)
+		params := mux.Vars(req)
+		var uuid string = params["userId"]
+		fmt.Println("userId: ", uuid)
+		var result []BurgerOrder
+		err = c.Find(bson.M{"userId":uuid}).All(&result)
+		if err!=nil {
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
+		}
+		if len(result) == 0 {
+			formatter.JSON(w, http.StatusNotFound, "User Doesn't have order")
+			return
+		}
+		_ = json.NewDecoder(req.Body).Decode(&result)
+		fmt.Println("Burger Order: ", result)
+		formatter.JSON(w, http.StatusOK, result)
+	}
+}
 
+
+
+// API Create New Burger Order
 func burgerOrderHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		// Open MongoDB Session
@@ -155,6 +192,10 @@ func burgerOrderHandler(formatter *render.Render) http.HandlerFunc {
 		newitem.Price = orderdetail.Price		
 		newitem.Description = orderdetail.Description
 		if err == nil {
+			if order.OrderStatus == "Paid"{
+				formatter.JSON(w, http.StatusNotFound, "Order already Paid, please create a new order")
+				return
+			}
 			order.Cart = append(order.Cart, newitem)
 			order.TotalAmount = (order.TotalAmount + newitem.Price)
 			fmt.Println("Orders: ", "Orders found")	

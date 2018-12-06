@@ -23,7 +23,7 @@ class App extends Component {
             <Route path="/payment" render={() => (<PaymentOverview />) } />
             <Route path="/paymentSuccess" render={() => (<PaymentSuccess />) } />
             <Route path="/paymentError" render={() => (<PaymentError />) } />
-
+            {/*<Route path="/login" render={() =>(<UserLogin />)}/>*/}
           </Switch>
       </div>
     );
