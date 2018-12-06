@@ -19,7 +19,7 @@ class App extends Component {
             <Route exact path= "/" render = {() => (<Homepage/>)}/>
             <Route exact path= "/menu/:restaurantId" render = {(match) => (<Menu {...match} showCart={{status:true}}/>)}/>
             <Route exact path= "/order/:orderId" render = {(match) => (<Order {...match} />)}/>
-            <Route exact path="/listRestaurant/:zipcode" render={(match) => (<ListRestaurant {...match}/>)}/>
+            <Route exact path="/restaurant/zipcode/:zipcode" render={(match) => (<ListRestaurant {...match}/>)}/>
             <Route path="/payment" render={() => (<PaymentOverview />) } />
             <Route path="/paymentSuccess" render={() => (<PaymentSuccess />) } />
             <Route path="/paymentError" render={() => (<PaymentError />) } />
