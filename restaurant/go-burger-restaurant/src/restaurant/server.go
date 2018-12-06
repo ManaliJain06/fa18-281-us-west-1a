@@ -18,6 +18,7 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"net"
+	"strings"
 )
 
 // Configuration parameters for MongoDB databse
@@ -69,9 +70,11 @@ func getSystemIp() string {
     if err != nil {
 		return "" 
 	}
-     defer conn.Close()
-	 localAddr := conn.LocalAddr().(*net.UDPAddr).String()
-	 return localAddr
+    defer conn.Close()
+	localAddr := conn.LocalAddr().(*net.UDPAddr).String()
+	address := strings.Split(localAddr, ":")
+    fmt.Println("address: ", address[0])
+    return address[0]
 }
 
 /*

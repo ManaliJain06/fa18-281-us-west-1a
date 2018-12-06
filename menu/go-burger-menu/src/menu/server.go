@@ -72,10 +72,11 @@ func getSystemIp() string {
     if err != nil {
         return "" 
     }
-     defer conn.Close()
-     localAddr := conn.LocalAddr().(*net.UDPAddr).String()
-     // localAddr := localAddr.split(":");
-     return localAddr
+    defer conn.Close()
+    localAddr := conn.LocalAddr().(*net.UDPAddr).String()
+    address := strings.Split(localAddr, ":")
+    fmt.Println("address: ", address[0])
+    return address[0]
 }
 
 // API to create a new item in the menu
