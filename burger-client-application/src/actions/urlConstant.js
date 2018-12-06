@@ -1,5 +1,5 @@
 // export const paymentUrl = 'http://54.219.241.43:8000';
-//export const paymentUrl = 'http://EC2Co-EcsEl-1CNG22VMRNP2G-342756940.us-west-1.elb.amazonaws.com:8000'; // running on AWS ECS
+//export const paymentUrl = 'http://ec2co-ecsel-hgvaibfnr6yn-1190636458.us-west-1.elb.amazonaws.com:8000'; // running on AWS ECS
 // export const paymentUrl = 'http://35.247.121.55:8000'; // running on Google GKE
 export const paymentUrl = 'https://hszrvgkm85.execute-api.us-west-1.amazonaws.com/burger'; // AWS API gateway
 export const orderUrl = 'http://54.153.121.217:8000';
