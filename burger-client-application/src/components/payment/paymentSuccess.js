@@ -52,7 +52,7 @@ class paymentSuccess extends Component {
                 {
                   
                   !Object.keys(this.props.paymentData).length ? (
-                    <div class="payment-alert">
+                    <div className="payment-alert">
                       Invalid payment! 😱
                     </div>
                   ) : (
@@ -91,7 +91,7 @@ class paymentSuccess extends Component {
                       </table>
 
                     <br />
-                    <div class="payment-alert success">
+                    <div className="payment-alert success">
                       Please save your payment details for your own reference. ✌️
                     </div>
 

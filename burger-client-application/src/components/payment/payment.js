@@ -123,21 +123,21 @@ class payment extends Component {
 											<h3>Enter your address</h3>
 											<form>
 												<label>Address</label>
-												<input type="text" id="address" name="address" />
+												<input className="paymentInputText" type="text" id="address" name="address" />
 												<label>City</label>
-												<input type="text" id="city" name="city" />
+												<input className="paymentInputText" type="text" id="city" name="city" />
 												<label>Zipcode</label>
-												<input type="text" id="zipcode" name="zipcode" />
+												<input className="paymentInputText" type="text" id="zipcode" name="zipcode" />
 											</form>
 											
 											<h3>Enter your payment method</h3>
 											<form>
 												<label>Card Number</label>
-												<input type="text" id="cardnumber" name="cardnumber" />
+												<input className="paymentInputText" type="text" id="cardnumber" name="cardnumber" />
 												<label>Name on Card</label>
-												<input type="text" id="nameoncard" name="nameoncard" />
+												<input className="paymentInputText" type="text" id="nameoncard" name="nameoncard" />
 												<label>Expiration Date (mmddyyyy) </label>
-												<input type="text" id="expiration" name="expiration" />
+												<input className="paymentInputText" type="text" id="expiration" name="expiration" />
 											</form>
 
 											<div className="btn-container">

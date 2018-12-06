@@ -76,10 +76,17 @@ curl --request DELETE \
 ```
 
 
+#### Reference
+```
+// To enable CORS, use this package
+// Added Handler package
+go get -v github.com/gorilla/handlers
+```
+
+
+
+
 ## If database is pointing to your EC2, do this:
-
-
-
 
 ### Start Mongo Shard on EC2
 
@@ -191,32 +198,137 @@ docker push nerdijoe/golang-payments
 
 #### 10. deploy golang-payments on docker
 ```
+// using docker-compose
 docker-compose scale payments=1 
-
 docker-compose up -d --scale payments=1 --no-recreate
 
-
-docker run --name payments -e AWS_MONGODB=mongodb://<username>:<password>@<mongo-ec2-instance-ip>:27017 -p 8000:8000 -d nerdijoe/golang-payments
-
-
+// run docker normally
+docker run --name payments -e AWS_MONGODB=mongodb://<username>:<password>@<mongo-ec2-instance-ip>:27017 -e MONGODB_DBNAME=cmpe281 -e MONGODB_COLLECTION=payments -p 8000:8000 -d nerdijoe/golang-payments
 ```
 
 
 ```
 docker-compose stop payments
 docker-compose rm payments
+docker-compose rmi payments
 ```
 
+See docker logs
+```
 docker logs -f payments
+```
 
+
+```
 docker-ps:
 	 docker ps --all --format "table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}\t"
 
 docker-ps-ports:
 	 docker ps --all --format "table {{.Names}}\t{{.Ports}}\t"
+```
 
 
 
-Enable CORS
-// Added Handler package
+
+## Mongo sharding
+
+1. SSH to Query Router Instance
+
+2. Login to mongo as admin
+```
+mongo mongos-query-router:27017 -u admin -p cmpe281 --authenticationDatabase admin
+```
+
+3. Go to database cmpe281
+```
+use test
+```
+
+4. Enable Sharding
+```
+use cmpe281
+db.payments.ensureIndex( { orderid : "hashed" } )
+sh.shardCollection( "cmpe281.payments", { "orderid" : "hashed" } )
+```
+
+db.payments.getShardDistribution() 
+
+
+
+
+
+# GKE
+
+### Open cloud shell
+
+### Set your project id and compute/zone
+```
+gcloud config set project august-now-224702
+gcloud config set compute/zone us-west1-a
+export PROJECT_ID="$(gcloud config get-value project -q)"
+```
+
+### clone your repo
+```
+git clone https://github.com/nguyensjsu/cmpe281-nerdijoe.git
+```
+
+
+### set your gopath
+```
+export GOPATH=$HOME/go
+```
+
+**go get commands**
+```
+rm -rf src/github.com
+go get -v github.com/codegangsta/negroni
+go get -v github.com/gorilla/mux
+go get -v github.com/unrolled/render
+go get -v github.com/satori/go.uuid
+go get -v github.com/streadway/amqp
+go get -v gopkg.in/mgo.v2
+go get -v gopkg.in/mgo.v2/bson
 go get -v github.com/gorilla/handlers
+
+```
+
+
+### build your image
+```
+docker build -t gcr.io/${PROJECT_ID}/payments:v1 .
+
+gcloud auth configure-docker
+```
+
+
+### push 
+```
+docker push gcr.io/${PROJECT_ID}/payments:v1
+```
+
+### create cluster
+```
+gcloud container clusters create golang-cluster --num-nodes=3
+
+gcloud compute instances list
+
+
+kubectl run payments --image=gcr.io/${PROJECT_ID}/payments:v1 --port 8000 --env AWS_MONGODB=mongodb://<user>:<password>@ec2-54-215-217-211.us-west-1.compute.amazonaws.com:27017 --env MONGODB_DBNAME=cmpe281 --env MONGODB_COLLECTION=payments
+```
+
+```
+kubectl expose deployment payments --type=LoadBalancer --port 80 --target-port 8000
+kubectl get service
+
+kubectl scale deployment payments --replicas=3
+kubectl get deployment payments
+
+```
+
+
+### Delete kubernetes service and cluster
+```
+kubectl delete service payments
+gcloud container clusters delete cluster
+```
