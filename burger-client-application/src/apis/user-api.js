@@ -3,16 +3,34 @@
 */
 
 import axios from "axios";
-import {orderUrl} from "../actions/urlConstant";
+import {orderUrl, userUrl} from "../actions/urlConstant";
 
-export const callLoginApi = (payload) => () => {
-    console.log("payload", JSON.stringify(payload))
-    axios.put(`${orderUrl}/order/${orderId}` )
-        .then( res => {
-            console.log('after axiosOrderUpdateToPaid, res:', res);
+let headers = {
+    headers:{
+        "Content-Type": "application/json"
+    }
+};
 
-        }).catch( res => {
-        console.log('xx  error axiosOrderUpdateToPaid, error:', res);
-    })
+export const callLoginApi = (payload) => {
+    console.log("payload", JSON.stringify(payload));
+    return axios.post(`${userUrl}/users/signin`, payload, headers )
+        .then( function(res) {
+            console.log('call login api, res:', res);
+            return res
+        }).catch( function(err) {
+            console.log('error calling login api, error:', err);
+            return err
+        });
+};
 
+export const callRegisterAPI = (payload) => {
+    console.log("payload", JSON.stringify(payload));
+    return axios.post(`${userUrl}/users/signup`, payload, headers )
+        .then( function(res){
+            console.log('call register api, res:', res);
+           return res
+        }).catch( function (err) {
+            console.log('error calling login api, error:', err);
+           return err
+        });
 };
