@@ -28,9 +28,6 @@ None
 2) Discuss on design and tools and technology for the application
 3) Create Design Spec documents
 
-## Blockers
-None as of now.
-
 ## Outcome-
 # Rudy
   - Created simple Payment REST api in golang
@@ -63,14 +60,18 @@ None as of now.
   - Create database design for the restaurant module
 
 # Varun
-- Created User API desgin document. Which contains the details of all the api user module will have.
-- Understanding the restful standards and implementing .
-- Learning Golang for implementing the Gol mongodb
+    - Created User API desgin document. Which contains the details of all the api user module will have.
+    - Understanding the restful standards and implementing .
+    - Learning Golang for implementing the Gol mongodb
 
 # Fulbert
-- Created Order API design document which will function as cart
-- Start creating a local mongodb for testing
-- Start working on REST API development
+    - Created Order API design document which will function as cart
+    - Start creating a local mongodb for testing
+    - Start working on REST API development
+
+## Blockers
+None as of now.
+
 # Week 3 (11/11/2019 - 11/17/2019)
 
 ## Minutes of meeting for team meeting
@@ -78,10 +79,11 @@ None as of now.
 2) Deciding on the frontend technology of the application.
 3) Perform initial integration testing on the Various GO APIs.
 
-## Blockers
-Connecting React server with go API as it gives a CORS error.
-
 ## Outcome-
+
+Front end - In React.js
+Back end - Golang
+Database - MongoDB with Sharding implemented
 
 # Varun
 
@@ -97,3 +99,13 @@ Connecting React server with go API as it gives a CORS error.
 - Created Create order API
 - Created Get order by ID API
 - Creted Getall orders API
+
+# Manali
+- Created database in mongodb
+- Created and tested GO Add restaurant API
+- Created and tested Get restaurant list API
+- Created and tested Delete restaurant API
+
+
+## Blockers
+Connecting React server with go API as it gives a CORS error.
