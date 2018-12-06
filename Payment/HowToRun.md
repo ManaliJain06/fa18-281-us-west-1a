@@ -326,6 +326,16 @@ kubectl get deployment payments
 
 ```
 
+### deploy new version
+### build your image
+```
+docker build -t gcr.io/${PROJECT_ID}/payments:v2 .
+docker push gcr.io/${PROJECT_ID}/payments:v2
+
+kubectl set image deployment/payments payments=gcr.io/${PROJECT_ID}/payments:v2
+
+```
+
 
 ### Delete kubernetes service and cluster
 ```

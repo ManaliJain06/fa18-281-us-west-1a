@@ -17,6 +17,7 @@ import (
 	"github.com/gorilla/handlers"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"net"
 )
 
 // Configuration parameters for MongoDB databse
@@ -46,19 +47,31 @@ func NewServerConfiguration() *negroni.Negroni {
 
 // Router for API
 func initRoutes(mx *mux.Router, formatter *render.Render) {
-	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
+	mx.HandleFunc("/restaurant/ping", pingHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/restaurant", addRestaurantHandler(formatter)).Methods("POST")
-	mx.HandleFunc("/restaurant/zipcode/{zipcode}", getRestaurantHandler(formatter)).Methods("GET")
+	mx.HandleFunc("/restaurant", getAllRestaurantHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/restaurant/{restaurantId}", getRestaurantByIDHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/restaurant/{restaurantId}", deleteRestaurantHandler(formatter)).Methods("DELETE")
+	mx.HandleFunc("/restaurant/zipcode/{zipcode}", getRestaurantHandler(formatter)).Methods("GET")
 	// mx.handleFunc("/restaurant/{restaurantId}", updateRestaurantHandler(formatter)).Methods("PUT")
 }
 
 // Handler for API Ping
 func pingHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		formatter.JSON(w, http.StatusOK, struct{ Test string }{"Restaurant API version 1.0 alive!"})
+		message := "Burger Restaurant API Server Working on machine: " + getSystemIp()
+		formatter.JSON(w, http.StatusOK, struct{ Test string }{message})
 	}
+}
+
+func getSystemIp() string {
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+    if err != nil {
+		return "" 
+	}
+     defer conn.Close()
+	 localAddr := conn.LocalAddr().(*net.UDPAddr).String()
+	 return localAddr
 }
 
 /*
@@ -121,7 +134,7 @@ func getRestaurantHandler(formatter *render.Render) http.HandlerFunc {
 		var zipcode string = params["zipcode"]
 		fmt.Println(zipcode);
 		
-		var res  []bson.M
+		var res  []restaurant
         err = collection.Find(bson.M{"zipcode" : zipcode}).All(&res)
 		
 		if res == nil || len(res) <= 0 || err != nil{
@@ -132,6 +145,44 @@ func getRestaurantHandler(formatter *render.Render) http.HandlerFunc {
 		}
 	}
 }
+
+/*
+Handler to get all restaurant
+*/
+func getAllRestaurantHandler(formatter *render.Render) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		//w.Header().Set("Content-Type", "application/json")
+
+		session, err := mgo.Dial(mongodb_server)
+		if err != nil {
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
+		}
+		defer session.Close()
+
+		if err := session.DB(adminDatabase).Login(mongo_user, mongo_pass); err != nil {
+			formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+			return
+		  }
+		session.SetMode(mgo.Monotonic, true)
+		collection := session.DB(mongodb_database).C(mongodb_collection)
+
+		// params := mux.Vars(req)
+		// var zipcode string = params["zipcode"]
+		// fmt.Println(zipcode);
+		
+		var res  []restaurant
+        err = collection.Find(bson.M{}).All(&res)
+		
+		if res == nil || len(res) <= 0 || err != nil{
+			formatter.JSON(w, http.StatusNotFound, "No restaurants found") 
+		} else {
+			fmt.Println("Result: ", res)
+			formatter.JSON(w, http.StatusOK, res)
+		}
+	}
+}
+
 /*
 Handler method for getting restaurant based on a Id
 */
@@ -156,15 +207,17 @@ func getRestaurantByIDHandler(formatter *render.Render) http.HandlerFunc {
 
 		params := mux.Vars(req)
 		var restaurantId string = params["restaurantId"]
+		fmt.Println("restaurant id is : ", restaurantId)
+
+		var res restaurant
+        err = collection.Find(bson.M{"restaurantid" : restaurantId}).One(&res)
 		
-		var res  []bson.M
-        err = collection.Find(bson.M{"restaurantId" : restaurantId}).One(&res)
-		
-		if res == nil || err != nil {
+		if err != nil {
 			formatter.JSON(w, http.StatusNotFound, "Cannot find restaurant")
+			return
 		} else {	
 			fmt.Println("Result: ", res)
-			res := json.NewEncoder(w).Encode(res)
+			// res := json.NewEncoder(w).Encode(res)
 			formatter.JSON(w, http.StatusOK, res)
 		}
 	}
@@ -188,7 +241,7 @@ func deleteRestaurantHandler(formatter *render.Render) http.HandlerFunc {
 		
 		params := mux.Vars(req)
 
-		var result bson.M
+		var result restaurant
 		err = c.Find(bson.M{"restaurantid": params["restaurantId"]}).One(&result)
 		if err == nil {
 			c.Remove(bson.M{"restaurantid": params["restaurantId"]})
