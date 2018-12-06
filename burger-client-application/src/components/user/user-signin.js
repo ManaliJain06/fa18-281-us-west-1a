@@ -53,7 +53,7 @@ class UserSignIn extends Component {
                 }
             })
             .catch((err) => {
-
+                console.log("some error occured :", err.error())
             })
 
     }

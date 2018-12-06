@@ -33,17 +33,30 @@ class Header extends Component{
     }
   }
 
+  handleLogout = () => {
+      localStorage.removeItem("user");
+      this.props.history.push("/");
+  };
+
 
   render(){
     console.log("[Header] render: ");
+    let loginLogout;
+    let user = localStorage.getItem("user");
+    if(user != null){
+        loginLogout = <span style = {{cursor:"pointer"}} onClick={()=>{this.props.history.push("/login")}}>Sign in</span>;
+    }
+    else{
+        loginLogout = <span style = {{cursor:"pointer"}} onClick={()=>{this.handleLogout()}}>Logout</span>;
+    }
     return (
       <div className="header">
           <div className="leftheader"> The Counter Custom burgers </div>
           <div className="rightheader">
               <div className="topnav">
                   <span style = {{cursor:"pointer"}} onClick={()=>{this.props.history.push("/")}}>Home</span>
-                  <span>Sign up</span>
-                  <span>Sign in</span>
+                  <span style = {{cursor:"pointer"}} onClick={()=>{this.props.history.push("/signup")}}>Sign up</span>
+                  {loginLogout}
                   {this.showCart()}
 
               </div>
