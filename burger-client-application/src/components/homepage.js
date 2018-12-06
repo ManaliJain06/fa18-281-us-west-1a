@@ -38,7 +38,7 @@ class Homepage extends Component{
                                 });
                             }}/>
                         <input className = "home-page-button" type="submit" value="Go" onClick={() => {
-                            this.props.history.push(`/listRestaurant/${this.state.zipcode}`);
+                            this.props.history.push(`/restaurant/zipcode/${this.state.zipcode}`);
                         }}/>
 
                     </div>

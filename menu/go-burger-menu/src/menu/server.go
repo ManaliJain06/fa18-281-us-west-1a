@@ -62,8 +62,20 @@ func failOnError(err error, msg string) {
 // Menu Serivce Health Check API 
 func pingHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		formatter.JSON(w, http.StatusOK, struct{ Test string }{"Burger Menu API Server Working !!!"})
+        message := "Burger Menu API Server Working on machine: " + getSystemIp()
+		formatter.JSON(w, http.StatusOK, struct{ Test string }{message})
 	}
+}
+
+func getSystemIp() string {
+    conn, err := net.Dial("udp", "8.8.8.8:80")
+    if err != nil {
+        return "" 
+    }
+     defer conn.Close()
+     localAddr := conn.LocalAddr().(*net.UDPAddr).String()
+     // localAddr := localAddr.split(":");
+     return localAddr
 }
 
 // API to create a new item in the menu
@@ -102,7 +114,8 @@ func createMenuItemHandler(formatter *render.Render) http.HandlerFunc {
     	reqPayload.Item.Id = uuid.String()
     	session, err := mgo.Dial(database_server)
         if err != nil {
-                panic(err)
+            formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+            return
         }
         defer session.Close()
        mongo_collection := session.DB(database).C(collection)
@@ -118,16 +131,20 @@ func createMenuItemHandler(formatter *render.Render) http.HandlerFunc {
              	
             error := mongo_collection.Insert(menu)
             fmt.Println("error: ", error)
+            if error != nil {
+                formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+                return
+            }
         	
         }else{
         	menu.Items = append(menu.Items, reqPayload.Item)
         	error := mongo_collection.Update(bson.M{"restaurantid": menu.RestaurantId}, bson.M{"$set": bson.M{"items": menu.Items}})       	
         	if error != nil {
         		fmt.Println("error: ", error)
+                formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+                return
         	}   
         }
-        
-        
 		formatter.JSON(response, http.StatusOK, menu)
 	}
 }
@@ -141,7 +158,8 @@ func findRestaurantMenu(formatter *render.Render) http.HandlerFunc {
 		fmt.Println( "restaurant ID: ", restaurantId )
 		session, err := mgo.Dial(database_server)
         if err != nil {
-                formatter.JSON(response, http.StatusInternalServerError, "Menu not found !!!")
+            formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+            return
         }
         defer session.Close()
         //session.SetMode(mgo.Monotonic, true) need to check
@@ -149,7 +167,8 @@ func findRestaurantMenu(formatter *render.Render) http.HandlerFunc {
         var result bson.M
         err = mongo_collection.Find(bson.M{"restaurantid" : restaurantId}).One(&result)
         if err != nil {
-                formatter.JSON(response, http.StatusNotFound, "Menu not found !!!")
+            format  ter.JSON(response, http.StatusNotFound, "Menu not found !!!")
+            return
         }
         fmt.Println("Result: ", result)
 		formatter.JSON(response, http.StatusOK, result)
@@ -165,7 +184,8 @@ func updateMenuItemHandler(formatter *render.Render) http.HandlerFunc {
     	fmt.Println("Menu ItemPayload ", reqPayload.Item)
     	session, err := mgo.Dial(database_server)
         if err != nil {
-                panic(err)
+            formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+            return
         }
         defer session.Close()
        mongo_collection := session.DB(database).C(collection)
@@ -174,8 +194,8 @@ func updateMenuItemHandler(formatter *render.Render) http.HandlerFunc {
         err = mongo_collection.Find(bson.M{"restaurantid" : reqPayload.RestaurantId}).One(&menu)
         if err != nil {
             fmt.Println("error: ", err)
-            formatter.JSON(response, http.StatusNotFound, menu)
-        	
+            formatter.JSON(response, http.StatusNotFound, "Restaurant not found")
+        	return
         }else{
         	for i := 0; i < len(menu.Items); i++ {
 				if menu.Items[i].Id == reqPayload.Item.Id {
@@ -189,9 +209,10 @@ func updateMenuItemHandler(formatter *render.Render) http.HandlerFunc {
         	error := mongo_collection.Update(bson.M{"restaurantid": menu.RestaurantId}, bson.M{"$set": bson.M{"items": menu.Items}})  
         	if error != nil {
         		fmt.Println("error: ", error)
+                formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+                return
         	}     	
         }
-        
         
 		formatter.JSON(response, http.StatusOK, menu)
 	}
@@ -205,7 +226,8 @@ func deleteMenuItemHandler(formatter *render.Render) http.HandlerFunc {
     	fmt.Println("Menu ItemPayload ", reqPayload)
     	session, err := mgo.Dial(database_server)
         if err != nil {
-                panic(err)
+            formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+            return
         }
         defer session.Close()
         mongo_collection := session.DB(database).C(collection)
@@ -214,8 +236,8 @@ func deleteMenuItemHandler(formatter *render.Render) http.HandlerFunc {
         err = mongo_collection.Find(bson.M{"restaurantid" : reqPayload.RestaurantId}).One(&menu)
         if err != nil {
             fmt.Println("error: ", err)
-            formatter.JSON(response, http.StatusNotFound, menu)
-        	
+            formatter.JSON(response, http.StatusNotFound, "Restaurant not found")
+        	return
         }else{
         	for i := 0; i < len(menu.Items); i++ {
 				if menu.Items[i].Id == reqPayload.ItemId {
@@ -226,10 +248,10 @@ func deleteMenuItemHandler(formatter *render.Render) http.HandlerFunc {
         	error := mongo_collection.Update(bson.M{"restaurantid": menu.RestaurantId}, bson.M{"$set": bson.M{"items": menu.Items}})  
         	if error != nil {
         		fmt.Println("error: ", error)
+                formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+                return
         	}     	
         }
-        
-        
 		formatter.JSON(response, http.StatusOK, menu)
 	}
 }
