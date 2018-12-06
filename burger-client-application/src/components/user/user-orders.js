@@ -6,7 +6,7 @@ import {withRouter} from 'react-router-dom';
 import '../../index.css';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as restaurantApi from './../../apis/restaurant-api';
+import * as UserAPI from './../../apis/user-api';
 import {userOrdersList} from './../../actions/user-actions';
 import Header from '../header';
 
@@ -17,25 +17,24 @@ class ListUserOrders extends Component {
     }
 
     componentDidMount() {
+        this.props.history.push('/');
         const user = JSON.parse(localStorage.getItem('user'));
         if (user == null) {
             alert("You are not logged in!");
             this.props.history.push('/login');
         }
 
-        restaurantApi.getRestaurants(this.props.match.params.zipcode).then((response) => {
-            if (response.status === 200) {
-                response.json().then((data) => {
-                    //action to save data
-                    this.props.userOrdersList(data);
-                });
-            }
+        UserAPI.callUserOrdersAPI(user.id)
+            .then((response) => {
+                if (response.status === 200) {
+                    this.props.userOrdersList(response.data);
+                }
         });
     }
 
     render() {
         {
-            if (this.props.restaurants.restaurantList && this.props.restaurants.restaurantList.length > 0) {
+            if (this.props.userOrdersData.userOrders && this.props.userOrdersData.userOrders.length > 0) {
                 return (
                     <div className="outerdiv">
                         <Header showCart={{status: true}}/>
@@ -88,7 +87,7 @@ class ListUserOrders extends Component {
 function mapStateToProps(state) {
     console.log("[user] mapStateToProps");
     return {
-        userOrders: state.userOrders
+        userOrdersData: state.userOrders
     }
 }
 
