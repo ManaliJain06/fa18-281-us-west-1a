@@ -66,7 +66,7 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	payments = append(payments, Payment{PaymentID: "1", UserID: "1", OrderID: "11", TotalAmount: 100.50, Status: true, PaymentDate: t.Format("2006-01-02 15:04:05")})
 	payments = append(payments, Payment{PaymentID: "2", UserID: "2", OrderID: "22", TotalAmount: 30.30, Status: true, PaymentDate: t.Format("2006-01-02 15:04:05")})
 
-	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
+	mx.HandleFunc("/payments/ping", pingHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/payments", getAllPayments(formatter)).Methods("GET")
 	mx.HandleFunc("/payments/{id}", getPaymentByID(formatter)).Methods("GET")
 	mx.HandleFunc("/payments", createPayments(formatter)).Methods("POST")
