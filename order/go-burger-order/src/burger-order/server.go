@@ -90,15 +90,18 @@ func getIp() string {
     if err != nil {
 		return "" 
 	}
-     defer conn.Close()
-	 localAddr := conn.LocalAddr().(*net.UDPAddr).String()
-	 return localAddr
+    defer conn.Close()
+	localAddr := conn.LocalAddr().(*net.UDPAddr).String()
+	address := strings.Split(localAddr, ":")
+    fmt.Println("address: ", address[0])
+    return address[0]
 }
 
 // API Ping Handler
 func pingHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		formatter.JSON(w, http.StatusOK, struct{ Test string }{"burger-order API is up! " + getIp()})
+		message := "Burger order API Server Working on machine: " + getSystemIp()
+		formatter.JSON(w, http.StatusOK, struct{ Test string }{message})
 	}
 }
 
