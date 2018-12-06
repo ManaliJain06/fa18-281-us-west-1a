@@ -10,7 +10,7 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom'
 import '../../index.css';
 import '../../stylesheets/payment.css';
-
+import * as UserAPI from '../../apis/user-api'
 import Header from '../header';
 
 class UserSignIn extends Component {
@@ -41,7 +41,21 @@ class UserSignIn extends Component {
             email: this.state.email,
             orderId: this.state.password
         };
-        this.props.PaymentCreate(data, this.props.history);
+        UserAPI.callLoginApi(payload)
+            .then((res) => {
+                if (res.status === 200){
+                    let user = {
+                        email:res.data.email,
+                        id: res.data.id,
+                        name: res.data.firstname + "" + res.data.lastname
+                    };
+                    localStorage.setItem('user', user);
+                }
+            })
+            .catch((err) => {
+
+            })
+
     }
 
     handleBackButton(event) {

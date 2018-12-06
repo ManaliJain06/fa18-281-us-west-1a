@@ -3,16 +3,23 @@
 */
 
 import axios from "axios";
-import {orderUrl} from "../actions/urlConstant";
+import {orderUrl, userUrl} from "../actions/urlConstant";
+
+let headers = {
+    headers:{
+        "Content-Type": "application/json"
+    }
+};
 
 export const callLoginApi = (payload) => () => {
     console.log("payload", JSON.stringify(payload))
-    axios.put(`${orderUrl}/order/${orderId}` )
-        .then( res => {
-            console.log('after axiosOrderUpdateToPaid, res:', res);
-
-        }).catch( res => {
-        console.log('xx  error axiosOrderUpdateToPaid, error:', res);
+    return axios.post(`${userUrl}/users/signin`, payload, headers )
+        .then( (res) => {
+            console.log('call login api, res:', res);
+            return res;
+        }).catch( (err) => {
+            console.log('error calling login api, error:', res);
+            return err;
     })
 
 };
