@@ -11,6 +11,24 @@
 |status	| Boolean |	Payment Status (True = Paid, False = Cancelled) |
 |paymentDate |DateTime	|Paid date|
 
+0. Ping the API endpoint
+    **Request**
+    ```
+    GET /payments/ping
+    Content-Type: application/json
+    ```
+    **Parameters**
+    
+    None
+
+
+    **Response**
+    ```
+    {
+    "Test": "Payment API version 1.0 is alive!"
+    }
+    ```
+
 
 1. Pay for an order
 
@@ -40,7 +58,7 @@
     |status	| Boolean	|True (True = Paid, False = Cancelled)
     |paymentDate	|String	|Date of the payment
 
-    **Parameters for Error (Status code: 400)**
+    **Parameters for Error (Status code: 404)**
 
     |Parameter	|Type |	Description|
     |-----|-----|------|
@@ -71,7 +89,7 @@
     |status	|Boolean  |Payment Status (True = Paid, False = Cancelled)
     |paymentDate	|String	|Date of the payment
 
-    **Parameters for Error (Status code: 400)**
+    **Parameters for Error (Status code: 404)**
 
     |Parameter	|Type |	Description|
     |-----|-----|------|
@@ -106,7 +124,7 @@
     |status	|Boolean  |Payment Status (True = Paid, False = Cancelled)
     |paymentDate	|String	|Date of the payment
 
-    **Parameters for Error (Status code: 400)**
+    **Parameters for Error (Status code: 404)**
 
     |Parameter	|Type |	Description|
     |-----|-----|------|
@@ -143,7 +161,7 @@
     |status	|Boolean  |Payment Status (True = Paid, False = Cancelled)
     |paymentDate	|String	|Date of the payment
 
-    **Parameters for Error (Status code: 400)**
+    **Parameters for Error (Status code: 404)**
 
     |Parameter	|Type |	Description|
     |-----|-----|------|
@@ -180,7 +198,7 @@
     |status	|Boolean  |Payment Status (True = Paid, False = Cancelled)
     |paymentDate	|String	|Date of the payment
 
-    **Parameters for Error (Status code: 400)**
+    **Parameters for Error (Status code: 404)**
 
     |Parameter	|Type |	Description|
     |-----|-----|------|
