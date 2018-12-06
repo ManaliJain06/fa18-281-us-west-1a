@@ -34,7 +34,7 @@ func MenuServer() *negroni.Negroni {
 	router := mux.NewRouter()
 	initRoutes(router, formatter)
 	allowedHeaders := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
-	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD","DELETE" "OPTIONS"})
+	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD","DELETE","OPTIONS"})
 	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
 
 	n.UseHandler(handlers.CORS(allowedHeaders,allowedMethods , allowedOrigins)(router))
@@ -46,7 +46,8 @@ func initRoutes(router *mux.Router, formatter *render.Render) {
 	router.HandleFunc("/menu/ping", pingHandler(formatter)).Methods("GET")
 	router.HandleFunc("/menu", createMenuItemHandler(formatter)).Methods("POST")
 	router.HandleFunc("/menu/{restaurantId}", findRestaurantMenu(formatter)).Methods("GET")
-	router.HandleFunc("/menu/item", updateItemsHandler(formatter)).Methods("PUT")
+	router.HandleFunc("/menu", updateMenuItemHandler(formatter)).Methods("PUT")
+	router.HandleFunc("/menu", deleteMenuItemHandler(formatter)).Methods("DELETE")
 
 }
 
@@ -112,7 +113,7 @@ func createMenuItemHandler(formatter *render.Render) http.HandlerFunc {
                 fmt.Println("error: ", err)
 
              	menu.RestaurantId = reqPayload.RestaurantId
-             	menu.RestaurantName = reqPayload.RestaurantName
+             	//menu.RestaurantName = reqPayload.RestaurantName
              	menu.Items = append(menu.Items, reqPayload.Item)
              	
             error := mongo_collection.Insert(menu)
@@ -120,8 +121,10 @@ func createMenuItemHandler(formatter *render.Render) http.HandlerFunc {
         	
         }else{
         	menu.Items = append(menu.Items, reqPayload.Item)
-        	error := mongo_collection.Update(bson.M{"restaurantid": menu.RestaurantId}, bson.M{"$set": bson.M{"items": append(menu.Items, reqPayload.Item)}})       	
-        	fmt.Println("error: ", error)
+        	error := mongo_collection.Update(bson.M{"restaurantid": menu.RestaurantId}, bson.M{"$set": bson.M{"items": menu.Items}})       	
+        	if error != nil {
+        		fmt.Println("error: ", error)
+        	}   
         }
         
         
@@ -138,7 +141,7 @@ func findRestaurantMenu(formatter *render.Render) http.HandlerFunc {
 		fmt.Println( "restaurant ID: ", restaurantId )
 		session, err := mgo.Dial(database_server)
         if err != nil {
-                panic(err)
+                formatter.JSON(response, http.StatusInternalServerError, "Menu not found !!!")
         }
         defer session.Close()
         //session.SetMode(mgo.Monotonic, true) need to check
@@ -146,7 +149,7 @@ func findRestaurantMenu(formatter *render.Render) http.HandlerFunc {
         var result bson.M
         err = mongo_collection.Find(bson.M{"restaurantid" : restaurantId}).One(&result)
         if err != nil {
-                log.Fatal(err)
+                formatter.JSON(response, http.StatusNotFound, "Menu not found !!!")
         }
         fmt.Println("Result: ", result)
 		formatter.JSON(response, http.StatusOK, result)
@@ -155,27 +158,79 @@ func findRestaurantMenu(formatter *render.Render) http.HandlerFunc {
 
 
 // API to update an items in the menu
-func updateItemsHandler(formatter *render.Render) http.HandlerFunc {
+func updateMenuItemHandler(formatter *render.Render) http.HandlerFunc {
 	return func(response http.ResponseWriter, request *http.Request) {
-		uuid,_ := uuid.NewV4()
-		var item menuItem
-		_ = json.NewDecoder(request.Body).Decode(&item)		
-    	fmt.Println("Menu Item: ", item.Name)
-    	fmt.Println("Menu Item Id: ", uuid)
-    	fmt.Println("Menu Item : ", item)
-		session, err := mgo.Dial(database_server)
+		var reqPayload restaurantReqBody
+		_ = json.NewDecoder(request.Body).Decode(&reqPayload)		
+    	fmt.Println("Menu ItemPayload ", reqPayload.Item)
+    	session, err := mgo.Dial(database_server)
         if err != nil {
                 panic(err)
         }
         defer session.Close()
-        item.Id = uuid.String()
-        mongo_collection := session.DB(database).C(collection)
-        error := mongo_collection.Insert(item)
-        if error != nil {
-                panic(error)
+       mongo_collection := session.DB(database).C(collection)
+        
+       	var menu Menu;
+        err = mongo_collection.Find(bson.M{"restaurantid" : reqPayload.RestaurantId}).One(&menu)
+        if err != nil {
+            fmt.Println("error: ", err)
+            formatter.JSON(response, http.StatusNotFound, menu)
+        	
+        }else{
+        	for i := 0; i < len(menu.Items); i++ {
+				if menu.Items[i].Id == reqPayload.Item.Id {
+					menu.Items[i].Name = reqPayload.Item.Name
+					menu.Items[i].Price = reqPayload.Item.Price
+					menu.Items[i].Description = reqPayload.Item.Description
+					menu.Items[i].Calories = reqPayload.Item.Calories
+					break
+				}
+			}
+        	error := mongo_collection.Update(bson.M{"restaurantid": menu.RestaurantId}, bson.M{"$set": bson.M{"items": menu.Items}})  
+        	if error != nil {
+        		fmt.Println("error: ", error)
+        	}     	
         }
-        fmt.Println("Menu mongo_collection: ", mongo_collection)
-		formatter.JSON(response, http.StatusOK, item)
+        
+        
+		formatter.JSON(response, http.StatusOK, menu)
+	}
+}
+
+// API to delete an items in the menu
+func deleteMenuItemHandler(formatter *render.Render) http.HandlerFunc {
+	return func(response http.ResponseWriter, request *http.Request) {
+		var reqPayload deleteReqBody
+		_ = json.NewDecoder(request.Body).Decode(&reqPayload)		
+    	fmt.Println("Menu ItemPayload ", reqPayload)
+    	session, err := mgo.Dial(database_server)
+        if err != nil {
+                panic(err)
+        }
+        defer session.Close()
+        mongo_collection := session.DB(database).C(collection)
+        
+       	var menu Menu; 
+        err = mongo_collection.Find(bson.M{"restaurantid" : reqPayload.RestaurantId}).One(&menu)
+        if err != nil {
+            fmt.Println("error: ", err)
+            formatter.JSON(response, http.StatusNotFound, menu)
+        	
+        }else{
+        	for i := 0; i < len(menu.Items); i++ {
+				if menu.Items[i].Id == reqPayload.ItemId {
+					menu.Items = append(menu.Items[0:i],menu.Items[i+1:]...)
+					break
+				}
+			}
+        	error := mongo_collection.Update(bson.M{"restaurantid": menu.RestaurantId}, bson.M{"$set": bson.M{"items": menu.Items}})  
+        	if error != nil {
+        		fmt.Println("error: ", error)
+        	}     	
+        }
+        
+        
+		formatter.JSON(response, http.StatusOK, menu)
 	}
 }
 

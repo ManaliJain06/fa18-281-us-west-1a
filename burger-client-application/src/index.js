@@ -15,10 +15,8 @@ const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_
 const store = createStore(
     allreducers,
     compose(
-        //middlewares,
-        devTools,
+        middlewares,
     )
-
 );
 
 ReactDOM.render(

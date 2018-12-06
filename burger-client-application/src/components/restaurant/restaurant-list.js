@@ -59,7 +59,7 @@ class ListRestaurant extends Component{
                                                     <td>{res.hours}</td>
                                                     <td>{res.distance}</td>
                                                     <td> <input className = "home-page-button" type="submit" value="Order" onClick={() => {
-                                                        this.props.history.push("/menu/"+res.restaurantId);}}/>
+                                                        this.props.history.push("/menu/"+res.restaurantid);}}/>
                                                     </td>
                                                 </tr>
                                         ))

@@ -60,69 +60,52 @@ class Menu extends Component{
         }});
   }
 
-  // getItems(items){
-  //   return items.map((item)=>{
-  //     return(
-  //         <tr className = "row">
-  //           <td>{item.name}</td>
-  //           <td>{item.description}</td>
-  //           <td>{item.calories}</td>
-  //           <td>$ {item.price}</td>
-  //           <td>
-  //           <span onClick={()=>{this.addItem(item)}}> <i className="fas fa-cart-plus"
-  //             style={{fontSize:24,color:"#72182a",cursor:"pointer"}}/>
-  //           </span>
-  //           </td>
-  //         </tr>
-  //     )
-  //   })
-  // }
+  getItems(items){
+    return items.map((item)=>{
+      return(
+        <tr className = "menu-table-item-row">
+            <td className = "menu-table-item-col">{item.name}</td>
+            <td className = "menu-table-item-col">{item.description}</td>
+            <td className = "menu-table-item-col">{item.calories}</td>
+            <td className = "menu-table-item-col">$ {item.price}</td>
+            <td className = "menu-table-item-col">
+            <span onClick={()=>{this.addItem(item)}}> <i className="fas fa-cart-plus"
+              style={{fontSize:24,color:"#72182a",cursor:"pointer"}}/>
+            </span>
+
+            </td>
+        </tr>
+      )
+    })
+  }
 
   displayMenu(){
     if(this.props.menu.items && this.props.menu.items.length > 0){
       console.log("[Menu] displayMenuItems items: ",this.props.menu.items )
       return(
-          <div className="content">
-              <div className="card">
-                <table>
-                  <tbody>
-                  <tr>
-                      <th>Name</th>
-                      <th>Content</th>
-                      <th>Calories</th>
-                      <th>Price</th>
-                      <th></th>
-                  </tr>
-                  {
-                      this.props.menu.items.map((item) => (
-                          <tr className = "row">
-                              <td>{item.name}</td>
-                              <td>{item.description}</td>
-                              <td>{item.calories}</td>
-                              <td>$ {item.price}</td>
-                              <td>
-                                    <span onClick={()=>{this.addItem(item)}}>
-                                        <i className="fas fa-cart-plus"
-                                           style={{fontSize:24,color:"#72182a",cursor:"pointer"}}/>
-                                    </span>
-                              </td>
-                          </tr>
-                      ))
-                  }
-                  </tbody>
-                </table>
-              </div>
-          </div>
-      )
+        <div className = "menu-item-div">
+        <table className="table-menu">
+          <tbody>
+          <tr className = "menu-table-header-row">
+              <th  className = "menu-table-item-col">Name</th>
+              <th  className = "menu-table-item-col">Content</th>
+              <th  className = "menu-table-item-col">Calories</th>
+              <th  className = "menu-table-item-col">Price</th>
+          </tr>
+          {this.getItems(this.props.menu.items)}
+          </tbody>
+        </table>
+        </div>)
+
     }else{
-      return null
+      return  null
     }
   }
 
 render(){
   console.log("[Menu] render url param: ",this.props.match.params.restaurantId);
   return (
-      <div className="outerdiv">
+      <div className="menu-home">
           <Header showCart={{status:true}}/>
           {this.displayMenu()}
       </div>

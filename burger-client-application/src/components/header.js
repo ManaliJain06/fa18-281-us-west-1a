@@ -41,7 +41,7 @@ class Header extends Component{
           <div className="leftheader"> The Counter Custom burgers </div>
           <div className="rightheader">
               <div className="topnav">
-                  <span>Home</span>
+                  <span style = {{cursor:"pointer"}} onClick={()=>{this.props.history.push("/")}}>Home</span>
                   <span>Sign up</span>
                   <span>Sign in</span>
                   {this.showCart()}
