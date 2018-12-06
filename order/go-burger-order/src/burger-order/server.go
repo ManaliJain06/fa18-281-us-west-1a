@@ -10,7 +10,7 @@ import (
 	"log"
 	"net/http"
 	"net"
-	//"os"
+	"os"
 
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
@@ -25,17 +25,17 @@ import (
 //var mongodb_server = "10.0.0.117"
 //var mongodb_server = "dockerhost"
 
-var mongodb_server = "13.57.246.180"
+/* var mongodb_server = "13.57.246.180"
 var mongodb_database = "burger"
 var mongodb_collection = "order"
 var mongo_user = "mongo_admin"
-var mongo_pass = "cmpe281"   
+var mongo_pass = "cmpe281"    */
 
-/* var mongodb_server = os.Getenv("Server")
+var mongodb_server = os.Getenv("Server")
 var mongodb_database = os.Getenv("Database")
 var mongodb_collection = os.Getenv("Collection")
 var mongo_user = os.Getenv("User")
-var mongo_pass = os.Getenv("Pass")   */
+var mongo_pass = os.Getenv("Pass")   
 
 // RabbitMQ Config
 // var rabbitmq_server = "rabbitmq"
