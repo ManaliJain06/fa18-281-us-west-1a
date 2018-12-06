@@ -13,11 +13,14 @@ import '../../stylesheets/payment.css';
 
 import Header from '../header';
 
-class payment extends Component {
+class UserSignIn extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
-        this.handleButton = this.handleButton.bind(this);
+        this.state = {
+            email:"",
+            password:""
+        };
+        this.handleLogin = this.handleLogin.bind(this);
         this.handleBackButton = this.handleBackButton.bind(this);
 
     }
@@ -32,16 +35,12 @@ class payment extends Component {
         }
     };
 
-    handleButton(event) {
+    handleLogin(event) {
         event.preventDefault();
-        console.log(`handleButton orderId=${this.state.orderId}, totalAmount=${this.state.totalAmount}`);
-
-        const data = {
-            userId: "0",
-            orderId: this.props.orderDetail.orderId,
-            totalAmount: this.props.orderDetail.totalAmount,
+        const payload = {
+            email: this.state.email,
+            orderId: this.state.password
         };
-
         this.props.PaymentCreate(data, this.props.history);
     }
 
@@ -56,21 +55,36 @@ class payment extends Component {
             <div className="menu-home">
                 <div className="outerdiv">
                     <Header/>
-
                     <div className="content payment">
                         <div className="card center">
                             <h2 id="center">Sign In</h2>
                             {
                                 <div>
                                     <form>
-                                        <label>User Name</label>
-                                        <input className="paymentInputText" type="text" id="username" name="UserName" placeholder="Username" />
+                                        <label>Email</label>
+                                        <input className="paymentInputText" type="text" id="email" name="Email" placeholder="Email"
+                                            onChange={
+                                                (event) => {
+                                                    this.setState({
+                                                        ...this.state,
+                                                        email: event.target.value});
+                                                }
+                                            }
+                                        />
                                         <label>Password</label>
-                                        <input className="paymentInputText" type="password" id="pass" name="password" placeholder="Password"/>
+                                        <input className="paymentInputText" type="password" id="pass" name="password" placeholder="Password"
+                                               onChange={
+                                                   (event) => {
+                                                       this.setState({
+                                                           ...this.state,
+                                                           password: event.target.value});
+                                                   }
+                                               }
+                                        />
                                     </form>
                                     <div className="btn-container">
                                         <input type="button" className="payment_button" value="Login to your account"
-                                               onClick={this.handleButton}/>
+                                               onClick={this.handleLogin}/>
                                     </div>
                                 </div>
                             }
@@ -101,24 +115,11 @@ const mapDispatchToProps = (dispatch) => {
         PaymentGetOrderDetail: (orderId) => {
             dispatch(paymentActions.axiosGetOrder(orderId));
         },
-
     }
-}
-
-// function mapDispatchToProps (dispatch) {
-// 	return bindActionCreators({
-// 		PaymentGetAll: paymentActions.getAll,
-// 	}, dispatch)
-// }
-
-// function mapDispatchToProps(dispatch) {
-// 	return bindActionCreators({
-// 			updateMenuList: updateMenuList
-// 	}, dispatch)
-// }
+};
 
 
-const connectedPayment = withRouter(connect(mapStateToProps, mapDispatchToProps)(payment));
+const connectedSignIn = withRouter(connect(mapStateToProps, mapDispatchToProps)(UserSignIn));
 
-export default connectedPayment;
+export default connectedSignIn;
 
