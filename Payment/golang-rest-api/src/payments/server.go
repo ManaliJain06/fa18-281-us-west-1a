@@ -30,13 +30,13 @@ import (
 
 // MongoDB Config
 // var mongodb_server = "localhost:27017"
-// var mongodb_database = "test"
+// var mongodb_database = "test" // cmpe281
 // var mongodb_collection = "payments"
 
 // Use EC2 MongoDB Sharding
 var mongodb_server = os.Getenv("AWS_MONGODB")
-var mongodb_database = "test"
-var mongodb_collection = "payments"
+var mongodb_database = os.Getenv("MONGODB_DBNAME")
+var mongodb_collection = os.Getenv("MONGODB_COLLECTION")
 
 type Payments []Payment
 
