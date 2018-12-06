@@ -21,5 +21,16 @@ export const callLoginApi = (payload) => () => {
             console.log('error calling login api, error:', res);
             return err;
     })
+};
 
+export const callRegisterAPI = (payload) => () => {
+    console.log("payload", JSON.stringify(payload))
+    return axios.post(`${userUrl}/users/signup`, payload, headers )
+        .then( (res) => {
+            console.log('call register api, res:', res);
+            return res;
+        }).catch( (err) => {
+            console.log('error calling login api, error:', res);
+            return err;
+        })
 };

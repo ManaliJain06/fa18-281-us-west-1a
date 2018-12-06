@@ -1,12 +1,7 @@
-/*
-	UI Component for Sign In page
-*/
-/*
-	UI Component to show payment web page
-*/
+
 import React, {Component} from 'react';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+// import {bindActionCreators} from 'redux';
+// import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom'
 import '../../index.css';
 import '../../stylesheets/payment.css';
@@ -21,16 +16,15 @@ class UserSignIn extends Component {
             password:""
         };
         this.handleLogin = this.handleLogin.bind(this);
-        this.handleBackButton = this.handleBackButton.bind(this);
-
     }
 
     componentDidMount = () => {
-        console.log('componentDidMount ---')
+        console.log('componentDidMount ---');
         const user = localStorage.getItem('user');
 
         // check if the user is already signed in
         if (user != null) {
+            alert("You are already logged in!");
             this.props.history.push('/');
         }
     };
@@ -110,30 +104,17 @@ class UserSignIn extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        data: state.payment.data,
-        orderDetail: state.payment.orderDetail,
-
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        PaymentGetAll: () => {
-            dispatch(paymentActions.axiosGetAll());
-        },
-        PaymentCreate: (data, router) => {
-            dispatch(paymentActions.axiosCreatePayment(data, router));
-        },
-        PaymentGetOrderDetail: (orderId) => {
-            dispatch(paymentActions.axiosGetOrder(orderId));
-        },
-    }
-};
+// const mapStateToProps = (state) => {
+//     return {
+//     }
+// };
+//
+// const mapDispatchToProps = (dispatch) => {
+//     return {}
+// };
 
 
-const connectedSignIn = withRouter(connect(mapStateToProps, mapDispatchToProps)(UserSignIn));
+const routerSignIn = withRouter(UserSignIn);
 
-export default connectedSignIn;
+export default routerSignIn;
 
