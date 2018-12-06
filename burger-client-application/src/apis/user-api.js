@@ -11,26 +11,26 @@ let headers = {
     }
 };
 
-export const callLoginApi = (payload) => () => {
-    console.log("payload", JSON.stringify(payload))
+export const callLoginApi = (payload) => {
+    console.log("payload", JSON.stringify(payload));
     return axios.post(`${userUrl}/users/signin`, payload, headers )
-        .then( (res) => {
+        .then( function(res) {
             console.log('call login api, res:', res);
-            return res;
-        }).catch( (err) => {
-            console.log('error calling login api, error:', res);
-            return err;
-    })
+            return res
+        }).catch( function(err) {
+            console.log('error calling login api, error:', err);
+            return err
+        });
 };
 
-export const callRegisterAPI = (payload) => () => {
-    console.log("payload", JSON.stringify(payload))
+export const callRegisterAPI = (payload) => {
+    console.log("payload", JSON.stringify(payload));
     return axios.post(`${userUrl}/users/signup`, payload, headers )
-        .then( (res) => {
+        .then( function(res){
             console.log('call register api, res:', res);
-            return res;
-        }).catch( (err) => {
-            console.log('error calling login api, error:', res);
-            return err;
-        })
+           return res
+        }).catch( function (err) {
+            console.log('error calling login api, error:', err);
+           return err
+        });
 };

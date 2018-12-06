@@ -21,7 +21,7 @@ class UserSignUp extends Component {
             password: "",
             email: ""
         };
-        this.handleLogin = this.handleLogin.bind(this);
+        //this.handleRegister = this.handleRegister.bind(this);
     }
 
     componentDidMount = () => {
@@ -162,7 +162,7 @@ class UserSignUp extends Component {
                                     </form>
                                     <div className="btn-container">
                                         <input type="button" className="payment_button" value="Create a new account"
-                                               onClick={() =>{this.handleRegister()}}/>
+                                               onClick={(e)=>{this.handleRegister(e)}}/>
                                     </div>
                                 </div>
                             }
@@ -184,7 +184,7 @@ class UserSignUp extends Component {
 // };
 
 
-const routerSignIn = withRouter(UserSignIn);
+const routerSignUp = withRouter(UserSignUp);
 
-export default routerSignIn;
+export default routerSignUp;
 

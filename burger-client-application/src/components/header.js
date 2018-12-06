@@ -43,7 +43,7 @@ class Header extends Component{
     console.log("[Header] render: ");
     let loginLogout;
     let user = localStorage.getItem("user");
-    if(user != null){
+    if(user == null){
         loginLogout = <span style = {{cursor:"pointer"}} onClick={()=>{this.props.history.push("/login")}}>Sign in</span>;
     }
     else{

@@ -33,7 +33,7 @@ class UserSignIn extends Component {
         event.preventDefault();
         const payload = {
             email: this.state.email,
-            orderId: this.state.password
+            password: this.state.password
         };
         UserAPI.callLoginApi(payload)
             .then((res) => {
@@ -41,21 +41,21 @@ class UserSignIn extends Component {
                     let user = {
                         email:res.data.email,
                         id: res.data.id,
-                        name: res.data.firstname + "" + res.data.lastname
+                        name: res.data.firstName + " " + res.data.lastName
                     };
                     localStorage.setItem('user', user);
+                    this.props.history.push('/');
+                }else if(res.status === 401){
+                    alert("password does not match with given username")
                 }
             })
             .catch((err) => {
+                if(err.status === 401){
+                    alert("password does not match with given username")
+                }
                 console.log("some error occured :", err.error())
             })
 
-    }
-
-    handleBackButton(event) {
-        event.preventDefault();
-        console.log(`handleButton go back home`);
-        this.props.history.push('/');
     }
 
     render() {

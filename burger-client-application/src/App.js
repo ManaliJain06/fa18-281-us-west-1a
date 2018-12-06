@@ -9,6 +9,8 @@ import ListRestaurant from "./components/restaurant/restaurant-list";
 import PaymentOverview from "./components/payment/payment";
 import PaymentSuccess from './components/payment/paymentSuccess';
 import PaymentError from './components/payment/paymentError';
+import UserSignIn from './components/user/user-signin'
+import UserSignUp from './components/user/user-signup'
 
 class App extends Component {
 
@@ -23,7 +25,9 @@ class App extends Component {
             <Route path="/payment" render={() => (<PaymentOverview />) } />
             <Route path="/paymentSuccess" render={() => (<PaymentSuccess />) } />
             <Route path="/paymentError" render={() => (<PaymentError />) } />
-            {/*<Route path="/login" render={() =>(<UserLogin />)}/>*/}
+            <Route path="/login" render={() =>(<UserSignIn />)}/>
+            <Route path="/signup" render={() =>(<UserSignUp />)}/>
+
           </Switch>
       </div>
     );
