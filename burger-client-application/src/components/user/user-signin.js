@@ -20,7 +20,7 @@ class UserSignIn extends Component {
 
     componentDidMount = () => {
         console.log('componentDidMount ---');
-        const user = localStorage.getItem('user');
+        const user = JSON.parse(localStorage.getItem('user'));
 
         // check if the user is already signed in
         if (user != null) {
@@ -41,9 +41,9 @@ class UserSignIn extends Component {
                     let user = {
                         email:res.data.email,
                         id: res.data.id,
-                        name: res.data.firstName + " " + res.data.lastName
+                        name: res.data.firstName
                     };
-                    localStorage.setItem('user', user);
+                    localStorage.setItem('user', JSON.stringify(user));
                     this.props.history.push('/');
                 }else if(res.status === 401){
                     alert("password does not match with given username")

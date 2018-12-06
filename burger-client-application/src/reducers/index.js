@@ -3,6 +3,7 @@ import menu from './menu-reducer';
 import restaurant from './restaurant-reducer';
 import order from './order-reducer';
 import payment from './payment-reducer';
+import user from './user-reducer'
 
 
 const allReducers = combineReducers({
@@ -11,6 +12,7 @@ const allReducers = combineReducers({
     restaurant:restaurant,
     order:order,
     payment,
+    userOrders:user
 });
 
 export default allReducers;
