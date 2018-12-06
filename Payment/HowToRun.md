@@ -204,13 +204,16 @@ docker-compose up -d --scale payments=1 --no-recreate
 
 // run docker normally
 docker run --name payments -e AWS_MONGODB=mongodb://<username>:<password>@<mongo-ec2-instance-ip>:27017 -e MONGODB_DBNAME=cmpe281 -e MONGODB_COLLECTION=payments -p 8000:8000 -d nerdijoe/golang-payments
+
+docker run --name payments -e AWS_MONGODB=mongodb://<username>:<password>@ec2-54-215-217-211.us-west-1.compute.amazonaws.com:27017 -e MONGODB_DBNAME=cmpe281 -e MONGODB_COLLECTION=payments -p 8000:8000 -d nerdijoe/golang-payments
+
 ```
 
-
+#### Stop, delete payments container, and delete golang-payments image
 ```
-docker-compose stop payments
-docker-compose rm payments
-docker-compose rmi payments
+docker stop payments
+docker rm payments
+docker rmi <imageid>
 ```
 
 See docker logs
@@ -318,7 +321,7 @@ kubectl run payments --image=gcr.io/${PROJECT_ID}/payments:v1 --port 8000 --env 
 ```
 
 ```
-kubectl expose deployment payments --type=LoadBalancer --port 80 --target-port 8000
+kubectl expose deployment payments --type=LoadBalancer --port 8000 --target-port 8000
 kubectl get service
 
 kubectl scale deployment payments --replicas=3
@@ -329,11 +332,15 @@ kubectl get deployment payments
 ### deploy new version
 ### build your image
 ```
-docker build -t gcr.io/${PROJECT_ID}/payments:v2 .
-docker push gcr.io/${PROJECT_ID}/payments:v2
+git pull origin master
 
-kubectl set image deployment/payments payments=gcr.io/${PROJECT_ID}/payments:v2
+docker build -t gcr.io/${PROJECT_ID}/payments:v3 .
+docker push gcr.io/${PROJECT_ID}/payments:v3
 
+kubectl set image deployment/payments payments=gcr.io/${PROJECT_ID}/payments:v3
+
+kubectl get service
+kubectl get pods
 ```
 
 
