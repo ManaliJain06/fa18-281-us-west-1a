@@ -6,3 +6,9 @@ export function updateCart(data) {
         data
     }
 }
+
+export function removeCartDataAfterExport() {
+    return {
+        type: actionTypes.REMOVE_CART_DATA_AFTER_PAYMENT
+    }
+}

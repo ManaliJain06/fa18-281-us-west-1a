@@ -57,7 +57,7 @@ class ListRestaurant extends Component{
                                 <Header showCart={{status:true}}/>
                                 <div className="content">
                                     <div className="card">
-                                        <table className="tableRestaurant">
+                                        <table cellPadding={10} className="tableRestaurant">
                                             <tbody>
                                             <tr>
                                                 <th>Name</th>
