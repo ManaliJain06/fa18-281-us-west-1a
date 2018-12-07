@@ -5,11 +5,11 @@ services:
     ports:
       - 8000:8000
     environment: 
-      - Server=13.57.246.180
-      - Database=burger
-      - Collection=order
-      - User=mongo_admin
-      - Pass=cmpe281
+      - Server=YourServer
+      - Database=YourDB
+      - Collection=YourCollection
+      - User=YourDBUser
+      - Pass=YourPass
 
 volumes:
   schemas:
