@@ -1,96 +1,101 @@
 # Order/cart API
 
-## 1. Add item to new cart
+## 1. Add item to cart
 Request
 ```
 Post /order
 Content-Type: application/json
 ```
 
-| Parameter        | Type           | Description  |
-| ------------- |-------------| -----|
-| userId    | string  | User ID
-| itemId    | string  | Item ID
-| quantity  | int     | Item quantity
+| Parameter     | Type    | Description  |
+| ------------- |---------| -------------|
+| orderId       | string  | Order ID
+| userId        | string  | User ID
+| itemId        | string  | Item ID
+| itemName      | string  | Item Name
+| price         | float32 | Item Price
+| description   | string  | Item Description
 
 Response
 
 Parameters for Success (Status code: 200)
 
-| Parameter        | Type           | Description  |
-| ------------- |-------------| -----|
+| Parameter     | Type      | Description |
+| ------------- |-----------| ------------|
 | orderId       | string    | order ID
-| items         | struct    | item ID, quantity   
-| orderStatus   | string    | placed, paid, removed
-| totalAmount   | double    | total price
+| userId        | string    | User ID
+| orderStatus   | string    | placed, paid
+| items         | struct    | item ID, itemName, price, description   
+| totalAmount   | float32   | total price
 
 
 Parameters for Error (Status code: 400)
 
-| Parameter        | Type           | Description  |
-| ------------- |-------------| -----|
-| Message   | string  | Error message 
+| Parameter     | Type      | Description  |
+| ------------- |-----------| -------------|
+| Message       | string    | Error message 
  
 ## 2. View cart by userId
 Request
 ```
-Get /order
+Get /orders/{userId}
 Content-Type: application/json
 ```
 
-| Parameter        | Type           | Description  |
-| ------------- |-------------| -----|
-| userId   | string  | User ID
+| Parameter     | Type      | Description |
+| ------------- |-----------| ------------|
+| userId        | string    | User ID
 
 Response
 Parameters for Success (Status code: 200)
 
-| Parameter        | Type           | Description  |
-| ------------- |-------------| -----|
-| userId        | string    | User ID
+| Parameter     | Type      | Description |
+| ------------- |-----------| ------------|
 | orderId       | string    | order ID
-| items         | struct    | item ID, quantity   
-| orderStatus   | string    | placed, paid, removed
-| totalAmount   | double    | total price
+| userId        | string    | User ID
+| orderStatus   | string    | placed, paid
+| items         | struct    | item ID, itemName, price, description   
+| totalAmount   | float32   | total price
+
 
 Parameters for Error (Status code: 400)
 
-| Parameter        | Type           | Description  |
-| ------------- |-------------| -----|
-| Message   | string  | Error message 
+| Parameter     | Type      | Description  |
+| ------------- |-----------| -------------|
+| Message       | string    | Error message 
  
 
-## 3. Edit cart
+## 3. Cart Checkout
 Request
 ```
-Put /order/
+Put /order/{orderId}
 Content-Type: application/json
 ```
 
-| Parameter        | Type           | Description  |
-| ------------- |-------------| -----|
-| userId    | string | User ID
-| orderId   | string | order ID
-| itemId    | string | Item ID
-| quantity  | int    | Item quantity
+| Parameter     | Type      | Description |
+| ------------- |-----------| ------------|
+| orderId       | string    | order ID
+| userId        | string    | User ID
 
 Response
 
 Parameters for Success (Status code: 200)
 
-| Parameter        | Type           | Description  |
-| ------------- |-------------| -----|
-| userId        | string  | User ID
-| orderId       | string  | order ID
-| items         | struct  | item ID, quantity   
-| orderStatus   | string  | placed, paid, removed
-| totalAmount   | double  | total price
+| Parameter     | Type      | Description |
+| ------------- |-----------| ------------|
+| orderId       | string    | order ID
+| userId        | string    | User ID
+| orderStatus   | string    | placed, paid
+| items         | struct    | item ID, itemName, price, description   
+| totalAmount   | float32   | total price
 
 Parameters for Error (Status code: 400)
 
-| Parameter        | Type           | Description  |
-| ------------- |-------------| -----|
-| Message   | string  | Error message 
+Parameters for Error (Status code: 400)
+
+| Parameter     | Type      | Description  |
+| ------------- |-----------| -------------|
+| Message       | string    | Error message 
 
 
 ## 4. Delete cart
