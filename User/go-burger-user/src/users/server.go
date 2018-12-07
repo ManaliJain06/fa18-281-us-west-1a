@@ -12,15 +12,16 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"github.com/satori/go.uuid"
 	"net"
+	"os"
 	"strings"
 )
 
-var mongodb_server = "13.56.140.21:27017"
-var mongodb_database = "burger"
-var mongodb_collection = "Users"
-var mongo_admin_database = "admin"
-var mongo_username = "mongo-admin"
-var mongo_password = "cmpe281"
+var mongodb_server = os.Getenv("MONGO_SERVER")
+var mongodb_database = os.Getenv("MONGO_DATABASE")
+var mongodb_collection = os.Getenv("MONGO_COLLECTION")
+var mongo_admin_database = os.Getenv("MONGO_ADMIN_DATABASE")
+var mongo_username = os.Getenv("MONGO_USERNAME")
+var mongo_password = os.Getenv("MONGO_PASS")
 
 func MenuServer() *negroni.Negroni {
 	formatter := render.New(render.Options{
@@ -196,11 +197,15 @@ func DeleteUser(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	err = session.DB(mongo_admin_database).Login(mongo_username, mongo_password)
-	if err != nil {
+	if err != nil && err != mgo.ErrNotFound {
 		message := struct {Message string}{"Some error occured while login to database!!"}
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(message)
 		return
+	}else if err == mgo.ErrNotFound {
+		message := struct {Message string}{"user not found!!"}
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(message)
 	}
     defer session.Close()
     session.SetMode(mgo.Monotonic, true)
