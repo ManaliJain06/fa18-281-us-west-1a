@@ -75,7 +75,7 @@ class UserSignUp extends Component {
                     <Header/>
                     <div className="content payment">
                         <div className="card center">
-                            <h2 id="center">Sign In</h2>
+                            <h2 id="center">Sign Up</h2>
                             {
                                 <div>
                                     <form>

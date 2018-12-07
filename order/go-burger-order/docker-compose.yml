@@ -1,0 +1,16 @@
+version: "3"
+services:
+  order:
+    image: fjong1/test:order-aws
+    ports:
+      - 8000:8000
+    environment: 
+      - Server=YourServer
+      - Database=YourDB
+      - Collection=YourCollection
+      - User=YourDBUser
+      - Pass=YourPass
+
+volumes:
+  schemas:
+    external: false

@@ -39,6 +39,13 @@ class payment extends Component {
 		console.log('componentDidMount ---')
 		// this.props.PaymentGetAll();
 
+		const user = JSON.parse(localStorage.getItem('user'));
+		if (user == null) {
+				alert("You are not logged in!");
+				this.props.history.push('/login');
+		}
+
+
 		const orderId = localStorage.getItem('orderId');
 
 		// check for null
@@ -66,11 +73,20 @@ class payment extends Component {
 		event.preventDefault();
 		console.log(`handleButton orderId=${this.state.orderId}, totalAmount=${this.state.totalAmount}`);
 
+		const user = JSON.parse(localStorage.getItem('user'));
+		
+		var userId = "0";
+		if (user != null) {
+			userId = user.id
+		}
+
 		const data = {
-			userId: "0",
+			userId,
 			orderId: this.props.orderDetail.orderId,
 			totalAmount: this.props.orderDetail.totalAmount,
-		}		
+		}
+
+		console.log('handleButton data=', data);
 
 		this.props.PaymentCreate(data, this.props.history);
 	}

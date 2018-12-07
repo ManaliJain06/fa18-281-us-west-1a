@@ -44,7 +44,7 @@ export const axiosCreatePayment = (data, router) => (dispatch) => {
   console.log('axiosCreatePayment');
 	console.log('before axios router', router)
   axios.post(`${paymentUrl}/payments`, {
-		userId: "0",
+		userId: data.userId,
 		orderId: data.orderId,
 		totalAmount: data.totalAmount,
   }).then( res => {

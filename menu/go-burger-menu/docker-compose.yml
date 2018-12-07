@@ -1,0 +1,16 @@
+version: "3"
+services:
+  menu:
+    image: menu
+    ports:
+      - 8000:8000
+    environment: 
+      - DatabaseServer=18.144.8.184:27017
+      - Database=burger
+      - Collection=menu
+      - User=mongo-admin
+      - Pass=cmpe281
+
+volumes:
+  schemas:
+    external: false
