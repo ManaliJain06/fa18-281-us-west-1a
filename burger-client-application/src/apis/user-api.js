@@ -36,7 +36,6 @@ export const callRegisterAPI = (payload) => {
 };
 
 export const callUserOrdersAPI = (userId) => {
-    console.log("payload", JSON.stringify(payload));
     return axios.get(`${orderUrl}/orders/${userId}`, headers )
         .then( function(res){
             console.log('call register api, res:', res);
