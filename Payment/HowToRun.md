@@ -358,3 +358,28 @@ kubectl get pods
 kubectl delete service payments
 gcloud container clusters delete cluster
 ```
+
+
+
+
+## Heroku
+
+Deploy React frontend to heroku
+
+```
+//go to your repo directory
+
+heroku login
+
+heroku create
+
+https://git.heroku.com/counterburger.git
+
+git remote add heroku https://git.heroku.com/counterburger.git
+
+// only push the React app client subdirectory
+git subtree push --prefix burger-client-application heroku master
+```
+
+
+

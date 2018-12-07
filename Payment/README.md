@@ -1,5 +1,13 @@
 # Payment API 💵
 
+
+### Golang Payment API runs on Google Kubernetes Engine
+
+Load balancer IP:
+```
+http://35.247.121.55:8000
+```
+
 **Attributes**
 
 |Attribute Name	| Type	| Description|
