@@ -263,3 +263,58 @@ We have deployed out 1 microservice (Paymennt) on Google GKE
 
 We have deployed our 1 microservices (Order) on Kubernetes on Azure
 
+
+# Testing 
+## Application Flow
+
+##### 1) Find restaurants by entering zipcode
+
+![Homepage]()
+
+##### 2) Getting list of all the restaurant
+
+![getRestaurant]()
+
+##### 3) Get menu items for a particular restaurant
+
+![getMenu]()
+
+##### 4) Adding menu items to cart
+
+![addMenu]()
+
+##### 5) Processing oder by clicking on item cart
+
+![checkout]()
+
+##### 6) Checkout items
+
+Error: You cannot process to payment for the order untill you login
+
+![checkout-error]()
+
+
+
+Success: Redirect to login page
+
+![checkout-success1]()
+
+
+
+![checkout-success2]()
+
+
+
+##### 7) Payment page for ordering burger
+
+![payment1]()
+
+![payment2]()
+
+![paymentConfirmation]()
+
+
+
+##### 8) See all the orders for a user
+
+![viewOrders]()

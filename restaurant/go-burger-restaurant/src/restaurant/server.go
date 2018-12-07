@@ -22,12 +22,19 @@ import (
 )
 
 // Configuration parameters for MongoDB databse
-var mongodb_server = "54.67.41.59:27017"
-var mongodb_database = "burger"
-var mongodb_collection = "restaurant"
-var mongo_user = "mongo-admin"
-var mongo_pass = "cmpe281"
-var adminDatabase = "admin"
+// var mongodb_server = "54.67.41.59:27017"
+// var mongodb_database = "burger"
+// var mongodb_collection = "restaurant"
+// var mongo_user = "mongo-admin"
+// var mongo_pass = "cmpe281"
+// var adminDatabase = "admin"
+
+var mongodb_server = os.Getenv("Server")
+var mongodb_database = os.Getenv("Database")
+var mongodb_collection = os.Getenv("Collection")
+var mongo_user = os.Getenv("User")
+var mongo_pass = os.Getenv("Pass") 
+var adminDatabase = os.Getenv("Admin")
 /*
 Reference for Server configuration taken from - https://github.com/paulnguyen/cmpe281/blob/master/golabs/godata/go-gumball-mongo/src/gumball/server.go
 */
