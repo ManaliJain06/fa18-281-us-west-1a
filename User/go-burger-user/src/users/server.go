@@ -12,6 +12,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"github.com/satori/go.uuid"
 	"net"
+	"strings"
 )
 
 var mongodb_server = "13.56.140.21:27017"
@@ -58,9 +59,11 @@ func getSystemIp() string {
     if err != nil {
 		return "" 
 	}
-     defer conn.Close()
-	 localAddr := conn.LocalAddr().(*net.UDPAddr).String()
-	 return localAddr
+    defer conn.Close()
+	localAddr := conn.LocalAddr().(*net.UDPAddr).String()
+	address := strings.Split(localAddr, ":")
+    fmt.Println("address: ", address[0])
+    return address[0]
 }
 
 func GetUser(w http.ResponseWriter, req *http.Request) {

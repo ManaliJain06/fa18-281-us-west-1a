@@ -18,6 +18,7 @@ import (
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/gorilla/handlers"
+	"strings"
 )
 
 /*
@@ -94,8 +95,21 @@ func handleRequest() {
 // API Ping Handler
 func pingHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		formatter.JSON(w, http.StatusOK, struct{ Test string }{"Payment API version 1.0 is alive!"})
+		message := "Burger Payments API Server Working on machine: " + getSystemIp()
+		formatter.JSON(w, http.StatusOK, struct{ Test string }{message})
 	}
+}
+
+func getSystemIp() string {
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+    if err != nil {
+		return "" 
+	}
+    defer conn.Close()
+	localAddr := conn.LocalAddr().(*net.UDPAddr).String()
+	address := strings.Split(localAddr, ":")
+    fmt.Println("address: ", address[0])
+    return address[0]
 }
 
 // func allPayments(w http.ResponseWriter, r *http.Request) {
