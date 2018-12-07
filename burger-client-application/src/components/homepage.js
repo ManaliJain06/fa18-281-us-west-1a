@@ -23,7 +23,7 @@ class Homepage extends Component{
         console.log("home page render");
         return (
             <div className="outerdiv">
-                <Header/>
+                <Header showCart={{status:true}}/>
                 <div className="content">
                     <div id="left">
                         <h3>1. Find your location</h3>

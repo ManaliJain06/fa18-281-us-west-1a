@@ -60,14 +60,14 @@ None
   - Create database design for the restaurant module
 
 # Varun
-    - Created User API desgin document. Which contains the details of all the api user module will have.
-    - Understanding the restful standards and implementing .
-    - Learning Golang for implementing the Gol mongodb
+  - Created User API desgin document. Which contains the details of all the api user module will have.
+  - Understanding the restful standards and implementing .
+  - Learning Golang for implementing the Gol mongodb
 
 # Fulbert
-    - Created Order API design document which will function as cart
-    - Start creating a local mongodb for testing
-    - Start working on REST API development
+  - Created Order API design document which will function as cart
+  - Start creating a local mongodb for testing
+  - Start working on REST API development
 
 ## Blockers
 None as of now.
@@ -106,6 +106,51 @@ Database - MongoDB with Sharding implemented
 - Created and tested Get restaurant list API
 - Created and tested Delete restaurant API
 
+# Arijit
+- Created database in mongodb
+- Created and tested GO add menu API
+- Created and tested menu delete API
+- Created and tested GO find menu API
 
-## Blockers
-Connecting React server with go API as it gives a CORS error.
+# Rudy
+- Created database in mongodb
+- Created and tested GO get all payments API
+- Created and tested GO create payment API
+- Created and tested GO Delete payment API
+
+## Challenges
+1) Connecting React server with go API as it gives a CORS error.
+2) Enablling cross origin request for Golang
+3) MongoDB sharding creating issues when deleting or editing docuemnts
+
+# Week 4 (11/18/2019 - 11/24/2019)
+## Minutes of meeting for team meeting
+1) Start Creating UI for individual module.
+2) Making a bolier plate code for UI in React framework for each team member to follow.
+3) Initial integration of one Golang API with the UI.
+
+## Outcome
+
+## Challenges
+
+# Week 5 (11/25/2019 - 11/101/2019)
+## Minutes of meeting for team meeting
+1) Extensivvely starting working on UI and its bug fixes
+2) To explore various WOW factors for the project
+3) Designing the deployment for front end and backend
+
+## Outcome
+
+## Challenges
+
+# Week 6 (12/01/2019 - 12/07/2019)
+## Minutes of meeting for team meeting
+1) Start integrating indvidual'd module with the UI
+2) Performing testing on each module.
+3) Testing the full flow for the application and writing test cases
+3) Deploy backend services and front end on cloud and do integration testing
+
+## Outcome
+
+## Challenges
+
