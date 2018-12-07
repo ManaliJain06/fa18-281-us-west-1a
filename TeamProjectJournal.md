@@ -1,3 +1,9 @@
+**Team Project Journal**
+
+# US-WEST-1A 🏖
+
+# Project 🍔
+# Weekly Progress and Challenges 
 # Oct
 
 # Week 1 (10/23/2018 - 11/3/2019)
@@ -29,7 +35,7 @@ None
 3) Create Design Spec documents
 
 ## Outcome-
-# Rudy
+## Rudy
   - Created simple Payment REST api in golang
     GET get all payments
     GET get payment by id
@@ -39,7 +45,7 @@ None
 
   - Also managed to connect to local mongodb.
   
-# Arijit
+## Arijit
   - Created Menu REST api in golang
     POST create an item in the menu
     GET get menu item bu Id
@@ -49,7 +55,7 @@ None
   - Also designed the database collection attributes
   - Tested the API's using Postman
 
-# Manali
+## Manali
   - Create Restaurnat API design document
   - Create REST API for Restaurant in Golang
     POST create a new restaurant
@@ -59,12 +65,12 @@ None
 
   - Create database design for the restaurant module
 
-# Varun
+## Varun
   - Created User API desgin document. Which contains the details of all the api user module will have.
   - Understanding the restful standards and implementing .
   - Learning Golang for implementing the Gol mongodb
 
-# Fulbert
+## Fulbert
   - Created Order API design document which will function as cart
   - Start creating a local mongodb for testing
   - Start working on REST API development
@@ -85,36 +91,36 @@ Front end - In React.js
 Back end - Golang
 Database - MongoDB with Sharding implemented
 
-# Varun
+### Varun
   - Created database in mongodb.
   - Created Create user API.
   - Created Get user API.
   - Created Delete user API.
   - Created GetAll user API.
 
-# Fulbert
+## Fulbert
   - Created a local mongodb for testing
   - Created Create order API
   - Created Get order by ID API
   - Creted Getall orders API
 
-# Manali
+## Manali
   - Created database in mongodb
   - Created and tested GO Add restaurant API
   - Created and tested Get restaurant list API
   - Created and tested Delete restaurant API
 
-# Arijit
+## Arijit
   - Created database in mongodb
   - Created and tested GO add menu API
   - Created and tested menu delete API
   - Created and tested GO find menu API
 
-# Rudy
-- Created database in mongodb
-- Created and tested GO get payments details by Id API
-- Created and tested GO create payment API
-- Created and tested GO add new payment API
+## Rudy
+  - Created database in mongodb
+  - Created and tested GO get payments details by Id API
+  - Created and tested GO create payment API
+  - Created and tested GO add new payment API
 
 ## Challenges
 1) Connecting React server with go API as it gives a CORS error.
@@ -130,28 +136,28 @@ Database - MongoDB with Sharding implemented
 
 ## Outcome
  
-# Varun
+## Varun
   - Task division for UI module
   - MongoDB sharing implementation
   - Integration of create user APIs with client
 
-# Fulbert
+## Fulbert
   - Task division for UI module
   - Created Create order API
   - Created Get order by ID API
   - Creted Getall orders API
 
-# Manali
+## Manali
   - Task division for UI module
   - Sharding for MongoDB and testing 
   - Created and tested get all restaurant API
 
-# Arijit
+## Arijit
   - Task division for UI module
   - Created and tested GO update menu API
   - MongoDB sharding and testing with APIs
 
-# Rudy
+## Rudy
   - Task division for UI module
   - MongoDB sharding and testing
   - Created and tested Edit payment
@@ -167,28 +173,28 @@ Database - MongoDB with Sharding implemented
 
 ## Outcome
 
-# Varun
+## Varun
   - UI development for User module
   - Understanding the working of ECS for GO service deployment
   - API bug fixes
 
-# Fulbert
+## Fulbert
   - UI development for restaurant for order
   - Worked on integration of Menu and Order module
   - Order service deployment on Docker container on EC2
 
-# Manali
+## Manali
   - UI development for restaurant
   - Integration testing of APIs with client
   - UI bug fixes.
   - Deploying GO APIs on docker container on EC2
 
-# Arijit
+## Arijit
   - UI development for Menu
   - GO API deployment on docker container on EC2
   - UI and backend Bug fixes and integration with Order
 
-# Rudy
+## Rudy
   - UI development
   - Deploying GO APIs on docker container on EC2
   - Working with Sharding replication and configuring on EC2
@@ -204,29 +210,29 @@ Database - MongoDB with Sharding implemented
 3) Deploy backend services and front end on cloud and do integration testing
 
 ## Outcome
-# Varun
+## Varun
   - Integrating UI if User with the system
   - Made necessary changes to incorporate User in every module
   - Deployment of GO services in ECS
 
-# Fulbert
+## Fulbert
   - Integration of Client and backend for testing
   - Worked on deploying Golang app on Azure Cloud
   - Soled issues with ECS deployment of Health Checks
 
-# Manali
+## Manali
   - Integration on Client and GO APIs and tested the whole flow of the application
   - UI testing and bug fixes for Restaurant and Menu module
   - Solving Redux issues for React
   - Deployment of GO server APIs on ECS
 
-# Arijit
+## Arijit
   - UI and Backend Integration of Menu and connecting with Restaurant
   - Worked on AWS API gateway and integrating every module with .
   - GO API deployment on ECS
   - UI and backend Bug fixes.
 
-# Rudy
+## Rudy
   - Integrated Payments client with GO APIs and Integration testing of the application
   - Setup the redux payment store
   - Deployed golang app on AWS ECS
@@ -238,8 +244,7 @@ Database - MongoDB with Sharding implemented
 3) Client deployment on Heroku was giving SSL issue on deployment which was later fixed and the application is running fine now
 4) AWS API gateway is returning every request with status of 200 Ok even if the request failed at the backend
 
-
-!!! **WOW Factor** !!!
+# !!!**WOW Factor**!!!
 
 # Amazon EC2 Container Service
 Amazonm ECS is a container service which is used to deploy services on a group of servers forming a cluster. ECS deploys docker container for distributed applications. It also evaluates the CPU usage and memory consumptions to determine the deployment requirements of a container.
