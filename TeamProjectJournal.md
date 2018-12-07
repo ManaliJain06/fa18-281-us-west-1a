@@ -194,6 +194,7 @@ Database - MongoDB with Sharding implemented
   - Working with Sharding replication and configuring on EC2
 
 ## Challenges
+1) Health checks for ECS is failing resulting in draining of services
 
 # Week 6 (12/01/2019 - 12/07/2019)
 ## Minutes of meeting for team meeting
@@ -203,7 +204,27 @@ Database - MongoDB with Sharding implemented
 3) Deploy backend services and front end on cloud and do integration testing
 
 ## Outcome
+# Varun
+  - Integrating UI if User with the system
+  - Made necessary changes to incorporate User in every module
+  - Deployment of GO services in ECS
 
+# Fulbert
+  - Integration of Client and backend for testing
+  - Worked on deploying Golang app on Azure Cloud
+  - Soled issues with ECS deployment of Health Checks
+
+# Manali
+  - Integration on Client and GO APIs and tested the whole flow of the application
+  - UI testing and bug fixes for Restaurant and Menu module
+  - Solving Redux issues for React
+  - Deployment of GO server APIs on ECS
+
+# Arijit
+  - UI and Backend Integration of Menu and connecting with Restaurant
+  - Worked on AWS API gateway and integrating every module with .
+  - GO API deployment on ECS
+  - UI and backend Bug fixes.
 
 # Rudy
   - Integrated Payments client with GO APIs and Integration testing of the application
@@ -214,4 +235,22 @@ Database - MongoDB with Sharding implemented
 ## Challenges
 1) Sharding is not properly distributed, need to pick the correct sharded key.
 2) AWS ECS keeps stopping, it turned out, the health check was not properly configured.
+3) Client deployment on Heroku was giving SSL issue on deployment which was later fixed and the application is running fine now
+4) AWS API gateway is returning every request with status of 200 Ok even if the request failed at the backend
+
+
+!!! **WOW Factor** !!!
+
+# Amazon EC2 Container Service
+Amazonm ECS is a container service which is used to deploy services on a group of servers forming a cluster. ECS deploys docker container for distributed applications. It also evaluates the CPU usage and memory consumptions to determine the deployment requirements of a container.
+
+We have deployed our 3 microservices (User, Restaurant and Menu) on ECS. The details of them are as below.
+
+# Google Kubernetes Engine (GKE)
+
+We have deployed out 1 microservice (Paymennt) on Google GKE
+
+# Azure Kubernetes Service (AKS)
+
+We have deployed our 1 microservices (Order) on Kubernetes on Azure
 

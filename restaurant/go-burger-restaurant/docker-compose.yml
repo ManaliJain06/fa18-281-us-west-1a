@@ -1,0 +1,16 @@
+version: "5"
+services:
+  menu:
+    image: restaurant
+    ports:
+      - 8000:8000
+    environment: 
+      - DatabaseServer=54.67.41.59:27017
+      - Database=burger
+      - Collection=restaurant
+      - User=mongo-admin
+      - Pass=cmpe281
+
+volumes:
+  schemas:
+    external: false
