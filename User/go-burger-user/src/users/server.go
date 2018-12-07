@@ -197,28 +197,29 @@ func DeleteUser(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	err = session.DB(mongo_admin_database).Login(mongo_username, mongo_password)
-	if err != nil && err != mgo.ErrNotFound {
+	if err != nil {
 		message := struct {Message string}{"Some error occured while login to database!!"}
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(message)
 		return
-	}else if err == mgo.ErrNotFound {
-		message := struct {Message string}{"user not found!!"}
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode(message)
 	}
     defer session.Close()
     session.SetMode(mgo.Monotonic, true)
 	c := session.DB(mongodb_database).C(mongodb_collection)
 	query := bson.M{"id":params["id"]}
     err = c.Remove(query)
-    if err != nil {
+    if err != nil && err != mgo.ErrNotFound {
 		message := struct {Message string}{"Some error occured while querying to database!!"}
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(message)
 		fmt.Println("error:"+ err.Error())
 		return
-    }
+    }else if err == mgo.ErrNotFound {
+		message := struct {Message string}{"user not found!!"}
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(message)
+		return
+	}
 	json.NewEncoder(w).Encode(struct {Message string }{"user with id:"+params["id"]+" was deleted"})
 }
 func UpdateUser(w http.ResponseWriter, req *http.Request) {
