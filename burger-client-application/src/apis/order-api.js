@@ -1,7 +1,7 @@
 /*
 	Client REST API calls to order microservice
 */
-import {kongAPI} from '../actions/urlConstant';
+import {kongAPI, orderUrl} from '../actions/urlConstant';
 
 const api = kongAPI;
 const headers = {
