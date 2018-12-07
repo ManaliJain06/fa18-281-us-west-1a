@@ -8,7 +8,14 @@ go-get:
 	go get -v github.com/gorilla/handlers
 	go get -v gopkg.in/mgo.v2
 	go get -v gopkg.in/mgo.v2/bson
+	go get -v "net/http"
+	go get -v "net"
+	go get -v "strings"
 
+clean:
+	docker stop menu
+	docker rm menu
+	docker rmi menu
 
 run:
 	go run src/app/$(app).go

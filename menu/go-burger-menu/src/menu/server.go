@@ -16,6 +16,8 @@ import (
 	"github.com/gorilla/handlers"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"net"
+	"strings"
 )
 
 // MongoDB Config
@@ -115,7 +117,7 @@ func createMenuItemHandler(formatter *render.Render) http.HandlerFunc {
     	reqPayload.Item.Id = uuid.String()
     	session, err := mgo.Dial(database_server)
         if err != nil {
-            formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+            formatter.JSON(response, http.StatusInternalServerError, "Internal Server Error")
             return
         }
         defer session.Close()
@@ -133,7 +135,7 @@ func createMenuItemHandler(formatter *render.Render) http.HandlerFunc {
             error := mongo_collection.Insert(menu)
             fmt.Println("error: ", error)
             if error != nil {
-                formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+                formatter.JSON(response, http.StatusInternalServerError, "Internal Server Error")
                 return
             }
         	
@@ -142,7 +144,7 @@ func createMenuItemHandler(formatter *render.Render) http.HandlerFunc {
         	error := mongo_collection.Update(bson.M{"restaurantid": menu.RestaurantId}, bson.M{"$set": bson.M{"items": menu.Items}})       	
         	if error != nil {
         		fmt.Println("error: ", error)
-                formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+                formatter.JSON(response, http.StatusInternalServerError, "Internal Server Error")
                 return
         	}   
         }
@@ -159,7 +161,7 @@ func findRestaurantMenu(formatter *render.Render) http.HandlerFunc {
 		fmt.Println( "restaurant ID: ", restaurantId )
 		session, err := mgo.Dial(database_server)
         if err != nil {
-            formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+            formatter.JSON(response, http.StatusInternalServerError, "Internal Server Error")
             return
         }
         defer session.Close()
@@ -168,7 +170,7 @@ func findRestaurantMenu(formatter *render.Render) http.HandlerFunc {
         var result bson.M
         err = mongo_collection.Find(bson.M{"restaurantid" : restaurantId}).One(&result)
         if err != nil {
-            format  ter.JSON(response, http.StatusNotFound, "Menu not found !!!")
+            formatter.JSON(response, http.StatusNotFound, "Menu not found !!!")
             return
         }
         fmt.Println("Result: ", result)
@@ -185,7 +187,7 @@ func updateMenuItemHandler(formatter *render.Render) http.HandlerFunc {
     	fmt.Println("Menu ItemPayload ", reqPayload.Item)
     	session, err := mgo.Dial(database_server)
         if err != nil {
-            formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+            formatter.JSON(response, http.StatusInternalServerError, "Internal Server Error")
             return
         }
         defer session.Close()
@@ -210,7 +212,7 @@ func updateMenuItemHandler(formatter *render.Render) http.HandlerFunc {
         	error := mongo_collection.Update(bson.M{"restaurantid": menu.RestaurantId}, bson.M{"$set": bson.M{"items": menu.Items}})  
         	if error != nil {
         		fmt.Println("error: ", error)
-                formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+                formatter.JSON(response, http.StatusInternalServerError, "Internal Server Error")
                 return
         	}     	
         }
@@ -227,7 +229,7 @@ func deleteMenuItemHandler(formatter *render.Render) http.HandlerFunc {
     	fmt.Println("Menu ItemPayload ", reqPayload)
     	session, err := mgo.Dial(database_server)
         if err != nil {
-            formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+            formatter.JSON(response, http.StatusInternalServerError, "Internal Server Error")
             return
         }
         defer session.Close()
@@ -249,7 +251,7 @@ func deleteMenuItemHandler(formatter *render.Render) http.HandlerFunc {
         	error := mongo_collection.Update(bson.M{"restaurantid": menu.RestaurantId}, bson.M{"$set": bson.M{"items": menu.Items}})  
         	if error != nil {
         		fmt.Println("error: ", error)
-                formatter.JSON(w, http.StatusInternalServerError, "Internal Server Error")
+                formatter.JSON(response, http.StatusInternalServerError, "Internal Server Error")
                 return
         	}     	
         }
