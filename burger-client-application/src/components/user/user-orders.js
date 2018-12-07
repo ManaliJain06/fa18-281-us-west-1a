@@ -53,7 +53,7 @@ class ListUserOrders extends Component {
                         <Header showCart={{status: false}}/>
                         <div className="content">
                             <div className="card">
-                                <table className="tableRestaurant">
+                                <table className="tableRestaurant" cellPadding={10}>
                                     <tbody>
                                     <tr>
                                         <th>Order Id</th>

@@ -1,0 +1,17 @@
+version: "3"
+services:
+  user:
+    image: varunjindal12/burger_users:v2
+    ports:
+      - 8000:8000
+    environment: 
+      - MONGO_SERVER=13.56.140.21:27017
+      - MONGO_DATABASE=burger
+      - MONGO_COLLECTION=Users
+      - MONGO_ADMIN_DATABASE=admin
+      - MONGO_USERNAME=mongo-admin
+      - MONGO_PASS=cmpe281
+
+volumes:
+  schemas:
+    external: false
