@@ -17,7 +17,6 @@ class ListUserOrders extends Component {
     }
 
     componentDidMount() {
-        this.props.history.push('/');
         const user = JSON.parse(localStorage.getItem('user'));
         if (user == null) {
             alert("You are not logged in!");
@@ -27,45 +26,49 @@ class ListUserOrders extends Component {
         UserAPI.callUserOrdersAPI(user.id)
             .then((response) => {
                 if (response.status === 200) {
-                    this.props.userOrdersList(response.data);
+                    let userOrders= response.data.filter(order => order.userid === user.id);
+                    this.props.userOrdersList(userOrders);
                 }
-        });
+                else{
+                    this.props.userOrdersList({});
+                }
+             })
+            .catch((err) =>{
+                if(err.status === 404){
+                    console.log("data not found");
+                }
+            });
     }
+
+    // filterData = (orders, userId) =>{
+    //     let filteredData = orders.filter(order => order.userid === userId);
+    //     return orders.filter(order => order.userid === userId);
+    // };
 
     render() {
         {
-            if (this.props.userOrdersData.userOrders && this.props.userOrdersData.userOrders.length > 0) {
+            if (this.props.userOrdersData.ordersList && this.props.userOrdersData.ordersList.length > 0) {
                 return (
                     <div className="outerdiv">
-                        <Header showCart={{status: true}}/>
+                        <Header showCart={{status: false}}/>
                         <div className="content">
                             <div className="card">
                                 <table className="tableRestaurant">
                                     <tbody>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Open Hours</th>
-                                        <th>Distance</th>
-                                        <th>Option</th>
+                                        <th>Order Id</th>
+                                        <th>Payment Id</th>
+                                        <th>Amount</th>
+                                        <th>Date</th>
                                     </tr>
                                     {
-                                        this.props.restaurants.restaurantList.map((res) => (
+                                        this.props.userOrdersData.ordersList.map((res) => (
 
                                             <tr className="row">
-                                                <td className="streetaddress">{res.restaurantName} <br></br>
-                                                    {res.addressLine1} <br></br>
-                                                    {res.city} {res.state}<br></br>
-                                                    {res.addressLine2} <br></br>
-                                                    <div>Phone:</div>
-                                                    {res.phone} <br></br>
-                                                </td>
-                                                <td>{res.hours}</td>
-                                                <td>{res.distance}</td>
-                                                <td><input className="home-page-button" type="submit" value="Order"
-                                                           onClick={() => {
-                                                               this.props.history.push("/menu/" + res.restaurantId);
-                                                           }}/>
-                                                </td>
+                                                <td className="streetaddress">{res.orderid} <br></br></td>
+                                                <td>{res.paymentid}</td>
+                                                <td>{res.totalamount}</td>
+                                                <td>{res.paymentdate}</td>
                                             </tr>
                                         ))
                                     }

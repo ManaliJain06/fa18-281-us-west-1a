@@ -3,7 +3,7 @@
 */
 
 import axios from "axios";
-import {orderUrl, userUrl} from "../actions/urlConstant";
+import {paymentUrl, userUrl} from "../actions/urlConstant";
 
 let headers = {
     headers:{
@@ -19,7 +19,7 @@ export const callLoginApi = (payload) => {
             return res
         }).catch( function(err) {
             console.log('error calling login api, error:', err);
-            return err
+            return err.response
         });
 };
 
@@ -31,18 +31,19 @@ export const callRegisterAPI = (payload) => {
            return res
         }).catch( function (err) {
             console.log('error calling login api, error:', err);
-           return err
+           return err.response
         });
 };
 
-export const callUserOrdersAPI = (userId) => {
-    console.log("payload", JSON.stringify(userId));
-    return axios.get(`${orderUrl}/orders/${userId}`, headers )
+export const callUserOrdersAPI = () => {
+    console.log("getting paid orders");
+    console.log("api :", `${paymentUrl}/payments`);
+    return axios.get(`${paymentUrl}/payments`)
         .then( function(res){
             console.log('call register api, res:', res);
             return res
         }).catch( function (err) {
             console.log('error calling login api, error:', err);
-            return err
+            return err.response
         });
 };
