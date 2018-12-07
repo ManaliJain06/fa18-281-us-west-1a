@@ -86,42 +86,41 @@ Back end - Golang
 Database - MongoDB with Sharding implemented
 
 # Varun
-
-- Created database in mongodb.
-- Created Create user API.
-- Created Get user API.
-- Created Delete user API.
-- Created GetAll user API.
+  - Created database in mongodb.
+  - Created Create user API.
+  - Created Get user API.
+  - Created Delete user API.
+  - Created GetAll user API.
 
 # Fulbert
-
-- Created a local mongodb for testing
-- Created Create order API
-- Created Get order by ID API
-- Creted Getall orders API
+  - Created a local mongodb for testing
+  - Created Create order API
+  - Created Get order by ID API
+  - Creted Getall orders API
 
 # Manali
-- Created database in mongodb
-- Created and tested GO Add restaurant API
-- Created and tested Get restaurant list API
-- Created and tested Delete restaurant API
+  - Created database in mongodb
+  - Created and tested GO Add restaurant API
+  - Created and tested Get restaurant list API
+  - Created and tested Delete restaurant API
 
 # Arijit
-- Created database in mongodb
-- Created and tested GO add menu API
-- Created and tested menu delete API
-- Created and tested GO find menu API
+  - Created database in mongodb
+  - Created and tested GO add menu API
+  - Created and tested menu delete API
+  - Created and tested GO find menu API
 
 # Rudy
 - Created database in mongodb
-- Created and tested GO get all payments API
+- Created and tested GO get payments details by Id API
 - Created and tested GO create payment API
-- Created and tested GO Delete payment API
+- Created and tested GO add new payment API
 
 ## Challenges
 1) Connecting React server with go API as it gives a CORS error.
-2) Enablling cross origin request for Golang
+2) Enabling cross origin request for Golang
 3) MongoDB sharding creating issues when deleting or editing docuemnts
+4) Bug fixes for Golang APIs
 
 # Week 4 (11/18/2019 - 11/24/2019)
 ## Minutes of meeting for team meeting
@@ -130,16 +129,69 @@ Database - MongoDB with Sharding implemented
 3) Initial integration of one Golang API with the UI.
 
 ## Outcome
+ 
+# Varun
+  - Task division for UI module
+  - MongoDB sharing implementation
+  - Integration of create user APIs with client
+
+# Fulbert
+  - Task division for UI module
+  - Created Create order API
+  - Created Get order by ID API
+  - Creted Getall orders API
+
+# Manali
+  - Task division for UI module
+  - Sharding for MongoDB and testing 
+  - Created and tested get all restaurant API
+
+# Arijit
+  - Task division for UI module
+  - Created and tested GO update menu API
+  - MongoDB sharding and testing with APIs
+
+# Rudy
+  - Task division for UI module
+  - MongoDB sharding and testing
+  - Created and tested Edit payment
+  - Created and tested Delete payment
 
 ## Challenges
 
-# Week 5 (11/25/2019 - 11/101/2019)
+# Week 5 (11/25/2019 - 11/01/2019)
 ## Minutes of meeting for team meeting
-1) Extensivvely starting working on UI and its bug fixes
+1) Extensively starting working on UI and its bug fixes
 2) To explore various WOW factors for the project
 3) Designing the deployment for front end and backend
 
 ## Outcome
+
+# Varun
+  - UI development for User module
+  - Understanding the working of ECS for GO service deployment
+  - API bug fixes
+
+# Fulbert
+  - UI development for restaurant for order
+  - Worked on integration of Menu and Order module
+  - Order service deployment on Docker container on EC2
+
+# Manali
+  - UI development for restaurant
+  - Integration testing of APIs with client
+  - UI bug fixes.
+  - Deploying GO APIs on docker container on EC2
+
+# Arijit
+  - UI development for Menu
+  - GO API deployment on docker container on EC2
+  - UI and backend Bug fixes and integration with Order
+
+# Rudy
+  - UI development
+  - Deploying GO APIs on docker container on EC2
+  - Working with Sharding replication and configuring on EC2
 
 ## Challenges
 
@@ -152,5 +204,14 @@ Database - MongoDB with Sharding implemented
 
 ## Outcome
 
+
+# Rudy
+  - Integrated Payments client with GO APIs and Integration testing of the application
+  - Setup the redux payment store
+  - Deployed golang app on AWS ECS
+  - Deployed golang app on Google GKE
+
 ## Challenges
+1) Sharding is not properly distributed, need to pick the correct sharded key.
+2) AWS ECS keeps stopping, it turned out, the health check was not properly configured.
 
