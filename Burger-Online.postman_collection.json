@@ -1,0 +1,814 @@
+{
+	"info": {
+		"_postman_id": "a57caa02-8d5a-408b-a991-6aa907a9c8e7",
+		"name": "Burger-Online",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Kong",
+			"item": [
+				{
+					"name": "Ping menu service",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/menu/ping",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"menu",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ping restaurant service",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/restaurant/ping",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"restaurant",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ping order service",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/order/ping",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"order",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ping user service",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/users/test/ping",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"test",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ping payment service",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/payments/ping",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"payments",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get menu by restaurantId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/menu/2b7cfa42-5d37-4767-9dae-d8d921433e08",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"menu",
+								"2b7cfa42-5d37-4767-9dae-d8d921433e08"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get restaurant for zipcode",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/restaurant/zipcode/95134",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"restaurant",
+								"zipcode",
+								"95134"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all restaurants",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/restaurant",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"restaurant"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get order by orderId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/order/ae45cd00-4091-4191-83ef-fbb97ac4fbb0",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"order",
+								"ae45cd00-4091-4191-83ef-fbb97ac4fbb0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/order",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all payments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/payments",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get orders by userId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/orders/a6b74cd7-5e42-4a23-bf13-2151fb3af2ba",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"orders",
+								"a6b74cd7-5e42-4a23-bf13-2151fb3af2ba"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get payment by paymentId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/payments/b8357af9-3c0a-4227-8287-9b31d005a4f9",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"payments",
+								"b8357af9-3c0a-4227-8287-9b31d005a4f9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by userId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/users/a6b74cd7-5e42-4a23-bf13-2151fb3af2ba",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"a6b74cd7-5e42-4a23-bf13-2151fb3af2ba"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/users",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Sign in",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"cmpe281@gmail.com\",\n\t\"password\":\"cmpe281\"\n}"
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/users/signin",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new menu item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"resId\":\"43734ed0-40b4-40a1-8e7e-cb309af5b660\",\n\t\"item\":{\n\t\t\t\"name\":\"Philly Cheese King\",    \t\n\t\t\t\"price\":15,\n\t\t\t\"description\":\"Grilled beef patties, american cheese, caramelized onions and creamy\",\t\n\t\t\t\"calories\":900\n\t\t}\n\n}"
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/menu",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"menu"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new restaurant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"restaurantName\": \"The Counter San Jose\",\n\t\"restaurantId\": \"2\",\n\t\"zipcode\": \"95134\",\n\t\"phone\": \"(408) 227-9200\",\n\t\"addressLine1\": \"20080 San Fernando\",\n\t\"addressLine2\": \"Blaney\",\n\t\"city\": \"San Jose\",\n\t\"state\": \"CA\",\t\n\t\"country\": \"US\",\n\t\"hours\": \"Open today 11am-9pm\",\n\t\"acceptedCards\": \"Credit, Debit\",\n\t\"distance\": \"2.3 mi.\",\n\t\"email\": \"countersan@gmail.com\"\n}"
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/restaurant",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"restaurant"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": \"ae45cd00-4091-4191-83ef-fbb97ac4fbb0\",\n  \"itemId\": \"10\",\n  \"itemName\": \"Coke\",\n  \"price\": 10,\n  \"description\": \"Diet\"\n}"
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/order",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new payment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"userId\":\"a6b74cd7-5e42-4a23-bf13-2151fb3af2ba\",\n\t\"orderId\":\"ae45cd00-4091-4191-83ef-fbb97ac4fbb1\",\n\t\"totalAmount\":30.75\n}"
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/payments",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Sign up",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"lastname\" : \"arijit\",\n    \"firstname\" : \"mandal\",\n    \"address\" : {\n        \"street\" : \"almeda street\",\n        \"city\" : \"san jose\",\n        \"state\" : \"California\",\n        \"zipcode\" : \"95110\"\n    },\n    \"password\" : \"cmpe281\",\n    \"email\" : \"admin@sjsu.edu\"\n}"
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/users/signup",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete restaurant by restaurantId",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/restaurant/ac374a4e-3954-4ca4-85b1-0fb4394008a7",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"restaurant",
+								"ac374a4e-3954-4ca4-85b1-0fb4394008a7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete menu item",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"resId\":\"0c9c8877-d94e-42b2-a633-0d22e2553326\",\n\t\"itemId\":\"9e2be6f6-889e-4b4e-8697-818e607fee89\"\n}\n"
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/menu",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"menu"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete order by orderId",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"orderId\":\"3e5ea235-1022-4723-8953-3e083fd07e82\"\n}"
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/order",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete an user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete payment by paymentId",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/payments/b8357af9-3c0a-4227-8287-9b31d005a4f9",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"payments",
+								"b8357af9-3c0a-4227-8287-9b31d005a4f9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update menu item",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"resId\":\"2b7cfa42-5d37-4767-9dae-d8d921433e08\",\n\t\"item\":{\n\t\t\t\"id\": \"12f0e43c-a8b5-43a2-80a6-d1b0023c208b\",\n\t\t\t\"name\":\"Philly Cheese King\",    \t\n\t\t\t\"price\":10,\n\t\t\t\"description\":\"Grilled beef patties, american cheese, caramelized onions and creamy\",\t\n\t\t\t\"calories\":900\n\t\t}\n\n}"
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/menu",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"menu"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update order by orderId (After Payment)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"userId\":\"0d6f83b3-dc54-49fc-80b8-01574eaa7e5f\"\n}"
+						},
+						"url": {
+							"raw": "54.153.123.160:8000/order/ae45cd00-4091-4191-83ef-fbb97ac4fbb0",
+							"host": [
+								"54",
+								"153",
+								"123",
+								"160"
+							],
+							"port": "8000",
+							"path": [
+								"order",
+								"ae45cd00-4091-4191-83ef-fbb97ac4fbb0"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f41d290f-2835-427c-96fa-ced4a6336505",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "104a97d7-d2e6-426d-be26-7a98a341944a",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
