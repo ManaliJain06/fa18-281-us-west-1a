@@ -2,7 +2,7 @@
 	Client REST API calls to menu microservice
 */
 
-const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://34.222.153.201:8000';
+const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://54.153.123.160:8000';
 const headers = {
     'Accept': 'application/json'
 };
