@@ -11,6 +11,7 @@ import PaymentSuccess from './components/payment/paymentSuccess';
 import PaymentError from './components/payment/paymentError';
 import UserSignIn from './components/user/user-signin'
 import UserSignUp from './components/user/user-signup'
+import ListUserOrders from './components/user/user-orders'
 
 class App extends Component {
 
@@ -27,6 +28,7 @@ class App extends Component {
             <Route path="/paymentError" render={() => (<PaymentError />) } />
             <Route path="/login" render={() =>(<UserSignIn />)}/>
             <Route path="/signup" render={() =>(<UserSignUp />)}/>
+            <Route path="/userOrders" render={() =>(<ListUserOrders />)}/>
 
           </Switch>
       </div>

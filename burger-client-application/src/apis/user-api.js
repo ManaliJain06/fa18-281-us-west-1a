@@ -34,3 +34,15 @@ export const callRegisterAPI = (payload) => {
            return err
         });
 };
+
+export const callUserOrdersAPI = (userId) => {
+    console.log("payload", JSON.stringify(userId));
+    return axios.get(`${orderUrl}/orders/${userId}`, headers )
+        .then( function(res){
+            console.log('call register api, res:', res);
+            return res
+        }).catch( function (err) {
+            console.log('error calling login api, error:', err);
+            return err
+        });
+};

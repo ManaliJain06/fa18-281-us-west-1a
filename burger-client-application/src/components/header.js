@@ -42,12 +42,15 @@ class Header extends Component{
   render(){
     console.log("[Header] render: ");
     let loginLogout;
-    let user = localStorage.getItem("user");
+    let userSignUp;
+    let user = JSON.parse(localStorage.getItem("user"));
     if(user == null){
         loginLogout = <span style = {{cursor:"pointer"}} onClick={()=>{this.props.history.push("/login")}}>Sign in</span>;
+        userSignUp = <span style = {{cursor:"pointer"}} onClick={()=>{this.props.history.push("/signup")}}>Sign up</span>;
     }
     else{
         loginLogout = <span style = {{cursor:"pointer"}} onClick={()=>{this.handleLogout()}}>Logout</span>;
+        userSignUp = <span style = {{cursor:"pointer"}} onClick={()=>{this.props.history.push("/userOrders")}}>{"Hi "+user.name}</span>;
     }
     return (
       <div className="header">
@@ -55,10 +58,9 @@ class Header extends Component{
           <div className="rightheader">
               <div className="topnav">
                   <span style = {{cursor:"pointer"}} onClick={()=>{this.props.history.push("/")}}>Home</span>
-                  <span style = {{cursor:"pointer"}} onClick={()=>{this.props.history.push("/signup")}}>Sign up</span>
+                  {userSignUp}
                   {loginLogout}
                   {this.showCart()}
-
               </div>
           </div>
       </div>
