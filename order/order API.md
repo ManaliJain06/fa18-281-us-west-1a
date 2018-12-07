@@ -98,34 +98,65 @@ Parameters for Error (Status code: 400)
 | Message       | string    | Error message 
 
 
-## 4. Delete cart
+## 4. Remove Item from cart
+
 Request
 ```
-Delete /order/:orderId-
+Delete /order/{orderId}
 Content-Type: application/json
 ```
 
-| Parameter        | Type           | Description  |
-| ------------- |-------------| -----|
-| userId   | string  | User ID
+| Parameter     | Type    | Description  |
+| ------------- |---------| -------------|
+| itemId        | string  | Item ID
 
 Response
 
 Parameters for Success (Status code: 200)
 
-| Parameter        | Type           | Description  |
-| ------------- |-------------| -----|
-| orderId       | string  | order ID
-| orderStatus   | string  | placed, paid, removed
+| Parameter     | Type      | Description |
+| ------------- |-----------| ------------|
+| orderId       | string    | order ID
+| userId        | string    | User ID
+| orderStatus   | string    | placed, paid
+| items         | struct    | item ID, itemName, price, description   
+| totalAmount   | float32   | total price
 
 Parameters for Error (Status code: 400)
 
-| Parameter        | Type           | Description  |
-| ------------- |-------------| -----|
-| Message   | string  | Error message 
+| Parameter     | Type      | Description  |
+| ------------- |-----------| -------------|
+| Message       | string    | Error message 
 
 
-## 5. Update cart status
+## 5. Remove order
+
+Request
+```
+Delete /order
+Content-Type: application/json
+```
+
+| Parameter     | Type    | Description  |
+| ------------- |---------| -------------|
+| orderId       | string  | Order ID
+
+Response
+
+Parameters for Success (Status code: 200)
+
+| Parameter     | Type      | Description |
+| ------------- |-----------| ------------|
+| message       | string    | Success Message
+
+Parameters for Error (Status code: 400)
+
+| Parameter     | Type      | Description  |
+| ------------- |-----------| -------------|
+| Message       | string    | Error message 
+
+
+## 6. Update cart status
 Request
 ```
 Put /order/:orderId
