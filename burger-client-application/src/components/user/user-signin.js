@@ -53,7 +53,7 @@ class UserSignIn extends Component {
                 if(err.status === 401){
                     alert("password does not match with given username")
                 }
-                console.log("some error occured :", err.error())
+                console.log("some error occured :", err)
             })
 
     }
