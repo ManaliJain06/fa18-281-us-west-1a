@@ -1,8 +1,9 @@
 /*
 	Client REST API calls to menu microservice
 */
+import {kongAPI} from '../actions/urlConstant';
 
-const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://34.222.153.201:8000';
+const api = kongAPI;
 const headers = {
     'Accept': 'application/json'
 };
