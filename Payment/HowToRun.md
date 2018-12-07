@@ -250,17 +250,22 @@ use test
 4. Enable Sharding
 ```
 use cmpe281
-db.payments.ensureIndex( { orderid : "hashed" } )
-sh.shardCollection( "cmpe281.payments", { "orderid" : "hashed" } )
+sh.enableSharding("cmpe281")
+
+db.payments.ensureIndex( { paymentid : "hashed" } )
+sh.shardCollection( "cmpe281.payments", { "paymentid" : "hashed" } )
 ```
 
 db.payments.getShardDistribution() 
 
+---
+
+# AWS ECS
 
 
+---
 
-
-# GKE
+# Google GKE
 
 ### Open cloud shell
 
@@ -320,6 +325,8 @@ gcloud compute instances list
 kubectl run payments --image=gcr.io/${PROJECT_ID}/payments:v1 --port 8000 --env AWS_MONGODB=mongodb://<user>:<password>@ec2-54-215-217-211.us-west-1.compute.amazonaws.com:27017 --env MONGODB_DBNAME=cmpe281 --env MONGODB_COLLECTION=payments
 ```
 
+
+### Scale up
 ```
 kubectl expose deployment payments --type=LoadBalancer --port 8000 --target-port 8000
 kubectl get service
@@ -334,10 +341,12 @@ kubectl get deployment payments
 ```
 git pull origin master
 
-docker build -t gcr.io/${PROJECT_ID}/payments:v3 .
-docker push gcr.io/${PROJECT_ID}/payments:v3
+export PROJECT_ID="$(gcloud config get-value project -q)"
 
-kubectl set image deployment/payments payments=gcr.io/${PROJECT_ID}/payments:v3
+docker build -t gcr.io/${PROJECT_ID}/payments:v4 .
+docker push gcr.io/${PROJECT_ID}/payments:v4
+
+kubectl set image deployment/payments payments=gcr.io/${PROJECT_ID}/payments:v4
 
 kubectl get service
 kubectl get pods
