@@ -78,6 +78,15 @@ class Order extends Component{
       })
   }
 
+  checkUserLogin(){
+      this.props.history.push("/payment");
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user == null) {
+          alert("You are not logged in! Please log in before checkout");
+          this.props.history.push('/login');
+      }
+  }
+
   displayOrder(){
     if(this.props.order.items && this.props.order.items.length > 0){
       console.log("[Order] displayOrderItems items: ",this.props.order.items )
@@ -98,7 +107,7 @@ class Order extends Component{
               </tr>
           </tbody>
         </table>
-        <button style={checkoutButtonStyle} onClick={()=>{this.props.history.push("/payment")}}>Checkout </button>
+        <button style={checkoutButtonStyle} onClick={()=>{ this.checkUserLogin()}}>Checkout </button>
       </div>)
 
     }else{

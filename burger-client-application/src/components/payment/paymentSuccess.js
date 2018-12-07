@@ -11,6 +11,8 @@ import '../../index.css';
 import '../../stylesheets/payment.css';
 
 import Header from '../header';
+import {bindActionCreators} from "redux";
+import {removeCartDataAfterExport} from './../../actions/order-actions';
 
 class paymentSuccess extends Component {
 	constructor(props){
@@ -22,7 +24,6 @@ class paymentSuccess extends Component {
     // this.isEmptyObject = this.isEmptyObject.bind(this);
 	}
 
-
   handleBackButton(event) {
 		event.preventDefault();
     console.log(`handleButton go back home`);
@@ -33,7 +34,10 @@ class paymentSuccess extends Component {
   isEmptyObject(obj) {
     return !Object.keys(obj).length;
   }
-  
+
+  componentDidMount() {
+	this.props.removeCartDataAfterExport();
+  }
 
   render() {
     console.log('Object.keys(this.props.paymentData).length=', Object.keys(this.props.paymentData).length);
@@ -119,5 +123,11 @@ const mapStateToProps = (state) => {
   }
 }
 
-const connectedPaymentSuccess = withRouter(connect(mapStateToProps,)(paymentSuccess))
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        removeCartDataAfterExport: removeCartDataAfterExport
+    }, dispatch)
+}
+
+const connectedPaymentSuccess = withRouter(connect(mapStateToProps,mapDispatchToProps)(paymentSuccess))
 export default connectedPaymentSuccess;

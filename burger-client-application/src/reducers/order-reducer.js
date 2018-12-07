@@ -19,6 +19,13 @@ const order = (state = orderCart, action)=>
                 items:action.data.items,
                 totalAmount:action.data.totalAmount
             })
+        case actionTypes.REMOVE_CART_DATA_AFTER_PAYMENT:
+            return Object.assign({},state,{
+                orderCount:0,
+                orderId:"",
+                items:[],
+                totalAmount:0
+            })
         default :
             return state;
     }

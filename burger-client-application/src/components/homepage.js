@@ -6,7 +6,7 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import '../index.css';
-import burger from '../images/burger.jpg';
+import burger from '../images/burgerImage.png';
 import Header from './header';
 
 class Homepage extends Component{
@@ -23,7 +23,7 @@ class Homepage extends Component{
         console.log("home page render");
         return (
             <div className="outerdiv">
-                <Header/>
+                <Header showCart={{status:true}}/>
                 <div className="content">
                     <div id="left">
                         <h3>1. Find your location</h3>
@@ -44,7 +44,7 @@ class Homepage extends Component{
                     </div>
 
                     <div id="right">
-                        <img style={{"width": "500px"}} src={burger}></img>
+                        <img style={{"width": "400px"}} src={burger}></img>
                     </div>
                 </div>
             </div>

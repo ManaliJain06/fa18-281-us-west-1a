@@ -25,7 +25,15 @@ class Menu extends Component{
                   console.log("[Menu] items: ", data);
                   this.props.updateMenuList(data);
               });
-          }});
+          }else if (response.status===404 || response.status===500){
+              response.json().then((data)=>{
+                  //action to save data
+                  this.props.updateMenuList({});
+                  alert(data);
+                  this.props.history.push("/");
+              });
+          }
+      });
 
     }else{
       console.log("[Menu] componentDidMount !!! restaurantId missing !!!");
@@ -82,21 +90,26 @@ class Menu extends Component{
   displayMenu(){
     if(this.props.menu.items && this.props.menu.items.length > 0){
       console.log("[Menu] displayMenuItems items: ",this.props.menu.items )
-      return(
-        <div className = "menu-item-div">
-        <table className="table-menu">
-          <tbody>
-          <tr className = "menu-table-header-row">
-              <th  className = "menu-table-item-col">Name</th>
-              <th  className = "menu-table-item-col">Content</th>
-              <th  className = "menu-table-item-col">Calories</th>
-              <th  className = "menu-table-item-col">Price</th>
-          </tr>
-          {this.getItems(this.props.menu.items)}
-          </tbody>
-        </table>
-        </div>)
-
+        if(this.props.match && this.props.match.params && this.props.match.params.restaurantId) {
+            if(this.props.match.params.restaurantId !== this.props.menu.restaurantId) {
+                return null
+            } else {
+                return(
+                    <div className = "menu-item-div">
+                        <table className="table-menu">
+                            <tbody>
+                            <tr className = "menu-table-header-row">
+                                <th  className = "menu-table-item-col">Name</th>
+                                <th  className = "menu-table-item-col">Content</th>
+                                <th  className = "menu-table-item-col">Calories</th>
+                                <th  className = "menu-table-item-col">Price</th>
+                            </tr>
+                            {this.getItems(this.props.menu.items)}
+                            </tbody>
+                        </table>
+                    </div>)
+            }
+        }
     }else{
       return  null
     }
