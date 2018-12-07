@@ -18,12 +18,17 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"net"
 	"strings"
+	"os"
 )
 
 // MongoDB Config
-var database_server = "18.144.8.184:27017"
-var database = "burger"
-var collection = "menu"
+//var database_server = "18.144.8.184:27017"
+//var database = "burger"
+//var collection = "menu"
+var database_server = os.Getenv("DatabaseServer")
+var database = os.Getenv("Database")
+var collection = os.Getenv("Collection")
+
 
 
 

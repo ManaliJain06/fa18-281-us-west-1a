@@ -11,6 +11,7 @@ go-get:
 	go get -v "net/http"
 	go get -v "net"
 	go get -v "strings"
+	go get -v "os"
 
 clean:
 	docker stop menu
@@ -66,3 +67,6 @@ docker-clean:
 
 docker-ip:
 	docker-machine ip
+
+up:
+	docker-compose up
