@@ -210,6 +210,10 @@ Database - MongoDB with Sharding implemented
 3) Deploy backend services and front end on cloud and do integration testing
 
 ## Outcome
+
+## Architecture Diagram
+![Architecture Diagram](Pictures/architecture-diagram.png)
+
 ## Varun
   - Integrating UI if User with the system
   - Made necessary changes to incorporate User in every module
@@ -218,7 +222,7 @@ Database - MongoDB with Sharding implemented
 ## Fulbert
   - Integration of Client and backend for testing
   - Worked on deploying Golang app on Azure Cloud
-  - Soled issues with ECS deployment of Health Checks
+  - Solved issues with ECS deployment of Health Checks
 
 ## Manali
   - Integration on Client and GO APIs and tested the whole flow of the application

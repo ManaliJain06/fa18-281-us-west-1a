@@ -60,7 +60,9 @@ export const axiosCreatePayment = (data, router) => (dispatch) => {
 		// make an API call to order, to update that order has already been paid
 		console.log('before axiosOrderUpdateToPaid');
 		// axiosOrderUpdateToPaid(data.orderId);
-		axios.put(`${orderUrl}/order/${data.orderId}` )
+		axios.put(`${orderUrl}/order/${data.orderId}`, {
+			userId: data.userId,
+		})
     .then( res => {
       console.log('after axiosOrderUpdateToPaid, res:', res);
 
