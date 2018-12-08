@@ -251,17 +251,41 @@ Database - MongoDB with Sharding implemented
 # !!!**WOW Factor**!!!
 
 # Amazon EC2 Container Service
-Amazonm ECS is a container service which is used to deploy services on a group of servers forming a cluster. ECS deploys docker container for distributed applications. It also evaluates the CPU usage and memory consumptions to determine the deployment requirements of a container.
+Amazonm ECS is a container service which is used to deploy services on a group of servers forming a cluster. ECS deploys docker container for distributed applications. It also evaluates the CPU usage and memory consumptions to determine the deployment requirements of a container. It used Appliation load balancer internally.
 
-We have deployed our 3 microservices (User, Restaurant and Menu) on ECS. The details of them are as below.
+We have deployed our 3 microservices (User, Restaurant and Menu) on ECS.
 
 # Google Kubernetes Engine (GKE)
 
-We have deployed out 1 microservice (Paymennt) on Google GKE
+We have deployed out 1 microservice (Payment) on Google GKE
 
 # Azure Kubernetes Service (AKS)
 
 We have deployed our 1 microservices (Order) on Kubernetes on Azure
+
+# AKF Scale Cube
+## X Axis - Horizontal Duplication
+We are achieving horizontal replication for each of the servic end points by creating multiple nodes of each microservice. We have our users, menu and orders scaled on ECS and payment, orders on Kubernetes cloud.
+
+Showing scaling for Menu service ping
+
+## Y Axis - Split by function service
+Our application contains 5 microservices i.e. User, Restaurant, Menu, Order, Payment. If any one of the microservice is taken down then it won't affect other service.
+
+
+## Z Axis - Sharding
+All of our microservices have a MongoDb sharded database with 2 shard replica cluster of 3 nodes each.
+
+Steps for testing sharding 
+1) Test consistency of data by inserting into primary and getting the documents from secodary. 
+2) Isolate one secondary server from the other servers in the cluster and test reading stale data
+3) Connecting up the server again to the cluster and test replication again
+
+# Demonstrating our application's ability to handle a network partition
+1) A user is logged in.
+2) The user has some items in the cart.
+3) Taking down the payment service.
+4) The user is not able to pay for the order but he can navigate back in the appliation and search for new items and add it to cart.
 
 
 # Testing 
@@ -294,15 +318,12 @@ Error: You cannot process to payment for the order untill you login
 ![checkout-error]()
 
 
-
 Success: Redirect to login page
 
 ![checkout-success1]()
 
 
-
 ![checkout-success2]()
-
 
 
 ##### 7) Payment page for ordering burger
@@ -314,7 +335,7 @@ Success: Redirect to login page
 ![paymentConfirmation]()
 
 
-
 ##### 8) See all the orders for a user
 
 ![viewOrders]()
+
