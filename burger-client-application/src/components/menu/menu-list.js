@@ -23,7 +23,12 @@ class Menu extends Component{
           if(response.status===200){
               response.json().then((data)=>{
                   console.log("[Menu] items: ", data);
-                  this.props.updateMenuList(data);
+                  if(data.items.length>0) {
+                    this.props.updateMenuList(data);
+                  } else {
+                    alert("This restaurant does not have a menu");
+                    this.props.history.push("/");
+                  }
               });
           }else if (response.status===404 || response.status===500){
               response.json().then((data)=>{
