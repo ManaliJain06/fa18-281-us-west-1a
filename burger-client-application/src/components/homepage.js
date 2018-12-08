@@ -31,7 +31,7 @@ class Homepage extends Component{
                         <h3>3. Grab the keys</h3>
 
                         <span style={{fontSize:20}}>Enter your zipcode</span> <br></br>
-                        <input className = "home-page-textbox" type="text" id="fname" name="firstname" placeholder="Enter Zipcode"
+                        <input className = "home-page-textbox" type="text" id="fname" name="firstname" placeholder="Enter Zipcode e.g. 95134"
                                onChange={(event) => {
                                 this.setState({
                                         zipcode: event.target.value

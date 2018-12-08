@@ -33,7 +33,7 @@ class paymentError extends Component {
 							<div className="card center">
 								<h2 id="center">Payment Error</h2>
 
-                <div class="payment-alert">
+                <div className="payment-alert">
                   Please try again! 👻
                 </div>
 
