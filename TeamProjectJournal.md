@@ -274,7 +274,7 @@ Showing scaling for Menu service ping
 
 
 
-![AKF-x-replication](https://github.com/nguyensjsu/fa18-281-us-west-1a/blob/master/Pictures/AKF-x-replication.png)
+![AKF-x-replication](Pictures/AKF-x-replication.png)
 
 Figure: Showing horizontal replication of the menu service (evident from different IP addresses)
 
@@ -298,35 +298,35 @@ Figure: Showing shard clusters settings in config server
 
 
 
-![Consistency-before-sharding](https://github.com/nguyensjsu/fa18-281-us-west-1a/blob/master/Pictures/Consistency-before-sharding.png)
+![Consistency-before-sharding](Pictures/Consistency-before-sharding.png)
 
 Figure: Consistency in  shard cluster(shard2) before partition
 
 
 
-![network-partition-sharding](https://github.com/nguyensjsu/fa18-281-us-west-1a/blob/master/Pictures/network-partition-sharding.png)
+![network-partition-sharding](Pictures/network-partition-sharding.png)
 
 Figure: Creating network partiotion in secondary node (top left) using IP Tables
 
 
 
-![data-inserted-after-partition](https://github.com/nguyensjsu/fa18-281-us-west-1a/blob/master/Pictures/data-inserted-after-partition.png)
+![data-inserted-after-partition](Pictures/data-inserted-after-partition.png)
 
 Figure: Inserting a new item in the menu after creating partition
 
 
 
-![stale-data-read](https://github.com/nguyensjsu/fa18-281-us-west-1a/blob/master/Pictures/stale-data-read.png)
+![stale-data-read](Pictures/stale-data-read.png)
 
 Figure: Showing stale data read (document count) in the isolated (network partitioned) node
 
-![removing-partition](https://github.com/nguyensjsu/fa18-281-us-west-1a/blob/master/Pictures/removing-partition.png)
+![removing-partition](Pictures/removing-partition.png)
 
 Figure: Removing network partition by deleting IP Table rules
 
 
 
-![eventually-consistent](https://github.com/nguyensjsu/fa18-281-us-west-1a/blob/master/Pictures/eventually-consistent.png)
+![eventually-consistent](Pictures/eventually-consistent.png)
 
 Figure: All the shard nodes are eventaully consistent with same data (document count)
 
@@ -336,6 +336,54 @@ Figure: All the shard nodes are eventaully consistent with same data (document c
 2) The user has some items in the cart.
 3) Taking down the payment service.
 4) The user is not able to pay for the order but he can navigate back in the appliation and search for new items and add it to cart.
+
+5) Once the payment service is working, user can proceed by paying for the items in the carts
+
+ ![payment-normal](Pictures/payment-normal.jpeg)
+
+Figure: Showing payment service running in google kubernetes
+
+![order-edited](Pictures/order-edited.png)
+
+Figure: User adding items in the cart
+
+
+
+![payment-k8s-down](Pictures/payment-k8s-down.jpeg)
+
+Figure: Taking down payment service by sacling down to zero
+
+![payment-service](Pictures/payment-service.png)
+
+Figure: User requested for payment service
+
+
+
+![payment-service-error](Pictures/payment-service-error.png)
+
+Figure: Payment service not working 
+
+
+
+![remove-order-item](Pictures/remove-order-item.png)
+
+
+
+Figure: Even though payment service is not working, user can edit order using order service (item removed)
+
+
+
+![restart-k8s](Pictures/restart-k8s.jpeg)
+
+Figure: Restarting payment service
+
+![payment-success](Pictures/payment-success.png)
+
+Figure: Paying for the existing  (order) in the cart (success) 
+
+![payment-transaction-user-profile](Pictures/payment-transaction-user-profile.png)
+
+Figure: Trace of payment and order in user profile
 
 # Testing 
 
@@ -351,7 +399,9 @@ Figure: All the shard nodes are eventaully consistent with same data (document c
 
 ##### 3) Get menu items for a particular restaurant
 
-![getMenu]()
+![getMenu](
+
+)
 
 ##### 4) Adding menu items to cart
 
