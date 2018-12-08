@@ -3,6 +3,19 @@
 # US-WEST-1A 🏖
 
 # Project 🍔
+Counter burger Online Order
+
+# Team Member
+
+## Arijit Mandal (ariman01)
+## Fulbert Jong (fjong3)
+## Manali Jain (manaliJain06)
+## Rudy Wahjudi (nerdijoe)
+## Varun Jindal (varun-jindal12)
+
+# Team Project Demo Videos-
+You tube link- 
+
 # Weekly Progress and Challenges 
 # Oct
 
