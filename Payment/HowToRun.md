@@ -7,7 +7,6 @@
 1. set your gopath to golang project directory
 ```
 ## Mine is located at:
-
 /Users/ijoe/dev/cmpe281/cmpe281-nerdijoe/golang-rest-api
 ```
 
@@ -17,7 +16,11 @@
   ```
   How to set environtment variable locally
   ```
-  $ export AWS_MONGODB=mongodb://<username>:<password>@<aws_public_ip>:27017
+  $ export AWS_MONGODB=mongodb://ec2-54-215-217-211.us-west-1.compute.amazonaws.com:27017
+  $ export MONGODB_DBNAME=cmpe281
+  $ export MONGODB_COLLECTION=payments
+  $ export MONGODB_USERNAME=admin
+  $ export MONGODB_PASSWORD=cmpe281
   ```
 
 2. build you app
@@ -43,15 +46,15 @@ Or use curl command on your terminal:
 ```
 // Get all Payments
 curl --request GET \
-  --url http://localhost:3000/payments
+  --url http://localhost:9000/payments
 
 // Get Payment by id
 curl --request GET \
-  --url http://localhost:3000/payments/1
+  --url http://localhost:8000/payments/1
 
 // Create Payment
 curl --request POST \
-  --url http://localhost:8081/payments \
+  --url http://localhost:8000/payments \
   --header 'Content-Type: application/json' \
   --data '{
 	"userId":"55",
@@ -61,7 +64,7 @@ curl --request POST \
 
 // Edit Payment
 curl --request POST \
-  --url http://localhost:8081/payments \
+  --url http://localhost:8000/payments \
   --header 'Content-Type: application/json' \
   --data '{
 	"userId":"55",
@@ -71,7 +74,7 @@ curl --request POST \
 
 // Delete Payment
 curl --request DELETE \
-  --url http://localhost:8081/payments/3647712c-b439-4bb5-912c-73592955b7cc \
+  --url http://localhost:8000/payments/3647712c-b439-4bb5-912c-73592955b7cc \
   --header 'Content-Type: application/json'
 ```
 
@@ -248,6 +251,8 @@ use test
 ```
 
 4. Enable Sharding
+Choose paymentid as the shardkey
+
 ```
 use cmpe281
 sh.enableSharding("cmpe281")
@@ -256,12 +261,10 @@ db.payments.ensureIndex( { paymentid : "hashed" } )
 sh.shardCollection( "cmpe281.payments", { "paymentid" : "hashed" } )
 ```
 
+5. Check the sharding distribution stats
+```
 db.payments.getShardDistribution() 
-
----
-
-# AWS ECS
-
+```
 
 ---
 
@@ -280,7 +283,6 @@ export PROJECT_ID="$(gcloud config get-value project -q)"
 ```
 git clone https://github.com/nguyensjsu/cmpe281-nerdijoe.git
 ```
-
 
 ### set your gopath
 ```
@@ -333,6 +335,17 @@ kubectl get service
 
 kubectl scale deployment payments --replicas=3
 kubectl get deployment payments
+kubectl get pods
+kubectl get services
+
+```
+
+### Scale down
+```
+kubectl scale deployment payments --replicas=0
+kubectl get deployment payments
+kubectl get pods
+kubectl get services
 
 ```
 
@@ -360,9 +373,7 @@ gcloud container clusters delete cluster
 ```
 
 
-
-
-## Heroku
+## Heroku Deployment
 
 Deploy React frontend to heroku
 
@@ -379,6 +390,20 @@ git remote add heroku https://git.heroku.com/counterburger.git
 
 // only push the React app client subdirectory
 git subtree push --prefix burger-client-application heroku master
+
+
+heroku config:set --app counterburger API_GATEWAY="https://hszrvgkm85.execute-api.us-west-1.amazonaws.com/burger"
+heroku config:set --app counterburger REACT_APP_CONTACTS_API_URL="https://hszrvgkm85.execute-api.us-west-1.amazonaws.com/burger"
+heroku config:set TEST=thisisatest
+
+
+// Add the parent github repo to github remote
+git remote add upstream git@github.com:nguyensjsu/fa18-281-us-west-1a.git
+
+// Updating your fork from original repo to keep up with their changes:
+git pull upstream master
+
+
 ```
 
 
