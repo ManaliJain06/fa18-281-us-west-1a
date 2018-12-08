@@ -391,51 +391,61 @@ Figure: Trace of payment and order in user profile
 
 ##### 1) Find restaurants by entering zipcode
 
-![Homepage]()
+![home](Pictures/Testing/home.png)
 
-##### 2) Getting list of all the restaurant
+##### 2) Getting list of all the restaurant (for a given zipcode)
 
-![getRestaurant]()
+![getRestaurant](Pictures/Testing/getRestaurant.png)
+
+
 
 ##### 3) Get menu items for a particular restaurant
 
-![getMenu](
-
-)
+![getMenu](Pictures/Testing/getMenu.png)
 
 ##### 4) Adding menu items to cart
 
-![addMenu]()
+![addMenu](Pictures/Testing/addMenu.png)
 
-##### 5) Processing oder by clicking on item cart
 
-![checkout]()
+
+#### 5) Processing oder by clicking on item cart
+
+![checkout](Pictures/Testing/checkout.png)
 
 ##### 6) Checkout items
 
 Error: You cannot process to payment for the order untill you login
 
-![checkout-error]()
+![checkout-error](Pictures/Testing/checkout-error.png)
 
 
-Success: Redirect to login page
 
-![checkout-success1]()
+7) Success: Redirect to login page
 
-
-![checkout-success2]()
+![checkout-success1](Pictures/Testing/checkout-success1.png)
 
 
-##### 7) Payment page for ordering burger
 
-![payment1]()
-
-![payment2]()
-
-![paymentConfirmation]()
+![checkout-success2](Pictures/Testing/checkout-success2.png)
 
 
-##### 8) See all the orders for a user
 
-![viewOrders]()
+
+##### 8) Payment page for ordering burger
+
+![payment1](Pictures/Testing/payment1.png)
+
+
+
+![payment2](Pictures/Testing/payment2.png)
+
+![paymentConfirmation](Pictures/Testing/paymentConfirmation.png)
+
+
+
+
+##### 9) See all the orders for a user
+
+![viewOrders](Pictures/Testing/viewOrders.png)
 
