@@ -18,12 +18,17 @@ class Menu extends Component{
 
   componentDidMount(){
     if(this.props.match && this.props.match.params && this.props.match.params.restaurantId){
-      console.log("[Menu] componentDidMount restaurantId: ",this.props.match.params.restaurantId)
+      //console.log("[Menu] componentDidMount restaurantId: ",this.props.match.params.restaurantId)
       menuApi.getRestaurantMenuItems(this.props.match.params.restaurantId).then((response)=>{
           if(response.status===200){
               response.json().then((data)=>{
                   console.log("[Menu] items: ", data);
-                  this.props.updateMenuList(data);
+                  if(data.items.length>0) {
+                    this.props.updateMenuList(data);
+                  } else {
+                    alert("This restaurant does not have a menu");
+                    this.props.history.push("/");
+                  }
               });
           }else if (response.status===404 || response.status===500){
               response.json().then((data)=>{
@@ -89,7 +94,7 @@ class Menu extends Component{
 
   displayMenu(){
     if(this.props.menu.items && this.props.menu.items.length > 0){
-      console.log("[Menu] displayMenuItems items: ",this.props.menu.items )
+      //console.log("[Menu] displayMenuItems items: ",this.props.menu.items )
         if(this.props.match && this.props.match.params && this.props.match.params.restaurantId) {
             if(this.props.match.params.restaurantId !== this.props.menu.restaurantId) {
                 return null
@@ -116,7 +121,7 @@ class Menu extends Component{
   }
 
 render(){
-  console.log("[Menu] render url param: ",this.props.match.params.restaurantId);
+  //console.log("[Menu] render url param: ",this.props.match.params.restaurantId);
   return (
       <div className="menu-home">
           <Header showCart={{status:true}}/>

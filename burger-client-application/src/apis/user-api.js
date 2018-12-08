@@ -12,7 +12,7 @@ let headers = {
 };
 
 export const callLoginApi = (payload) => {
-    console.log("payload", JSON.stringify(payload));
+    //console.log("payload", JSON.stringify(payload));
     return axios.post(`${userUrl}/users/signin`, payload, headers )
         .then( function(res) {
             console.log('call login api, res:', res);
@@ -24,7 +24,7 @@ export const callLoginApi = (payload) => {
 };
 
 export const callRegisterAPI = (payload) => {
-    console.log("payload", JSON.stringify(payload));
+    //console.log("payload", JSON.stringify(payload));
     return axios.post(`${userUrl}/users/signup`, payload, headers )
         .then( function(res){
             console.log('call register api, res:', res);
@@ -36,8 +36,8 @@ export const callRegisterAPI = (payload) => {
 };
 
 export const callUserOrdersAPI = () => {
-    console.log("getting paid orders");
-    console.log("api :", `${paymentUrl}/payments`);
+    //console.log("getting paid orders");
+    //console.log("api :", `${paymentUrl}/payments`);
     return axios.get(`${paymentUrl}/payments`)
         .then( function(res){
             console.log('call register api, res:', res);
