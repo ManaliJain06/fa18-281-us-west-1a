@@ -44,7 +44,7 @@ None
     DELETE delete payment by id
 
   - Also managed to connect to local mongodb.
-  
+
 ## Arijit
   - Created Menu REST api in golang
     POST create an item in the menu
@@ -135,7 +135,7 @@ Database - MongoDB with Sharding implemented
 3) Initial integration of one Golang API with the UI.
 
 ## Outcome
- 
+
 ## Varun
   - Task division for UI module
   - MongoDB sharing implementation
@@ -250,21 +250,95 @@ Database - MongoDB with Sharding implemented
 
 # !!!**WOW Factor**!!!
 
-# Amazon EC2 Container Service
+## Amazon EC2 Container Service
 Amazonm ECS is a container service which is used to deploy services on a group of servers forming a cluster. ECS deploys docker container for distributed applications. It also evaluates the CPU usage and memory consumptions to determine the deployment requirements of a container. It used Appliation load balancer internally.
 
 We have deployed our 3 microservices (User, Restaurant and Menu) on ECS.
 
-# Google Kubernetes Engine (GKE)
+## Google Kubernetes Engine (GKE)
 
 We have deployed out 1 microservice (Payment) on Google GKE
 
-# Azure Kubernetes Service (AKS)
+## Azure Kubernetes Service (AKS)
 
 We have deployed our 1 microservices (Order) on Kubernetes on Azure
 
 
+
+#  AKF Scale Cube
+
+## X Axis - Horizontal Duplication
+We are achieving horizontal replication for each of the servic end points by creating multiple nodes of each microservice. We have our users, menu and orders scaled on ECS and payment, orders on Kubernetes cloud.
+
+Showing scaling for Menu service ping
+
+
+
+![AKF-x-replication](https://github.com/nguyensjsu/fa18-281-us-west-1a/blob/master/Pictures/AKF-x-replication.png)
+
+Figure: Showing horizontal replication of the menu service (evident from different IP addresses)
+
+## Y Axis - Split by function service
+Our application contains 5 microservices i.e. User, Restaurant, Menu, Order, Payment. If any one of the microservice is taken down then it won't affect other service.
+
+
+## Z Axis - Sharding
+All of our microservices have a MongoDb sharded database with 2 shard replica cluster of 3 nodes each.
+
+Steps for testing sharding 
+1) Test consistency of data by inserting into primary and getting the documents from secodary. 
+2) Isolate one secondary server from the other servers in the cluster and test reading stale data
+3) Connecting up the server again to the cluster and test replication again
+
+
+
+![Sharding-config](https://github.com/nguyensjsu/fa18-281-us-west-1a/blob/master/Pictures/Sharding-config.png)
+
+Figure: Showing shard clusters settings in config server
+
+
+
+![Consistency-before-sharding](https://github.com/nguyensjsu/fa18-281-us-west-1a/blob/master/Pictures/Consistency-before-sharding.png)
+
+Figure: Consistency in  shard cluster(shard2) before partition
+
+
+
+![network-partition-sharding](https://github.com/nguyensjsu/fa18-281-us-west-1a/blob/master/Pictures/network-partition-sharding.png)
+
+Figure: Creating network partiotion in secondary node (top left) using IP Tables
+
+
+
+![data-inserted-after-partition](https://github.com/nguyensjsu/fa18-281-us-west-1a/blob/master/Pictures/data-inserted-after-partition.png)
+
+Figure: Inserting a new item in the menu after creating partition
+
+
+
+![stale-data-read](https://github.com/nguyensjsu/fa18-281-us-west-1a/blob/master/Pictures/stale-data-read.png)
+
+Figure: Showing stale data read (document count) in the isolated (network partitioned) node
+
+![removing-partition](https://github.com/nguyensjsu/fa18-281-us-west-1a/blob/master/Pictures/removing-partition.png)
+
+Figure: Removing network partition by deleting IP Table rules
+
+
+
+![eventually-consistent](https://github.com/nguyensjsu/fa18-281-us-west-1a/blob/master/Pictures/eventually-consistent.png)
+
+Figure: All the shard nodes are eventaully consistent with same data (document count)
+
+# Demonstrating our application's ability to handle a network partition
+
+1) A user is logged in.
+2) The user has some items in the cart.
+3) Taking down the payment service.
+4) The user is not able to pay for the order but he can navigate back in the appliation and search for new items and add it to cart.
+
 # Testing 
+
 ## Application Flow
 
 ##### 1) Find restaurants by entering zipcode
