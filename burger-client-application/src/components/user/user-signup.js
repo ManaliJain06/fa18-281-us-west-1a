@@ -63,7 +63,7 @@ class UserSignUp extends Component {
                 if (err.status === 409){
                     alert("user with same email already exists");
                 }
-                console.log("some error occured :", err.error())
+                //console.log("some error occured :", err.error())
             })
 
     }
@@ -187,4 +187,3 @@ class UserSignUp extends Component {
 const routerSignUp = withRouter(UserSignUp);
 
 export default routerSignUp;
-
